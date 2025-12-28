@@ -1,0 +1,95 @@
+.pais-selector {
+  position: relative;
+}
+
+.pais-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--gris-oscuro);
+  border: 1px solid var(--gris);
+  border-radius: 8px;
+  color: var(--blanco);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pais-button:hover {
+  background: var(--gris);
+  border-color: var(--acento);
+}
+
+.pais-bandera {
+  font-size: 1.2rem;
+}
+
+.pais-nombre-mobile {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.pais-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 10px;
+  background: var(--negro-claro);
+  border: 1px solid var(--gris);
+  border-radius: 12px;
+  min-width: 200px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.pais-selector:hover .pais-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.pais-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--gris-claro);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.pais-option:hover {
+  background: var(--gris-oscuro);
+  color: var(--blanco);
+}
+
+.pais-option.activo {
+  background: var(--gris-oscuro);
+  color: var(--acento);
+}
+
+.pais-option .check {
+  margin-left: auto;
+  color: var(--acento);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .pais-nombre-mobile {
+    display: none;
+  }
+  
+  .pais-button {
+    padding: 8px 10px;
+  }
+}

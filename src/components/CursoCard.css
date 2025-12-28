@@ -1,0 +1,199 @@
+.curso-card {
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.curso-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--acento);
+  box-shadow: 0 12px 32px rgba(0, 255, 136, 0.15);
+}
+
+.curso-imagen-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: var(--gris-oscuro);
+}
+
+.curso-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.curso-card:hover .curso-imagen {
+  transform: scale(1.05);
+}
+
+.descuento-badge,
+.destacado-badge {
+  position: absolute;
+  top: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.descuento-badge {
+  right: 12px;
+  background: var(--rojo);
+  color: var(--blanco);
+}
+
+.destacado-badge {
+  left: 12px;
+  background: var(--acento);
+  color: var(--negro);
+}
+
+.curso-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.curso-categoria {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--gris-oscuro);
+  color: var(--acento);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 20px;
+  width: fit-content;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.curso-titulo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--blanco);
+  line-height: 1.3;
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.curso-descripcion {
+  color: var(--gris-claro);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.7em;
+}
+
+.curso-meta {
+  display: flex;
+  gap: 15px;
+  padding: 12px 0;
+  border-top: 1px solid var(--gris-oscuro);
+  border-bottom: 1px solid var(--gris-oscuro);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gris-claro);
+  font-size: 0.85rem;
+}
+
+.meta-item svg {
+  color: var(--acento);
+}
+
+.curso-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 8px;
+}
+
+.curso-precio {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.precio-anterior {
+  color: var(--gris-claro);
+  font-size: 0.9rem;
+  text-decoration: line-through;
+}
+
+.precio-actual {
+  color: var(--acento);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.btn-agregar,
+.btn-en-carrito,
+.btn-acceder {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-agregar {
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: var(--negro);
+}
+
+.btn-agregar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+}
+
+.btn-en-carrito {
+  background: var(--gris);
+  color: var(--blanco);
+  cursor: default;
+}
+
+.btn-acceder {
+  background: var(--acento);
+  color: var(--negro);
+}
+
+.btn-acceder:hover {
+  background: var(--acento-hover);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .curso-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-agregar,
+  .btn-en-carrito,
+  .btn-acceder {
+    width: 100%;
+    justify-content: center;
+  }
+}

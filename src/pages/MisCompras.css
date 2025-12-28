@@ -1,0 +1,326 @@
+.mis-compras-page {
+  min-height: 100vh;
+  background: var(--negro);
+  padding: 40px 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--gris-oscuro);
+}
+
+.page-header h1 {
+  color: var(--blanco);
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.page-header p {
+  color: var(--gris-claro);
+  font-size: 1.1rem;
+}
+
+.header-stats {
+  display: flex;
+  gap: 24px;
+}
+
+.header-stats .stat {
+  text-align: center;
+  padding: 12px 24px;
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 12px;
+}
+
+.header-stats .stat strong {
+  display: block;
+  color: var(--acento);
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.header-stats .stat span {
+  color: var(--gris-claro);
+  font-size: 0.85rem;
+}
+
+.sin-compras {
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--negro-claro);
+  border: 2px dashed var(--gris-oscuro);
+  border-radius: 16px;
+}
+
+.sin-compras svg {
+  color: var(--gris);
+  margin: 0 auto 24px;
+}
+
+.sin-compras h2 {
+  color: var(--blanco);
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.sin-compras p {
+  color: var(--gris-claro);
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+}
+
+.compras-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.compra-card {
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.compra-card:hover {
+  border-color: var(--acento);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.1);
+}
+
+.compra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--gris-oscuro);
+}
+
+.compra-info h3 {
+  color: var(--blanco);
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+
+.compra-fecha {
+  color: var(--gris-claro);
+  font-size: 0.9rem;
+}
+
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.estado-badge.pendiente {
+  background: rgba(255, 215, 0, 0.2);
+  color: var(--amarillo);
+}
+
+.estado-badge.revision {
+  background: rgba(100, 149, 237, 0.2);
+  color: #6495ED;
+}
+
+.estado-badge.aprobado {
+  background: rgba(0, 255, 136, 0.2);
+  color: var(--acento);
+}
+
+.estado-badge.rechazado {
+  background: rgba(255, 51, 102, 0.2);
+  color: var(--rojo);
+}
+
+.compra-detalles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--gris-oscuro);
+  border-radius: 8px;
+}
+
+.detalle-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detalle-item .label {
+  color: var(--gris-claro);
+  font-size: 0.85rem;
+}
+
+.detalle-item .value {
+  color: var(--blanco);
+  font-weight: 600;
+}
+
+.detalle-item .value.total {
+  color: var(--acento);
+  font-size: 1.2rem;
+}
+
+.compra-cursos {
+  margin-bottom: 20px;
+}
+
+.compra-cursos h4 {
+  color: var(--acento);
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.curso-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: var(--gris-oscuro);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.curso-item img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.curso-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.curso-info strong {
+  color: var(--blanco);
+  font-size: 0.95rem;
+}
+
+.curso-info span {
+  color: var(--acento);
+  font-weight: 600;
+}
+
+.compra-comprobante {
+  margin-bottom: 16px;
+}
+
+.compra-comprobante strong {
+  color: var(--blanco);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.btn-ver-comprobante {
+  display: inline-block;
+  padding: 10px 20px;
+  background: var(--gris-oscuro);
+  color: var(--acento);
+  border: 1px solid var(--acento);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-ver-comprobante:hover {
+  background: var(--acento);
+  color: var(--negro);
+}
+
+.compra-rechazo,
+.compra-aprobada,
+.compra-pendiente,
+.compra-revision {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.compra-rechazo {
+  background: rgba(255, 51, 102, 0.1);
+  border-left: 4px solid var(--rojo);
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.compra-rechazo strong {
+  color: var(--rojo);
+  font-size: 1rem;
+}
+
+.compra-rechazo p {
+  color: var(--gris-claro);
+  margin: 8px 0;
+}
+
+.btn-reintentar {
+  padding: 10px 20px;
+  background: var(--acento);
+  color: var(--negro);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-reintentar:hover {
+  background: var(--acento-hover);
+}
+
+.compra-aprobada {
+  background: rgba(0, 255, 136, 0.1);
+  border-left: 4px solid var(--acento);
+  color: var(--acento);
+}
+
+.compra-pendiente {
+  background: rgba(255, 215, 0, 0.1);
+  border-left: 4px solid var(--amarillo);
+  color: var(--amarillo);
+}
+
+.compra-revision {
+  background: rgba(100, 149, 237, 0.1);
+  border-left: 4px solid #6495ED;
+  color: #6495ED;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-stats .stat {
+    padding: 12px;
+  }
+
+  .compra-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

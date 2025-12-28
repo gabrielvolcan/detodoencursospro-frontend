@@ -1,0 +1,238 @@
+.mis-cursos-page {
+  min-height: 100vh;
+  background: var(--negro);
+  padding: 40px 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--gris-oscuro);
+}
+
+.page-header h1 {
+  color: var(--blanco);
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.page-header p {
+  color: var(--gris-claro);
+  font-size: 1.1rem;
+}
+
+.header-stats {
+  display: flex;
+  gap: 24px;
+}
+
+.header-stats .stat {
+  text-align: center;
+  padding: 12px 24px;
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 12px;
+}
+
+.header-stats .stat strong {
+  display: block;
+  color: var(--acento);
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.header-stats .stat span {
+  color: var(--gris-claro);
+  font-size: 0.85rem;
+}
+
+.sin-cursos {
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--negro-claro);
+  border: 2px dashed var(--gris-oscuro);
+  border-radius: 16px;
+}
+
+.sin-cursos svg {
+  color: var(--gris);
+  margin: 0 auto 24px;
+}
+
+.sin-cursos h2 {
+  color: var(--blanco);
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.sin-cursos p {
+  color: var(--gris-claro);
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+}
+
+.cursos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.curso-card-mis {
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.curso-card-mis:hover {
+  transform: translateY(-4px);
+  border-color: var(--acento);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.15);
+}
+
+.curso-imagen {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.curso-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge-completado {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--acento);
+  color: var(--negro);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.curso-content {
+  padding: 20px;
+}
+
+.curso-content h3 {
+  color: var(--blanco);
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.curso-categoria {
+  color: var(--gris-claro);
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.progreso-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--gris-oscuro);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progreso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--acento) 0%, #00cc6e 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progreso-text {
+  color: var(--acento);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.curso-info {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gris-oscuro);
+}
+
+.curso-info span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gris-claro);
+  font-size: 0.9rem;
+}
+
+.curso-info svg {
+  color: var(--acento);
+}
+
+.curso-acciones {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-continuar,
+.btn-certificado {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-continuar {
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: var(--negro);
+}
+
+.btn-continuar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+}
+
+.btn-certificado {
+  background: transparent;
+  border: 2px solid var(--amarillo);
+  color: var(--amarillo);
+}
+
+.btn-certificado:hover {
+  background: var(--amarillo);
+  color: var(--negro);
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cursos-grid {
+    grid-template-columns: 1fr;
+  }
+}
