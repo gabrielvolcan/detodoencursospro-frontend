@@ -8,7 +8,7 @@ import './CursoCard.css';
 const CursoCard = ({ curso }) => {
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
   const { usuario } = useAuth();
-  const { convertirPrecio } = usePais();
+  const { paisSeleccionado, obtenerMoneda } = usePais();
   const navigate = useNavigate();
 
   const yaComprado = usuario?.cursosComprados?.some(
@@ -30,18 +30,89 @@ const CursoCard = ({ curso }) => {
 
   const handleAccederCurso = (e) => {
     e.stopPropagation();
-    navigate(`/curso/${curso._id}/ver`);
+    navigate(`/aprender/${curso._id}`);
   };
 
-  const descuento = curso.precioAnterior 
-    ? Math.round(((curso.precioAnterior - curso.precio) / curso.precioAnterior) * 100)
-    : 0;
+  // ========================================
+  // 💰 OBTENER PRECIO SEGÚN PAÍS SELECCIONADO
+  // ========================================
+  
+  const obtenerPrecio = () => {
+    // Si el curso tiene el sistema nuevo de precios por país
+    if (curso.precios && curso.precios[paisSeleccionado]) {
+      const precioObj = curso.precios[paisSeleccionado];
+      return {
+        precio: precioObj.monto,
+        moneda: precioObj.moneda,
+        simbolo: obtenerSimbolo(precioObj.moneda),
+        formatted: formatearPrecio(precioObj.monto, precioObj.moneda)
+      };
+    }
+    
+    // Fallback: si tiene precioUSD, convertir manualmente
+    if (curso.precioUSD) {
+      const moneda = obtenerMoneda();
+      const tasas = {
+        USD: 1,
+        PEN: 3.75,
+        CLP: 950,
+        ARS: 1000,
+        UYU: 39
+      };
+      const precio = curso.precioUSD * (tasas[moneda] || 1);
+      
+      return {
+        precio,
+        moneda,
+        simbolo: obtenerSimbolo(moneda),
+        formatted: formatearPrecio(precio, moneda)
+      };
+    }
+    
+    // Último fallback: si tiene precio antiguo
+    if (curso.precio) {
+      return {
+        precio: curso.precio,
+        moneda: 'USD',
+        simbolo: '$',
+        formatted: `$${curso.precio.toFixed(2)}`
+      };
+    }
+    
+    // Error: no hay precio
+    return {
+      precio: 0,
+      moneda: 'USD',
+      simbolo: '$',
+      formatted: 'Gratis'
+    };
+  };
 
-  // Convertir precios
-  const precioConvertido = convertirPrecio(curso.precio);
-  const precioAnteriorConvertido = curso.precioAnterior 
-    ? convertirPrecio(curso.precioAnterior) 
-    : null;
+  const obtenerSimbolo = (moneda) => {
+    const simbolos = {
+      USD: '$',
+      PEN: 'S/',
+      CLP: '$',
+      ARS: '$',
+      UYU: '$',
+      VES: 'Bs'
+    };
+    return simbolos[moneda] || '$';
+  };
+
+  const formatearPrecio = (precio, moneda) => {
+    const simbolo = obtenerSimbolo(moneda);
+    
+    // Para monedas grandes (CLP, ARS), sin decimales
+    if (moneda === 'CLP' || moneda === 'ARS') {
+      return `${simbolo}${Math.round(precio).toLocaleString('es')}`;
+    }
+    
+    // Para el resto, con 2 decimales
+    return `${simbolo}${precio.toFixed(2)}`;
+  };
+
+  const precioInfo = obtenerPrecio();
 
   return (
     <div className="curso-card" onClick={handleClick}>
@@ -51,9 +122,6 @@ const CursoCard = ({ curso }) => {
           alt={curso.titulo}
           className="curso-imagen"
         />
-        {descuento > 0 && (
-          <span className="descuento-badge">-{descuento}%</span>
-        )}
         {curso.destacado && (
           <span className="destacado-badge">Destacado</span>
         )}
@@ -83,10 +151,7 @@ const CursoCard = ({ curso }) => {
 
         <div className="curso-footer">
           <div className="curso-precio">
-            {precioAnteriorConvertido && (
-              <span className="precio-anterior">{precioAnteriorConvertido.formatted}</span>
-            )}
-            <span className="precio-actual">{precioConvertido.formatted}</span>
+            <span className="precio-actual">{precioInfo.formatted}</span>
           </div>
 
           {yaComprado ? (
