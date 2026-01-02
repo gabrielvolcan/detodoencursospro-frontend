@@ -5,11 +5,11 @@ import { useCarrito } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
 import { obtenerMetodosPago } from '../config/metodosPago';
-import axios from 'axios';
+import { pagosAPI } from '../services/api';
 import './CheckoutManual.css';
 
 const CheckoutManual = () => {
-  const { items, obtenerTotal, vaciarCarrito } = useCarrito();
+  const { items, vaciarCarrito } = useCarrito();
   const { usuario, estaAutenticado } = useAuth();
   const { paisSeleccionado, obtenerMoneda } = usePais();
   const navigate = useNavigate();
@@ -24,35 +24,64 @@ const CheckoutManual = () => {
   const metodosPais = obtenerMetodosPago(paisSeleccionado);
   const monedaPais = obtenerMoneda(paisSeleccionado);
 
+  // ========================================
+  // 💰 FUNCIÓN PARA OBTENER PRECIO DE CURSO
+  // ========================================
+  const obtenerPrecioCurso = (curso) => {
+    // Si tiene precios por país
+    if (curso.precios && curso.precios[paisSeleccionado]) {
+      return curso.precios[paisSeleccionado].monto;
+    }
+    
+    // Si tiene precioUSD, convertir
+    if (curso.precioUSD) {
+      const tasas = {
+        USD: 1,
+        PEN: 3.75,
+        CLP: 950,
+        ARS: 1000,
+        UYU: 39
+      };
+      return curso.precioUSD * (tasas[monedaPais] || 1);
+    }
+    
+    // Fallback precio viejo
+    if (curso.precio) {
+      return curso.precio;
+    }
+    
+    return 0;
+  };
+
   // Calcular total según el país
   const calcularTotal = () => {
-    let total = 0;
-    items.forEach(curso => {
-      // Intentar obtener precio por país
-      if (curso.precios && curso.precios[paisSeleccionado]) {
-        total += curso.precios[paisSeleccionado].monto;
-      } 
-      // Fallback 1: usar precioUSD
-      else if (curso.precioUSD) {
-        total += curso.precioUSD;
-      }
-      // Fallback 2: usar precio viejo
-      else if (curso.precio) {
-        total += curso.precio;
-      }
-      // Fallback 3: precio 0
-      else {
-        total += 0;
-      }
-    });
-    return total;
+    return items.reduce((total, curso) => total + obtenerPrecioCurso(curso), 0);
   };
 
   const totalPais = calcularTotal();
-  const totalFormateado = new Intl.NumberFormat('es-ES', {
-    style: 'currency',
-    currency: monedaPais
-  }).format(totalPais);
+  
+  const formatearPrecio = (monto) => {
+    const simbolos = {
+      USD: '$',
+      PEN: 'S/',
+      CLP: '$',
+      ARS: '$',
+      UYU: '$',
+      VES: 'Bs'
+    };
+    
+    const simbolo = simbolos[monedaPais] || '$';
+    
+    // Para monedas grandes sin decimales
+    if (monedaPais === 'CLP' || monedaPais === 'ARS') {
+      return `${simbolo}${Math.round(monto).toLocaleString('es')}`;
+    }
+    
+    // Para el resto con 2 decimales
+    return `${simbolo}${monto.toFixed(2)}`;
+  };
+
+  const totalFormateado = formatearPrecio(totalPais);
 
   useEffect(() => {
     if (!estaAutenticado) {
@@ -66,7 +95,8 @@ const CheckoutManual = () => {
   const crearOrden = async () => {
     try {
       setSubiendo(true);
-      const { data } = await axios.post('http://localhost:5000/api/pagos-manual/crear-orden-manual', {
+      
+      const { data } = await pagosAPI.crearOrdenManual({
         cursosIds: items.map(c => c._id),
         metodoPago: {
           tipo: metodoSeleccionado.tipo,
@@ -74,8 +104,6 @@ const CheckoutManual = () => {
         },
         moneda: monedaPais,
         pais: paisSeleccionado
-      }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
 
       setOrdenCreada(data);
@@ -123,15 +151,7 @@ const CheckoutManual = () => {
       const formData = new FormData();
       formData.append('comprobante', comprobanteArchivo);
 
-      await axios.post(`http://localhost:5000/api/pagos-manual/subir-comprobante/${ordenCreada.compraId}`, 
-        formData,
-        {
-          headers: { 
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
+      await pagosAPI.subirComprobante(ordenCreada.compraId, formData);
 
       vaciarCarrito();
       setPaso(3);
@@ -142,27 +162,10 @@ const CheckoutManual = () => {
     }
   };
 
-  // Obtener precio formateado de un curso según el país
+  // Formatear precio individual de curso
   const formatearPrecioCurso = (curso) => {
-    let precio = 0;
-    
-    // Intentar obtener precio por país
-    if (curso.precios && curso.precios[paisSeleccionado]) {
-      precio = curso.precios[paisSeleccionado].monto;
-    } 
-    // Fallback 1: usar precioUSD
-    else if (curso.precioUSD) {
-      precio = curso.precioUSD;
-    }
-    // Fallback 2: usar precio viejo
-    else if (curso.precio) {
-      precio = curso.precio;
-    }
-    
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: monedaPais
-    }).format(precio);
+    const precio = obtenerPrecioCurso(curso);
+    return formatearPrecio(precio);
   };
 
   if (paso === 3) {

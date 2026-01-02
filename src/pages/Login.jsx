@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { LogIn, Mail, Lock } from 'lucide-react';
+import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
@@ -14,6 +14,7 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
+  const [mostrarPassword, setMostrarPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -69,6 +70,7 @@ const Login = () => {
                 onChange={handleChange}
                 required
                 placeholder="tu@email.com"
+                autoComplete="email"
               />
             </div>
 
@@ -77,15 +79,30 @@ const Login = () => {
                 <Lock size={18} />
                 Contraseña
               </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                placeholder="••••••••"
-              />
+              <div className="password-input-wrapper">
+                <input
+                  type={mostrarPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setMostrarPassword(!mostrarPassword)}
+                  tabIndex="-1"
+                >
+                  {mostrarPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="forgot-password">
+              <Link to="/recuperar-contraseña">¿Olvidaste tu contraseña?</Link>
             </div>
 
             <button 

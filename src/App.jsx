@@ -13,6 +13,8 @@ import MisCursos from './pages/MisCursos';
 import AprendeCurso from './pages/AprendeCurso';
 import Login from './pages/Login';
 import Registro from './pages/Registro';
+import RecuperarContraseña from './pages/RecuperarContraseña';
+import RestablecerContraseña from './pages/RestablecerContraseña';
 import Admin from './pages/Admin';
 import CursoForm from './pages/CursoForm';
 
@@ -38,23 +40,33 @@ function App() {
               <Header />
               <main>
                 <Routes>
-                  {/* Rutas públicas */}
+                  {/* ========================================
+                      RUTAS PÚBLICAS
+                  ======================================== */}
                   <Route path="/" element={<Home />} />
                   <Route path="/cursos" element={<Cursos />} />
                   <Route path="/curso/:id" element={<DetalleCurso />} />
+                  
+                  {/* Auth */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/registro" element={<Registro />} />
+                  <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
+                  <Route path="/restablecer-contraseña/:token" element={<RestablecerContraseña />} />
                   
-                  {/* Rutas privadas (requieren login) */}
+                  {/* ========================================
+                      RUTAS PRIVADAS (requieren login)
+                  ======================================== */}
                   <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
                   <Route path="/checkout" element={<PrivateRoute><CheckoutManual /></PrivateRoute>} />
                   <Route path="/mis-compras" element={<PrivateRoute><MisCompras /></PrivateRoute>} />
                   <Route path="/mis-cursos-aprender" element={<PrivateRoute><MisCursos /></PrivateRoute>} />
                   
-                  {/* 🎥 NUEVA RUTA: Reproductor de curso */}
+                  {/* 🎥 Reproductor de curso */}
                   <Route path="/aprender/:cursoId" element={<PrivateRoute><AprendeCurso /></PrivateRoute>} />
                   
-                  {/* Rutas de admin */}
+                  {/* ========================================
+                      RUTAS DE ADMIN
+                  ======================================== */}
                   <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
                   <Route path="/admin/curso/nuevo" element={<AdminRoute><CursoForm /></AdminRoute>} />
                   <Route path="/admin/curso/:id/editar" element={<AdminRoute><CursoForm /></AdminRoute>} />
