@@ -40,7 +40,8 @@ const CheckoutManual = () => {
         PEN: 3.75,
         CLP: 950,
         ARS: 1000,
-        UYU: 39
+        UYU: 39,
+        VES: 36
       };
       return curso.precioUSD * (tasas[monedaPais] || 1);
     }
@@ -99,8 +100,9 @@ const CheckoutManual = () => {
       const { data } = await pagosAPI.crearOrdenManual({
         cursosIds: items.map(c => c._id),
         metodoPago: {
-          tipo: metodoSeleccionado.tipo,
-          nombre: metodoSeleccionado.nombre
+          tipo: 'transferencia', // Tipo genérico para el backend
+          nombre: metodoSeleccionado.nombre,
+          pais: paisSeleccionado
         },
         moneda: monedaPais,
         pais: paisSeleccionado
