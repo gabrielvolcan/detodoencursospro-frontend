@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const BASE_URL = API_URL.replace('/api', ''); // ✅ URL base sin /api para archivos estáticos
+
+axios.defaults.baseURL = API_URL;
 
 // Interceptor para agregar token automáticamente
 axios.interceptors.request.use(
@@ -21,7 +24,7 @@ export const authAPI = {
   registro: (datos) => axios.post('/auth/registro', datos),
   login: (datos) => axios.post('/auth/login', datos),
   perfil: () => axios.get('/auth/perfil'),
-  obtenerPerfil: () => axios.get('/auth/perfil') // ✅ AGREGADO para compatibilidad
+  obtenerPerfil: () => axios.get('/auth/perfil')
 };
 
 // Cursos
@@ -29,7 +32,7 @@ export const cursosAPI = {
   obtenerTodos: (params) => axios.get('/cursos', { params }),
   obtenerPorId: (id) => axios.get(`/cursos/${id}`),
   crear: (datos) => axios.post('/cursos', datos),
-  actualizar: (id, datos) => axios.put(`/cursos/${id}`, datos), // Cambiado a PUT
+  actualizar: (id, datos) => axios.put(`/cursos/${id}`, datos),
   eliminar: (id) => axios.delete(`/cursos/${id}`),
   obtenerCategorias: () => axios.get('/cursos/meta/categorias'),
   obtenerNiveles: () => axios.get('/cursos/meta/niveles'),

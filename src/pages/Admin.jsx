@@ -4,7 +4,7 @@ import {
   DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { adminAPI, cursosAPI } from '../services/api';
+import { adminAPI, cursosAPI, BASE_URL } from '../services/api';
 import './Admin.css';
 
 const Admin = () => {
@@ -416,7 +416,7 @@ const Admin = () => {
                       <div className="pago-comprobante">
                         <strong>Comprobante:</strong>
                         <a 
-                          href={`http://localhost:5000${compra.comprobante.url}`} 
+                          href={`${BASE_URL}${compra.comprobante.url}`} 
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn-ver-comprobante"
