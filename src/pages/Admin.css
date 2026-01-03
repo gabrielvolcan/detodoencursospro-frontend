@@ -576,3 +576,310 @@ td {
   color: var(--blanco);
   transform: translateY(-2px);
 }
+/* ========================================
+   🆕 MODALES
+======================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--fondo-tarjeta);
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content-large {
+  background: var(--fondo-tarjeta);
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--texto-principal);
+  font-size: 1.5rem;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  color: var(--texto-secundario);
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.2s;
+}
+
+.modal-header button:hover {
+  color: var(--acento);
+  transform: scale(1.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  justify-content: flex-end;
+}
+
+.btn-cancelar {
+  padding: 12px 24px;
+  background: var(--fondo-secundario);
+  color: var(--texto-principal);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.btn-cancelar:hover {
+  background: var(--fondo-hover);
+  transform: translateY(-2px);
+}
+
+.btn-guardar {
+  padding: 12px 24px;
+  background: var(--acento);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.btn-guardar:hover {
+  background: var(--acento-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 230, 118, 0.3);
+}
+
+/* ========================================
+   🆕 DETALLE DE VENTA
+======================================== */
+
+.detalle-venta {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detalle-section {
+  background: var(--fondo-secundario);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+}
+
+.detalle-section h3 {
+  margin: 0 0 15px 0;
+  color: var(--acento);
+  font-size: 1.1rem;
+}
+
+.detalle-section p {
+  margin: 8px 0;
+  color: var(--texto-secundario);
+}
+
+.detalle-section strong {
+  color: var(--texto-principal);
+  margin-right: 8px;
+}
+
+.curso-detalle {
+  padding: 10px;
+  background: var(--fondo-tarjeta);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--acento);
+}
+
+/* ========================================
+   🆕 GESTIÓN DE VENTAS
+======================================== */
+
+.gestion-ventas {
+  padding: 20px;
+}
+
+.ventas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.ventas-header h1 {
+  margin: 0;
+  color: var(--texto-principal);
+}
+
+.filtro-ventas {
+  padding: 10px 20px;
+  background: var(--fondo-secundario);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  color: var(--texto-principal);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filtro-ventas:hover {
+  border-color: var(--acento);
+}
+
+.filtro-ventas:focus {
+  outline: none;
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.1);
+}
+
+.ventas-tabla {
+  background: var(--fondo-tarjeta);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ventas-tabla table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ventas-tabla thead {
+  background: var(--fondo-secundario);
+}
+
+.ventas-tabla th {
+  padding: 15px;
+  text-align: left;
+  color: var(--texto-secundario);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.ventas-tabla tbody tr {
+  border-bottom: 1px solid var(--borde);
+  transition: all 0.2s;
+}
+
+.ventas-tabla tbody tr:hover {
+  background: var(--fondo-hover);
+}
+
+.ventas-tabla td {
+  padding: 15px;
+  color: var(--texto-principal);
+}
+
+/* ========================================
+   🆕 ESTADOS DE COMPRA
+======================================== */
+
+.estado-badge.aprobado {
+  background: #00e67620;
+  color: var(--acento);
+}
+
+.estado-badge.pendiente {
+  background: #ffc10720;
+  color: #ffc107;
+}
+
+.estado-badge.rechazado {
+  background: #ff4d4d20;
+  color: #ff4d4d;
+}
+
+.estado-badge.en_revision {
+  background: #2196f320;
+  color: #2196f3;
+}
+
+/* ========================================
+   🆕 COLUMNA DE ACCIONES
+======================================== */
+
+.acciones {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ========================================
+   🆕 RESPONSIVE MODALES
+======================================== */
+
+@media (max-width: 768px) {
+  .modal-content,
+  .modal-content-large {
+    max-width: 95%;
+    padding: 20px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+
+  .ventas-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-ventas {
+    width: 100%;
+  }
+
+  .ventas-tabla {
+    overflow-x: auto;
+  }
+
+  .ventas-tabla table {
+    min-width: 800px;
+  }
+}

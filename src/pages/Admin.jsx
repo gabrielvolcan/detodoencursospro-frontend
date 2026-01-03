@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye 
+  DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye, X, ShoppingCart
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, BASE_URL } from '../services/api';
@@ -11,12 +11,18 @@ const Admin = () => {
   const { esAdmin } = useAuth();
   const navigate = useNavigate();
   
-  const [vista, setVista] = useState('dashboard'); // dashboard, cursos, usuarios, pagos
+  const [vista, setVista] = useState('dashboard');
   const [estadisticas, setEstadisticas] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [comprasPendientes, setComprasPendientes] = useState([]);
+  const [todasCompras, setTodasCompras] = useState([]);
+  const [filtroCompras, setFiltroCompras] = useState('todas');
   const [cargando, setCargando] = useState(true);
+  
+  // Modales
+  const [modalEditarUsuario, setModalEditarUsuario] = useState(null);
+  const [modalDetalleVenta, setModalDetalleVenta] = useState(null);
 
   useEffect(() => {
     if (!esAdmin()) {
@@ -25,6 +31,12 @@ const Admin = () => {
     }
     cargarDatos();
   }, []);
+
+  useEffect(() => {
+    if (vista === 'ventas') {
+      cargarTodasCompras();
+    }
+  }, [vista, filtroCompras]);
 
   const cargarDatos = async () => {
     try {
@@ -42,6 +54,20 @@ const Admin = () => {
       console.error('Error cargando datos:', error);
     } finally {
       setCargando(false);
+    }
+  };
+
+  const cargarTodasCompras = async () => {
+    try {
+      const params = {};
+      if (filtroCompras !== 'todas') {
+        params.estado = filtroCompras;
+      }
+      
+      const { data } = await adminAPI.obtenerTodasCompras(params);
+      setTodasCompras(data);
+    } catch (error) {
+      console.error('Error cargando compras:', error);
     }
   };
 
@@ -71,13 +97,47 @@ const Admin = () => {
     }
   };
 
+  const eliminarUsuario = async (usuarioId) => {
+    if (!confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) return;
+    
+    try {
+      await adminAPI.eliminarUsuario(usuarioId);
+      await cargarDatos();
+      alert('✅ Usuario eliminado');
+    } catch (error) {
+      console.error('Error eliminando usuario:', error);
+      alert('Error: ' + (error.response?.data?.error || error.message));
+    }
+  };
+
+  const guardarEdicionUsuario = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const datos = {
+      nombre: formData.get('nombre'),
+      email: formData.get('email'),
+      telefono: formData.get('telefono'),
+      pais: formData.get('pais')
+    };
+
+    try {
+      await adminAPI.editarUsuario(modalEditarUsuario._id, datos);
+      await cargarDatos();
+      setModalEditarUsuario(null);
+      alert('✅ Usuario actualizado');
+    } catch (error) {
+      alert('Error al actualizar usuario');
+    }
+  };
+
   const aprobarPago = async (compraId) => {
-    if (!confirm('¿Aprobar este pago? Se enviará email al usuario con sus credenciales.')) return;
+    if (!confirm('¿Aprobar este pago? Se enviará email al usuario.')) return;
     
     try {
       await adminAPI.aprobarPago(compraId);
       await cargarDatos();
-      alert('✅ Pago aprobado y email enviado al usuario');
+      if (vista === 'ventas') await cargarTodasCompras();
+      alert('✅ Pago aprobado y email enviado');
     } catch (error) {
       console.error('Error aprobando pago:', error);
       alert('Error al aprobar el pago');
@@ -91,10 +151,25 @@ const Admin = () => {
     try {
       await adminAPI.rechazarPago(compraId, motivo);
       await cargarDatos();
+      if (vista === 'ventas') await cargarTodasCompras();
       alert('❌ Pago rechazado y usuario notificado');
     } catch (error) {
       console.error('Error rechazando pago:', error);
       alert('Error al rechazar el pago');
+    }
+  };
+
+  const eliminarCompra = async (compraId) => {
+    if (!confirm('¿Eliminar esta compra? Si estaba aprobada, se quitarán los cursos del usuario.')) return;
+    
+    try {
+      await adminAPI.eliminarCompra(compraId);
+      await cargarTodasCompras();
+      await cargarDatos();
+      alert('✅ Compra eliminada');
+    } catch (error) {
+      console.error('Error eliminando compra:', error);
+      alert('Error al eliminar compra');
     }
   };
 
@@ -143,10 +218,18 @@ const Admin = () => {
               <span className="badge-count">{comprasPendientes.length}</span>
             )}
           </button>
+          <button 
+            className={vista === 'ventas' ? 'activo' : ''}
+            onClick={() => setVista('ventas')}
+          >
+            <ShoppingCart size={18} />
+            Todas las Ventas
+          </button>
         </nav>
       </div>
 
       <div className="admin-content">
+        {/* DASHBOARD */}
         {vista === 'dashboard' && (
           <div className="dashboard">
             <h1>Dashboard</h1>
@@ -227,6 +310,7 @@ const Admin = () => {
           </div>
         )}
 
+        {/* GESTIÓN DE CURSOS */}
         {vista === 'cursos' && (
           <div className="gestion-cursos">
             <div className="cursos-header">
@@ -305,6 +389,7 @@ const Admin = () => {
           </div>
         )}
 
+        {/* GESTIÓN DE USUARIOS */}
         {vista === 'usuarios' && (
           <div className="gestion-usuarios">
             <h1>Gestión de Usuarios</h1>
@@ -335,6 +420,7 @@ const Admin = () => {
                     <th>Rol</th>
                     <th>Registro</th>
                     <th>Estado</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -368,6 +454,24 @@ const Admin = () => {
                           {usuario.activo ? 'Activo' : 'Inactivo'}
                         </span>
                       </td>
+                      <td>
+                        <div className="acciones">
+                          <button 
+                            className="btn-icon"
+                            onClick={() => setModalEditarUsuario(usuario)}
+                            title="Editar"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                          <button 
+                            className="btn-icon eliminar"
+                            onClick={() => eliminarUsuario(usuario._id)}
+                            title="Eliminar"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -376,6 +480,7 @@ const Admin = () => {
           </div>
         )}
 
+        {/* PAGOS PENDIENTES */}
         {vista === 'pagos' && (
           <div className="gestion-pagos">
             <h1>Pagos Pendientes de Aprobación</h1>
@@ -446,7 +551,193 @@ const Admin = () => {
             )}
           </div>
         )}
+
+        {/* TODAS LAS VENTAS */}
+        {vista === 'ventas' && (
+          <div className="gestion-ventas">
+            <div className="ventas-header">
+              <h1>Todas las Ventas</h1>
+              <select 
+                value={filtroCompras}
+                onChange={(e) => setFiltroCompras(e.target.value)}
+                className="filtro-ventas"
+              >
+                <option value="todas">Todas</option>
+                <option value="aprobado">Aprobadas</option>
+                <option value="pendiente">Pendientes</option>
+                <option value="rechazado">Rechazadas</option>
+              </select>
+            </div>
+
+            <div className="ventas-tabla">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Total</th>
+                    <th>Método</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {todasCompras.map(compra => (
+                    <tr key={compra._id}>
+                      <td>#{compra._id.slice(-6)}</td>
+                      <td>{compra.usuario?.nombre}</td>
+                      <td>${compra.total.toFixed(2)} {compra.moneda}</td>
+                      <td>{compra.metodoPago?.nombre}</td>
+                      <td>{new Date(compra.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <span className={`estado-badge ${compra.estadoPago}`}>
+                          {compra.estadoPago}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="acciones">
+                          <button 
+                            className="btn-icon"
+                            onClick={() => setModalDetalleVenta(compra)}
+                            title="Ver detalles"
+                          >
+                            <Eye size={18} />
+                          </button>
+                          {compra.estadoPago === 'pendiente' && (
+                            <button 
+                              className="btn-icon"
+                              onClick={() => aprobarPago(compra._id)}
+                              title="Aprobar"
+                            >
+                              ✓
+                            </button>
+                          )}
+                          <button 
+                            className="btn-icon eliminar"
+                            onClick={() => eliminarCompra(compra._id)}
+                            title="Eliminar"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* MODAL EDITAR USUARIO */}
+      {modalEditarUsuario && (
+        <div className="modal-overlay" onClick={() => setModalEditarUsuario(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Editar Usuario</h2>
+              <button onClick={() => setModalEditarUsuario(null)}>
+                <X size={24} />
+              </button>
+            </div>
+            <form onSubmit={guardarEdicionUsuario}>
+              <div className="form-group">
+                <label>Nombre</label>
+                <input 
+                  type="text" 
+                  name="nombre" 
+                  defaultValue={modalEditarUsuario.nombre} 
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label>Email</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  defaultValue={modalEditarUsuario.email} 
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label>Teléfono</label>
+                <input 
+                  type="text" 
+                  name="telefono" 
+                  defaultValue={modalEditarUsuario.telefono} 
+                />
+              </div>
+              <div className="form-group">
+                <label>País</label>
+                <input 
+                  type="text" 
+                  name="pais" 
+                  defaultValue={modalEditarUsuario.pais} 
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" onClick={() => setModalEditarUsuario(null)} className="btn-cancelar">
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-guardar">
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DETALLE VENTA */}
+      {modalDetalleVenta && (
+        <div className="modal-overlay" onClick={() => setModalDetalleVenta(null)}>
+          <div className="modal-content-large" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Detalle de Venta #{modalDetalleVenta._id.slice(-6)}</h2>
+              <button onClick={() => setModalDetalleVenta(null)}>
+                <X size={24} />
+              </button>
+            </div>
+            <div className="detalle-venta">
+              <div className="detalle-section">
+                <h3>Cliente</h3>
+                <p><strong>Nombre:</strong> {modalDetalleVenta.usuario?.nombre}</p>
+                <p><strong>Email:</strong> {modalDetalleVenta.usuario?.email}</p>
+                <p><strong>Teléfono:</strong> {modalDetalleVenta.usuario?.telefono}</p>
+              </div>
+              <div className="detalle-section">
+                <h3>Pago</h3>
+                <p><strong>Total:</strong> ${modalDetalleVenta.total.toFixed(2)} {modalDetalleVenta.moneda}</p>
+                <p><strong>Método:</strong> {modalDetalleVenta.metodoPago?.nombre}</p>
+                <p><strong>Estado:</strong> <span className={`estado-badge ${modalDetalleVenta.estadoPago}`}>{modalDetalleVenta.estadoPago}</span></p>
+                <p><strong>Fecha:</strong> {new Date(modalDetalleVenta.createdAt).toLocaleString()}</p>
+              </div>
+              <div className="detalle-section">
+                <h3>Cursos</h3>
+                {modalDetalleVenta.cursos.map(item => (
+                  <div key={item._id} className="curso-detalle">
+                    <p>{item.curso?.titulo} - ${item.precio}</p>
+                  </div>
+                ))}
+              </div>
+              {modalDetalleVenta.comprobante?.url && (
+                <div className="detalle-section">
+                  <h3>Comprobante</h3>
+                  <a 
+                    href={`${BASE_URL}${modalDetalleVenta.comprobante.url}`} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ver-comprobante"
+                  >
+                    📸 Ver Comprobante
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

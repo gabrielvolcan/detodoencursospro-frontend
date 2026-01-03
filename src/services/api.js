@@ -61,7 +61,17 @@ export const adminAPI = {
   cambiarRol: (usuarioId, rol) => axios.put(`/admin/usuario/${usuarioId}/rol`, { rol }),
   obtenerComprasPendientes: () => axios.get('/admin/compras-pendientes'),
   aprobarPago: (compraId) => axios.post(`/admin/aprobar-pago/${compraId}`),
-  rechazarPago: (compraId, motivo) => axios.post(`/admin/rechazar-pago/${compraId}`, { motivo })
+  rechazarPago: (compraId, motivo) => axios.post(`/admin/rechazar-pago/${compraId}`, { motivo }),
+  
+  // 🆕 Gestión de usuarios
+  editarUsuario: (usuarioId, datos) => axios.put(`/admin/usuario/${usuarioId}`, datos),
+  eliminarUsuario: (usuarioId) => axios.delete(`/admin/usuario/${usuarioId}`),
+  quitarCursoUsuario: (usuarioId, cursoId) => axios.delete(`/admin/usuario/${usuarioId}/curso/${cursoId}`),
+  
+  // 🆕 Gestión de compras/ventas
+  obtenerTodasCompras: (params) => axios.get('/admin/todas-compras', { params }),
+  actualizarEstadoCompra: (compraId, datos) => axios.put(`/admin/compra/${compraId}/estado`, datos),
+  eliminarCompra: (compraId) => axios.delete(`/admin/compra/${compraId}`)
 };
 
 export default axios;
