@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye, X, ShoppingCart
+  DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye, X, ShoppingCart, Bell
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, BASE_URL } from '../services/api';
+import { useNotificaciones } from '../hooks/useNotificaciones';
 import './Admin.css';
 
 const Admin = () => {
@@ -23,6 +24,10 @@ const Admin = () => {
   // Modales
   const [modalEditarUsuario, setModalEditarUsuario] = useState(null);
   const [modalDetalleVenta, setModalDetalleVenta] = useState(null);
+  
+  // 🔔 Sistema de notificaciones
+  const { contador, hayNuevas, marcarComoVistas, verificarNotificaciones } = useNotificaciones(true);
+  const [mostrarToast, setMostrarToast] = useState(false);
 
   useEffect(() => {
     if (!esAdmin()) {
@@ -37,6 +42,14 @@ const Admin = () => {
       cargarTodasCompras();
     }
   }, [vista, filtroCompras]);
+
+  // 🔔 Mostrar toast cuando hay nuevas notificaciones
+  useEffect(() => {
+    if (hayNuevas && vista !== 'pagos') {
+      setMostrarToast(true);
+      setTimeout(() => setMostrarToast(false), 5000);
+    }
+  }, [hayNuevas, vista]);
 
   const cargarDatos = async () => {
     try {
@@ -210,12 +223,17 @@ const Admin = () => {
           </button>
           <button 
             className={vista === 'pagos' ? 'activo' : ''}
-            onClick={() => setVista('pagos')}
+            onClick={() => {
+              setVista('pagos');
+              marcarComoVistas();
+            }}
           >
             <DollarSign size={18} />
             Pagos Pendientes
-            {comprasPendientes.length > 0 && (
-              <span className="badge-count">{comprasPendientes.length}</span>
+            {contador > 0 && (
+              <span className={`badge-count ${hayNuevas ? 'badge-pulsante' : ''}`}>
+                {contador}
+              </span>
             )}
           </button>
           <button 
@@ -736,6 +754,33 @@ const Admin = () => {
               )}
             </div>
           </div>
+        </div>
+      )}
+      
+      {/* 🔔 TOAST DE NOTIFICACIÓN */}
+      {mostrarToast && (
+        <div className="notification-toast">
+          <Bell size={20} />
+          <div className="toast-content">
+            <strong>Nueva compra pendiente</strong>
+            <p>Tienes {contador} {contador === 1 ? 'pago' : 'pagos'} pendiente{contador === 1 ? '' : 's'}</p>
+          </div>
+          <button 
+            className="toast-btn"
+            onClick={() => {
+              setVista('pagos');
+              setMostrarToast(false);
+              marcarComoVistas();
+            }}
+          >
+            Ver ahora
+          </button>
+          <button 
+            className="toast-close"
+            onClick={() => setMostrarToast(false)}
+          >
+            <X size={18} />
+          </button>
         </div>
       )}
     </div>

@@ -71,7 +71,10 @@ export const adminAPI = {
   // 🆕 Gestión de compras/ventas
   obtenerTodasCompras: (params) => axios.get('/admin/todas-compras', { params }),
   actualizarEstadoCompra: (compraId, datos) => axios.put(`/admin/compra/${compraId}/estado`, datos),
-  eliminarCompra: (compraId) => axios.delete(`/admin/compra/${compraId}`)
+  eliminarCompra: (compraId) => axios.delete(`/admin/compra/${compraId}`),
+  
+  // 🔔 Notificaciones
+  obtenerContadorNotificaciones: () => axios.get('/admin/notificaciones/contador')
 };
 
 export default axios;
