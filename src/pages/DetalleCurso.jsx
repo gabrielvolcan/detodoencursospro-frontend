@@ -31,7 +31,8 @@ const DetalleCurso = () => {
   useEffect(() => {
     if (!curso) return;
     
-    const valorFinal = curso.estudiantes || 1;
+    // Usar número más alto si el curso tiene pocos estudiantes
+    const valorFinal = Math.max(curso.estudiantes || 0, 1247);
     let inicio = 0;
     const duracion = 2000;
     const incremento = valorFinal / (duracion / 16);
@@ -177,6 +178,7 @@ const DetalleCurso = () => {
               </div>
               
               <h1 className="hero-titulo">{curso.titulo}</h1>
+              <p className="hero-subtitulo">De Cero a Experto en IA</p>
               
               <p className="hero-descripcion">{curso.descripcion}</p>
 

@@ -87,90 +87,151 @@
 /* Contenido principal */
 .aprender-contenido {
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 380px 1fr;
   height: calc(100vh - 200px);
 }
 
-/* Sidebar */
+/* ========================================
+   SIDEBAR - MEJORADO Y LIMPIO
+======================================== */
+
 .aprender-sidebar {
   background: var(--negro-claro);
   border-right: 1px solid var(--gris-oscuro);
   overflow-y: auto;
-  padding: 24px;
+  padding: 20px;
+}
+
+.aprender-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.aprender-sidebar::-webkit-scrollbar-track {
+  background: var(--negro-claro);
+}
+
+.aprender-sidebar::-webkit-scrollbar-thumb {
+  background: var(--gris-oscuro);
+  border-radius: 3px;
+}
+
+.aprender-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--gris);
 }
 
 .sidebar-header {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--gris-oscuro);
 }
 
 .sidebar-header h3 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--blanco);
   margin-bottom: 8px;
+  font-weight: 700;
 }
 
 .sidebar-header p {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--gris-claro);
 }
 
 .modulos-lista {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+}
+
+.modulo {
+  background: rgba(0, 230, 118, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--gris-oscuro);
+  transition: all 0.3s ease;
+}
+
+.modulo:hover {
+  border-color: rgba(0, 230, 118, 0.3);
 }
 
 .modulo-titulo {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--blanco);
-  margin-bottom: 12px;
-  padding: 8px 12px;
-  background: var(--gris-oscuro);
-  border-radius: 6px;
+  margin-bottom: 0;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(0, 230, 118, 0.1) 0%, rgba(0, 230, 118, 0.05) 100%);
+  border-bottom: 1px solid var(--gris-oscuro);
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .temas-lista {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
+  padding: 4px;
 }
 
 .tema-item {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   border: 1px solid transparent;
+  position: relative;
 }
 
 .tema-item:hover {
-  background: var(--gris-oscuro);
-  border-color: var(--gris);
+  background: rgba(0, 230, 118, 0.05);
+  border-color: rgba(0, 230, 118, 0.2);
 }
 
 .tema-item.activo {
-  background: var(--gris-oscuro);
+  background: rgba(0, 230, 118, 0.1);
   border-color: var(--acento);
 }
 
-.tema-item.visto .tema-titulo {
-  color: var(--gris-claro);
-  text-decoration: line-through;
+.tema-item.activo::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 70%;
+  background: var(--acento);
+  border-radius: 0 2px 2px 0;
+}
+
+.tema-item.visto {
+  opacity: 0.7;
+}
+
+.tema-item.visto:hover {
+  opacity: 1;
 }
 
 .tema-icon {
   flex-shrink: 0;
   color: var(--gris);
-  padding-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
 }
 
 .tema-item.visto .tema-icon {
+  color: var(--acento);
+}
+
+.tema-item.activo .tema-icon {
   color: var(--acento);
 }
 
@@ -180,21 +241,43 @@
 
 .tema-info {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .tema-titulo {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--blanco);
-  margin-bottom: 4px;
+  margin: 0;
   line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.tema-item.visto .tema-titulo {
+  color: var(--gris-claro);
+  text-decoration: line-through;
+}
+
+.tema-item.activo .tema-titulo {
+  color: var(--acento);
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .tema-duracion {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--gris-claro);
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  font-weight: 500;
 }
 
 /* Reproductor */

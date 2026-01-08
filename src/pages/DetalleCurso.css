@@ -84,9 +84,20 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   line-height: 1.2;
   animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.hero-subtitulo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--acento);
+  margin-top: 0;
+  margin-bottom: 20px;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .hero-descripcion {
