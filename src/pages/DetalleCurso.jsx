@@ -11,6 +11,30 @@ import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
 import './DetalleCurso.css';
 
+// Hook para animar contador
+const useContador = (valorFinal, duracion = 2000) => {
+  const [contador, setContador] = useState(0);
+  
+  useEffect(() => {
+    let inicio = 0;
+    const incremento = valorFinal / (duracion / 16);
+    
+    const timer = setInterval(() => {
+      inicio += incremento;
+      if (inicio >= valorFinal) {
+        setContador(valorFinal);
+        clearInterval(timer);
+      } else {
+        setContador(Math.floor(inicio));
+      }
+    }, 16);
+    
+    return () => clearInterval(timer);
+  }, [valorFinal, duracion]);
+  
+  return contador;
+};
+
 const DetalleCurso = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -105,6 +129,9 @@ const DetalleCurso = () => {
   );
   const enCarrito = estaEnCarrito(curso._id);
   const precioInfo = obtenerPrecio();
+  
+  // Contador animado de estudiantes
+  const estudiantesAnimados = useContador(curso?.estudiantes || 1, 2000);
 
   // Beneficios destacados
   const beneficios = [
@@ -164,7 +191,7 @@ const DetalleCurso = () => {
                 </div>
                 <div className="stat">
                   <Users size={20} />
-                  <span>{curso.estudiantes || 0} Estudiantes</span>
+                  <span>{estudiantesAnimados}+ Estudiantes</span>
                 </div>
                 <div className="stat">
                   <Clock size={20} />
@@ -233,6 +260,41 @@ const DetalleCurso = () => {
               <div className="garantia-30dias">
                 <strong>🛡️ Garantía de 30 días</strong>
                 <p>Si no estás satisfecho, te devolvemos tu dinero</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA PRINCIPAL - MOVIDO ARRIBA */}
+      <div className="cta-principal">
+        <div className="container">
+          <div className="cta-content">
+            <h2>¿Listo para transformar tu carrera con IA?</h2>
+            <p>Únete a {estudiantesAnimados}+ estudiantes que ya están generando ingresos con IA</p>
+            
+            {!yaComprado && !enCarrito && (
+              <button 
+                className="btn-cta-principal"
+                onClick={handleComprarAhora}
+              >
+                <Zap size={24} />
+                Comenzar Ahora por {precioInfo.formatted}
+              </button>
+            )}
+
+            <div className="garantias-cta">
+              <div className="garantia-item">
+                <Check size={20} />
+                <span>Acceso de por vida</span>
+              </div>
+              <div className="garantia-item">
+                <Check size={20} />
+                <span>Actualizaciones gratis</span>
+              </div>
+              <div className="garantia-item">
+                <Check size={20} />
+                <span>Certificado incluido</span>
               </div>
             </div>
           </div>
@@ -357,37 +419,22 @@ const DetalleCurso = () => {
         </div>
       </div>
 
-      {/* CTA FINAL */}
-      <div className="cta-final">
+      {/* CTA FINAL - RECORDATORIO */}
+      <div className="cta-final-recordatorio">
         <div className="container">
-          <div className="cta-content">
-            <h2>¿Listo para transformar tu carrera con IA?</h2>
-            <p>Únete a {curso.estudiantes || 0}+ estudiantes que ya están generando ingresos con IA</p>
+          <div className="cta-content-small">
+            <h3>¿Tienes dudas? Es tu momento</h3>
+            <p>Únete a {estudiantesAnimados}+ estudiantes generando ingresos con IA</p>
             
             {!yaComprado && !enCarrito && (
               <button 
-                className="btn-cta-final"
+                className="btn-cta-small"
                 onClick={handleComprarAhora}
               >
-                <Zap size={24} />
-                Comenzar Ahora por {precioInfo.formatted}
+                <Zap size={20} />
+                Inscribirme por {precioInfo.formatted}
               </button>
             )}
-
-            <div className="garantias-footer">
-              <div className="garantia-item">
-                <Check size={20} />
-                <span>Acceso de por vida</span>
-              </div>
-              <div className="garantia-item">
-                <Check size={20} />
-                <span>Actualizaciones gratis</span>
-              </div>
-              <div className="garantia-item">
-                <Check size={20} />
-                <span>Certificado incluido</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>

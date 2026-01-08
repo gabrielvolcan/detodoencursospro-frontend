@@ -279,6 +279,127 @@
 }
 
 /* ========================================
+   CTA PRINCIPAL - ARRIBA
+======================================== */
+
+.cta-principal {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-principal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 230, 118, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.cta-content {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-content h2 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, white 0%, var(--acento) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 15px;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.cta-content p {
+  font-size: 1.3rem;
+  color: var(--texto-secundario);
+  margin-bottom: 35px;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.btn-cta-principal {
+  padding: 22px 55px;
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 230, 118, 0.4);
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cta-principal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn-cta-principal:hover::before {
+  left: 100%;
+}
+
+.btn-cta-principal:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 230, 118, 0.6);
+}
+
+.btn-cta-principal:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.garantias-cta {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 35px;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.garantia-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--texto-secundario);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.garantia-item svg {
+  color: var(--acento);
+}
+
+/* ========================================
    BENEFICIOS DESTACADOS
 ======================================== */
 
@@ -524,85 +645,51 @@
 }
 
 /* ========================================
-   CTA FINAL
+   CTA FINAL - RECORDATORIO PEQUEÑO
 ======================================== */
 
-.cta-final {
-  padding: 80px 0;
-  background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
-  position: relative;
-  overflow: hidden;
+.cta-final-recordatorio {
+  padding: 50px 0;
+  background: var(--fondo-secundario);
+  border-top: 1px solid var(--borde);
 }
 
-.cta-final::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(0, 230, 118, 0.1) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.cta-content {
+.cta-content-small {
   text-align: center;
-  position: relative;
-  z-index: 1;
 }
 
-.cta-content h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 15px;
+.cta-content-small h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin-bottom: 10px;
 }
 
-.cta-content p {
-  font-size: 1.25rem;
+.cta-content-small p {
+  font-size: 1.1rem;
   color: var(--texto-secundario);
-  margin-bottom: 40px;
+  margin-bottom: 25px;
 }
 
-.btn-cta-final {
-  padding: 20px 50px;
+.btn-cta-small {
+  padding: 16px 40px;
   background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: white;
   border: none;
   border-radius: 50px;
-  font-weight: 700;
-  font-size: 1.3rem;
+  font-weight: 600;
+  font-size: 1.1rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0, 230, 118, 0.4);
-}
-
-.btn-cta-final:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 15px 40px rgba(0, 230, 118, 0.6);
-}
-
-.garantias-footer {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-
-.garantia-item {
-  display: flex;
-  align-items: center;
   gap: 10px;
-  color: var(--texto-secundario);
-  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 230, 118, 0.3);
 }
 
-.garantia-item svg {
-  color: var(--acento);
+.btn-cta-small:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 230, 118, 0.5);
 }
 
 /* ========================================
@@ -654,14 +741,22 @@
     font-size: 1.8rem;
   }
 
-  .btn-cta-final {
-    padding: 16px 35px;
+  .cta-content p {
     font-size: 1.1rem;
   }
 
-  .garantias-footer {
+  .btn-cta-principal {
+    padding: 18px 40px;
+    font-size: 1.2rem;
+  }
+
+  .garantias-cta {
     flex-direction: column;
     align-items: center;
     gap: 15px;
+  }
+
+  .cta-content-small h3 {
+    font-size: 1.5rem;
   }
 }
