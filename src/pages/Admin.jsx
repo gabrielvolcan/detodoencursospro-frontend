@@ -24,6 +24,7 @@ const Admin = () => {
   // Modales
   const [modalEditarUsuario, setModalEditarUsuario] = useState(null);
   const [modalDetalleVenta, setModalDetalleVenta] = useState(null);
+  const [modalEditarPrecios, setModalEditarPrecios] = useState(null);
   
   // 🔔 Sistema de notificaciones
   const { contador, hayNuevas, marcarComoVistas, verificarNotificaciones } = useNotificaciones(true);
@@ -183,6 +184,35 @@ const Admin = () => {
     } catch (error) {
       console.error('Error eliminando compra:', error);
       alert('Error al eliminar compra');
+    }
+  };
+
+  const guardarPrecios = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    const precios = {
+      internacional: { monto: parseFloat(formData.get('precio_internacional')), moneda: 'USD' },
+      peru: { monto: parseFloat(formData.get('precio_peru')), moneda: 'PEN' },
+      chile: { monto: parseFloat(formData.get('precio_chile')), moneda: 'CLP' },
+      argentina: { monto: parseFloat(formData.get('precio_argentina')), moneda: 'ARS' },
+      uruguay: { monto: parseFloat(formData.get('precio_uruguay')), moneda: 'UYU' },
+      venezuela: { monto: parseFloat(formData.get('precio_venezuela')), moneda: 'VES' }
+    };
+
+    const datos = {
+      precioUSD: parseFloat(formData.get('precio_internacional')),
+      precios
+    };
+
+    try {
+      await cursosAPI.actualizar(modalEditarPrecios._id, datos);
+      await cargarDatos();
+      setModalEditarPrecios(null);
+      alert('✅ Precios actualizados exitosamente');
+    } catch (error) {
+      console.error('Error actualizando precios:', error);
+      alert('Error al actualizar precios');
     }
   };
 
@@ -382,6 +412,13 @@ const Admin = () => {
                             title="Ver"
                           >
                             <Eye size={18} />
+                          </button>
+                          <button 
+                            className="btn-icon"
+                            onClick={() => setModalEditarPrecios(curso)}
+                            title="Editar Precios"
+                          >
+                            <DollarSign size={18} />
                           </button>
                           <button 
                             className="btn-icon"
@@ -753,6 +790,95 @@ const Admin = () => {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+      
+      {/* MODAL EDITAR PRECIOS */}
+      {modalEditarPrecios && (
+        <div className="modal-overlay" onClick={() => setModalEditarPrecios(null)}>
+          <div className="modal-content-large" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>💰 Editar Precios - {modalEditarPrecios.titulo}</h2>
+              <button onClick={() => setModalEditarPrecios(null)}>
+                <X size={24} />
+              </button>
+            </div>
+            <form onSubmit={guardarPrecios}>
+              <div className="precios-grid">
+                <div className="form-group">
+                  <label>🌍 Internacional (USD)</label>
+                  <input 
+                    type="number" 
+                    name="precio_internacional" 
+                    step="0.01"
+                    defaultValue={modalEditarPrecios.precioUSD || modalEditarPrecios.precios?.internacional?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇵🇪 Perú (PEN)</label>
+                  <input 
+                    type="number" 
+                    name="precio_peru" 
+                    step="0.01"
+                    defaultValue={modalEditarPrecios.precios?.peru?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇨🇱 Chile (CLP)</label>
+                  <input 
+                    type="number" 
+                    name="precio_chile" 
+                    step="1"
+                    defaultValue={modalEditarPrecios.precios?.chile?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇦🇷 Argentina (ARS)</label>
+                  <input 
+                    type="number" 
+                    name="precio_argentina" 
+                    step="1"
+                    defaultValue={modalEditarPrecios.precios?.argentina?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇺🇾 Uruguay (UYU)</label>
+                  <input 
+                    type="number" 
+                    name="precio_uruguay" 
+                    step="1"
+                    defaultValue={modalEditarPrecios.precios?.uruguay?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇻🇪 Venezuela (VES)</label>
+                  <input 
+                    type="number" 
+                    name="precio_venezuela" 
+                    step="1"
+                    defaultValue={modalEditarPrecios.precios?.venezuela?.monto || 0}
+                    required 
+                  />
+                </div>
+              </div>
+              <div className="precio-ayuda">
+                <strong>💡 Tip:</strong> El precio USD se usa como base. Los demás se ajustan según cada país.
+              </div>
+              <div className="modal-actions">
+                <button type="button" onClick={() => setModalEditarPrecios(null)} className="btn-cancelar">
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-guardar">
+                  💾 Guardar Precios
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
