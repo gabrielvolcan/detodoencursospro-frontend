@@ -11,36 +11,13 @@ import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
 import './DetalleCurso.css';
 
-// Hook para animar contador
-const useContador = (valorFinal, duracion = 2000) => {
-  const [contador, setContador] = useState(0);
-  
-  useEffect(() => {
-    let inicio = 0;
-    const incremento = valorFinal / (duracion / 16);
-    
-    const timer = setInterval(() => {
-      inicio += incremento;
-      if (inicio >= valorFinal) {
-        setContador(valorFinal);
-        clearInterval(timer);
-      } else {
-        setContador(Math.floor(inicio));
-      }
-    }, 16);
-    
-    return () => clearInterval(timer);
-  }, [valorFinal, duracion]);
-  
-  return contador;
-};
-
 const DetalleCurso = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [curso, setCurso] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [moduloExpandido, setModuloExpandido] = useState(null);
+  const [estudiantesAnimados, setEstudiantesAnimados] = useState(0);
   
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
   const { usuario } = useAuth();
@@ -49,6 +26,28 @@ const DetalleCurso = () => {
   useEffect(() => {
     cargarCurso();
   }, [id]);
+
+  // Animación de contador de estudiantes
+  useEffect(() => {
+    if (!curso) return;
+    
+    const valorFinal = curso.estudiantes || 1;
+    let inicio = 0;
+    const duracion = 2000;
+    const incremento = valorFinal / (duracion / 16);
+    
+    const timer = setInterval(() => {
+      inicio += incremento;
+      if (inicio >= valorFinal) {
+        setEstudiantesAnimados(valorFinal);
+        clearInterval(timer);
+      } else {
+        setEstudiantesAnimados(Math.floor(inicio));
+      }
+    }, 16);
+    
+    return () => clearInterval(timer);
+  }, [curso]);
 
   const cargarCurso = async () => {
     try {
@@ -129,9 +128,6 @@ const DetalleCurso = () => {
   );
   const enCarrito = estaEnCarrito(curso._id);
   const precioInfo = obtenerPrecio();
-  
-  // Contador animado de estudiantes
-  const estudiantesAnimados = useContador(curso?.estudiantes || 1, 2000);
 
   // Beneficios destacados
   const beneficios = [
@@ -266,7 +262,7 @@ const DetalleCurso = () => {
         </div>
       </div>
 
-      {/* CTA PRINCIPAL - MOVIDO ARRIBA */}
+      {/* CTA PRINCIPAL - ARRIBA */}
       <div className="cta-principal">
         <div className="container">
           <div className="cta-content">
