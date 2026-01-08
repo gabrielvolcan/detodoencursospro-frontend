@@ -225,14 +225,6 @@ const DetalleCurso = () => {
                     <Rocket size={20} />
                     Acceder al Curso
                   </button>
-                ) : enCarrito ? (
-                  <button 
-                    className="btn-ir-carrito"
-                    onClick={() => navigate('/carrito')}
-                  >
-                    <Check size={20} />
-                    Ir al Carrito
-                  </button>
                 ) : (
                   <>
                     <button 
@@ -240,15 +232,17 @@ const DetalleCurso = () => {
                       onClick={handleComprarAhora}
                     >
                       <Zap size={20} />
-                      Comprar Ahora
+                      {enCarrito ? 'Ir al Checkout' : 'Comprar Ahora'}
                     </button>
-                    <button 
-                      className="btn-agregar-carrito"
-                      onClick={handleAgregarCarrito}
-                    >
-                      <ShoppingCart size={20} />
-                      Agregar al Carrito
-                    </button>
+                    {!enCarrito && (
+                      <button 
+                        className="btn-agregar-carrito"
+                        onClick={handleAgregarCarrito}
+                      >
+                        <ShoppingCart size={20} />
+                        Agregar al Carrito
+                      </button>
+                    )}
                   </>
                 )}
               </div>
@@ -269,13 +263,13 @@ const DetalleCurso = () => {
             <h2>¿Listo para transformar tu carrera con IA?</h2>
             <p>Únete a {estudiantesAnimados}+ estudiantes que ya están generando ingresos con IA</p>
             
-            {!yaComprado && !enCarrito && (
+            {!yaComprado && (
               <button 
                 className="btn-cta-principal"
                 onClick={handleComprarAhora}
               >
                 <Zap size={24} />
-                Comenzar Ahora por {precioInfo.formatted}
+                {enCarrito ? 'Finalizar Compra' : `Comenzar Ahora por ${precioInfo.formatted}`}
               </button>
             )}
 
