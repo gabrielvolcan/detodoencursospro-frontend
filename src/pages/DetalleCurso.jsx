@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Clock, Users, Star, ShoppingCart, Check, BookOpen, Award, Video, ChevronDown, ChevronUp } from 'lucide-react';
+import { 
+  Clock, Users, Star, ShoppingCart, Check, BookOpen, Award, Video, 
+  ChevronDown, ChevronUp, Zap, DollarSign, Target, TrendingUp, 
+  Sparkles, Rocket, Brain, Code
+} from 'lucide-react';
 import { cursosAPI } from '../services/api';
 import { useCarrito } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
@@ -16,7 +20,7 @@ const DetalleCurso = () => {
   
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
   const { usuario } = useAuth();
-  const { convertirPrecio } = usePais();
+  const { paisSeleccionado, obtenerMoneda } = usePais();
 
   useEffect(() => {
     cargarCurso();
@@ -40,8 +44,49 @@ const DetalleCurso = () => {
     }
   };
 
+  const handleComprarAhora = () => {
+    if (agregarAlCarrito(curso)) {
+      navigate('/checkout');
+    }
+  };
+
   const toggleModulo = (index) => {
     setModuloExpandido(moduloExpandido === index ? null : index);
+  };
+
+  // Obtener precio según país
+  const obtenerPrecio = () => {
+    if (!curso) return { formatted: '$0', simbolo: '$', precio: 0 };
+
+    // Sistema nuevo de precios
+    if (curso.precios && curso.precios[paisSeleccionado]) {
+      const { monto, moneda } = curso.precios[paisSeleccionado];
+      const simbolos = { USD: '$', PEN: 'S/', CLP: '$', ARS: '$', UYU: '$', VES: 'Bs' };
+      const simbolo = simbolos[moneda] || '$';
+      
+      const formatted = moneda === 'CLP' || moneda === 'ARS' 
+        ? `${simbolo}${Math.round(monto).toLocaleString('es')}`
+        : `${simbolo}${parseFloat(monto).toFixed(2)}`;
+      
+      return { formatted, simbolo, precio: parseFloat(monto), moneda };
+    }
+
+    // Fallback a precioUSD
+    if (curso.precioUSD) {
+      const moneda = obtenerMoneda();
+      const tasas = { USD: 1, PEN: 3.75, CLP: 950, ARS: 1000, UYU: 39, VES: 36 };
+      const precio = parseFloat(curso.precioUSD) * (tasas[moneda] || 1);
+      const simbolos = { USD: '$', PEN: 'S/', CLP: '$', ARS: '$', UYU: '$', VES: 'Bs' };
+      const simbolo = simbolos[moneda] || '$';
+      
+      const formatted = moneda === 'CLP' || moneda === 'ARS'
+        ? `${simbolo}${Math.round(precio).toLocaleString('es')}`
+        : `${simbolo}${precio.toFixed(2)}`;
+      
+      return { formatted, simbolo, precio, moneda };
+    }
+
+    return { formatted: 'Consultar precio', simbolo: '$', precio: 0 };
   };
 
   if (cargando) {
@@ -59,135 +104,289 @@ const DetalleCurso = () => {
     c => c.curso._id === curso._id || c.curso === curso._id
   );
   const enCarrito = estaEnCarrito(curso._id);
-  const precioConvertido = convertirPrecio(curso.precio);
-  const precioAnteriorConvertido = curso.precioAnterior ? convertirPrecio(curso.precioAnterior) : null;
+  const precioInfo = obtenerPrecio();
+
+  // Beneficios destacados
+  const beneficios = [
+    {
+      icono: <DollarSign size={32} />,
+      titulo: 'Monetiza desde el Día 1',
+      descripcion: 'Aprende a vender servicios de IA mientras estudias el curso'
+    },
+    {
+      icono: <Rocket size={32} />,
+      titulo: '22+ Agentes Listos para Vender',
+      descripcion: 'Cada agente es un producto que puedes vender a empresas'
+    },
+    {
+      icono: <Zap size={32} />,
+      titulo: 'Automatizaciones que se Pagan Solas',
+      descripcion: 'Cobra retainers mensuales por mantener sistemas automáticos'
+    },
+    {
+      icono: <TrendingUp size={32} />,
+      titulo: 'De Cero a Agencia de IA',
+      descripcion: 'Modelo de negocio completo paso a paso'
+    },
+    {
+      icono: <Code size={32} />,
+      titulo: 'Integra con Cualquier Herramienta',
+      descripcion: 'Make, n8n, WhatsApp, Meta Ads, OpenAI y más'
+    },
+    {
+      icono: <Target size={32} />,
+      titulo: 'Casos Reales de Monetización',
+      descripcion: 'Estrategias probadas para obtener tus primeros $1000'
+    }
+  ];
 
   return (
-    <div className="detalle-curso">
-      {/* Hero del curso */}
-      <div className="curso-hero">
+    <div className="detalle-curso-mejorado">
+      {/* HERO IMPACTANTE */}
+      <div className="curso-hero-mejorado">
+        <div className="hero-background"></div>
         <div className="container">
-          <div className="curso-hero-content">
-            <div className="curso-info">
-              <span className="curso-badge">{curso.categoria}</span>
-              <h1>{curso.titulo}</h1>
-              <p className="curso-descripcion-hero">{curso.descripcion}</p>
+          <div className="hero-grid">
+            <div className="hero-content">
+              <div className="badge-categoria">
+                <Sparkles size={16} />
+                {curso.categoria}
+              </div>
               
-              <div className="curso-stats">
-                <div className="stat-item">
-                  <Star size={18} fill="var(--amarillo)" color="var(--amarillo)" />
-                  <span>{curso.calificacion || 5} Calificación</span>
+              <h1 className="hero-titulo">{curso.titulo}</h1>
+              
+              <p className="hero-descripcion">{curso.descripcion}</p>
+
+              <div className="hero-stats">
+                <div className="stat">
+                  <Star size={20} fill="var(--amarillo)" color="var(--amarillo)" />
+                  <span>{curso.calificacion || 5} Rating</span>
                 </div>
-                <div className="stat-item">
-                  <Users size={18} />
+                <div className="stat">
+                  <Users size={20} />
                   <span>{curso.estudiantes || 0} Estudiantes</span>
                 </div>
-                <div className="stat-item">
-                  <Clock size={18} />
-                  <span>{curso.duracion}</span>
+                <div className="stat">
+                  <Clock size={20} />
+                  <span>{curso.duracion || '23 horas'}</span>
                 </div>
-                <div className="stat-item">
-                  <Award size={18} />
+                <div className="stat">
+                  <Award size={20} />
                   <span>{curso.nivel}</span>
                 </div>
               </div>
+
+              <div className="hero-garantia">
+                <Check size={20} />
+                <span>✨ Acceso de por vida • 📱 Estudia a tu ritmo • 🎓 Certificado incluido</span>
+              </div>
             </div>
 
-            <div className="curso-compra-card">
-              <img src={curso.imagen} alt={curso.titulo} />
-              
-              <div className="precio-section">
-                {precioAnteriorConvertido && (
-                  <span className="precio-anterior">{precioAnteriorConvertido.formatted}</span>
-                )}
-                <span className="precio-actual">{precioConvertido.formatted}</span>
+            <div className="hero-card-compra">
+              <div className="card-imagen">
+                <img src={curso.imagen} alt={curso.titulo} />
+                <div className="precio-overlay">
+                  <span className="precio-principal">{precioInfo.formatted}</span>
+                  {curso.precioAnterior && (
+                    <span className="precio-anterior">{precioInfo.simbolo}{curso.precioAnterior}</span>
+                  )}
+                </div>
               </div>
 
-              {yaComprado ? (
-                <button 
-                  className="btn-acceder-curso"
-                  onClick={() => navigate(`/curso/${curso._id}/ver`)}
-                >
-                  Acceder al Curso
-                </button>
-              ) : enCarrito ? (
-                <button 
-                  className="btn-en-carrito"
-                  onClick={() => navigate('/carrito')}
-                >
-                  <Check size={18} />
-                  Ir al Carrito
-                </button>
-              ) : (
-                <button 
-                  className="btn-comprar"
-                  onClick={handleAgregarCarrito}
-                >
-                  <ShoppingCart size={18} />
-                  Agregar al Carrito
-                </button>
-              )}
+              <div className="card-acciones">
+                {yaComprado ? (
+                  <button 
+                    className="btn-acceder-principal"
+                    onClick={() => navigate(`/aprender/${curso._id}`)}
+                  >
+                    <Rocket size={20} />
+                    Acceder al Curso
+                  </button>
+                ) : enCarrito ? (
+                  <button 
+                    className="btn-ir-carrito"
+                    onClick={() => navigate('/carrito')}
+                  >
+                    <Check size={20} />
+                    Ir al Carrito
+                  </button>
+                ) : (
+                  <>
+                    <button 
+                      className="btn-comprar-ahora"
+                      onClick={handleComprarAhora}
+                    >
+                      <Zap size={20} />
+                      Comprar Ahora
+                    </button>
+                    <button 
+                      className="btn-agregar-carrito"
+                      onClick={handleAgregarCarrito}
+                    >
+                      <ShoppingCart size={20} />
+                      Agregar al Carrito
+                    </button>
+                  </>
+                )}
+              </div>
 
-              <div className="garantia-box">
-                <strong>✓ Acceso de por vida</strong>
-                <p>Estudia a tu propio ritmo</p>
+              <div className="garantia-30dias">
+                <strong>🛡️ Garantía de 30 días</strong>
+                <p>Si no estás satisfecho, te devolvemos tu dinero</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Contenido del curso */}
-      <div className="container py-5">
-        <div className="curso-contenido">
-          {/* Temario */}
-          <div className="temario-section">
-            <h2>
-              <BookOpen size={24} />
-              Contenido del Curso
-            </h2>
-            
-            {curso.contenido && curso.contenido.length > 0 ? (
-              <div className="temario-lista">
-                {curso.contenido.map((modulo, index) => (
-                  <div key={index} className="modulo-item">
-                    <button 
-                      className="modulo-header"
-                      onClick={() => toggleModulo(index)}
-                    >
-                      <div className="modulo-titulo">
-                        <Video size={18} />
-                        <span>Módulo {index + 1}: {modulo.titulo}</span>
-                      </div>
-                      {moduloExpandido === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                    </button>
-                    
-                    {moduloExpandido === index && (
-                      <div className="modulo-contenido">
-                        <p>{modulo.descripcion}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
+      {/* BENEFICIOS DESTACADOS */}
+      <div className="beneficios-section">
+        <div className="container">
+          <h2 className="section-title">
+            <Brain size={32} />
+            ¿Por qué este curso cambiará tu carrera?
+          </h2>
+          
+          <div className="beneficios-grid">
+            {beneficios.map((beneficio, index) => (
+              <div 
+                key={index} 
+                className="beneficio-card"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="beneficio-icono">
+                  {beneficio.icono}
+                </div>
+                <h3>{beneficio.titulo}</h3>
+                <p>{beneficio.descripcion}</p>
               </div>
-            ) : (
-              <div className="sin-temario">
-                <BookOpen size={48} />
-                <p>El temario detallado estará disponible próximamente</p>
-              </div>
-            )}
+            ))}
           </div>
+        </div>
+      </div>
 
-          {/* Qué aprenderás */}
-          <div className="aprenderas-section">
-            <h2>¿Qué aprenderás?</h2>
-            <div className="aprenderas-grid">
-              {curso.contenido?.slice(0, 4).map((item, index) => (
-                <div key={index} className="aprenderas-item">
-                  <Check size={20} />
-                  <span>{item.titulo}</span>
+      {/* LO QUE APRENDERÁS */}
+      <div className="aprenderas-section-mejorada">
+        <div className="container">
+          <h2 className="section-title">
+            <Target size={32} />
+            Lo que dominarás al finalizar
+          </h2>
+
+          <div className="aprenderas-grid-mejorada">
+            <div className="aprenderas-item-mejorado">
+              <Check size={24} />
+              <span>Crear y vender chatbots de IA a empresas por $500-$2000 USD</span>
+            </div>
+            <div className="aprenderas-item-mejorado">
+              <Check size={24} />
+              <span>Automatizar procesos con Make y n8n para cobrar retainers mensuales</span>
+            </div>
+            <div className="aprenderas-item-mejorado">
+              <Check size={24} />
+              <span>Desarrollar 22+ agentes especializados listos para comercializar</span>
+            </div>
+            <div className="aprenderas-item-mejorado">
+              <Check size={24} />
+              <span>Integrar ChatGPT con WhatsApp, emails y redes sociales</span>
+            </div>
+            <div className="aprenderas-item-mejorado">
+              <Check size={24} />
+              <span>Crear páginas web con IA y monetizarlas con ads y afiliados</span>
+            </div>
+            <div className="aprenderas-item-mejorado">
+              <Check size={24} />
+              <span>Lanzar tu propia agencia de servicios de IA en 30 días</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* TEMARIO DETALLADO */}
+      <div className="temario-section-mejorado">
+        <div className="container">
+          <h2 className="section-title">
+            <BookOpen size={32} />
+            Contenido del Curso (23+ horas)
+          </h2>
+
+          {curso.contenido && curso.contenido.length > 0 ? (
+            <div className="modulos-lista">
+              {curso.contenido.map((modulo, index) => (
+                <div key={index} className="modulo-card">
+                  <button 
+                    className="modulo-header-btn"
+                    onClick={() => toggleModulo(index)}
+                  >
+                    <div className="modulo-info">
+                      <Video size={20} />
+                      <div>
+                        <h3>Módulo {index + 1}: {modulo.titulo}</h3>
+                        <span className="modulo-duracion">
+                          {modulo.videos?.length || 0} lecciones
+                        </span>
+                      </div>
+                    </div>
+                    {moduloExpandido === index ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                  </button>
+
+                  {moduloExpandido === index && (
+                    <div className="modulo-contenido-expandido">
+                      <p className="modulo-descripcion">{modulo.descripcion}</p>
+                      {modulo.videos && modulo.videos.length > 0 && (
+                        <div className="videos-lista">
+                          {modulo.videos.map((video, vIndex) => (
+                            <div key={vIndex} className="video-item">
+                              <Video size={16} />
+                              <span>{video.titulo}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="temario-placeholder">
+              <BookOpen size={64} />
+              <p>El temario detallado incluye más de 100 lecciones prácticas</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* CTA FINAL */}
+      <div className="cta-final">
+        <div className="container">
+          <div className="cta-content">
+            <h2>¿Listo para transformar tu carrera con IA?</h2>
+            <p>Únete a {curso.estudiantes || 0}+ estudiantes que ya están generando ingresos con IA</p>
+            
+            {!yaComprado && !enCarrito && (
+              <button 
+                className="btn-cta-final"
+                onClick={handleComprarAhora}
+              >
+                <Zap size={24} />
+                Comenzar Ahora por {precioInfo.formatted}
+              </button>
+            )}
+
+            <div className="garantias-footer">
+              <div className="garantia-item">
+                <Check size={20} />
+                <span>Acceso de por vida</span>
+              </div>
+              <div className="garantia-item">
+                <Check size={20} />
+                <span>Actualizaciones gratis</span>
+              </div>
+              <div className="garantia-item">
+                <Check size={20} />
+                <span>Certificado incluido</span>
+              </div>
             </div>
           </div>
         </div>
