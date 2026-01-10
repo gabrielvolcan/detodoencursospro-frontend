@@ -10,14 +10,14 @@ export const usePais = () => {
   return context;
 };
 
-// Tasas de conversión base USD
+// 💰 TASAS DE CONVERSIÓN ÚNICAS - FUENTE DE VERDAD
 const TASAS_CONVERSION = {
   USD: { simbolo: '$', nombre: 'Dólares', multiplicador: 1 },
-  PEN: { simbolo: 'S/', nombre: 'Soles', multiplicador: 3.36 },
-  CLP: { simbolo: '$', nombre: 'Pesos Chilenos', multiplicador: 894 },
-  ARS: { simbolo: '$', nombre: 'Pesos Argentinos', multiplicador: 1490 },
-  VES: { simbolo: 'Bs', nombre: 'Bolívares', multiplicador: 500 },
-  UYU: { simbolo: '$', nombre: 'Pesos Uruguayos', multiplicador: 38.6 }
+  PEN: { simbolo: 'S/', nombre: 'Soles', multiplicador: 3.75 },
+  CLP: { simbolo: '$', nombre: 'Pesos Chilenos', multiplicador: 980 },
+  ARS: { simbolo: '$', nombre: 'Pesos Argentinos', multiplicador: 1015 },
+  VES: { simbolo: 'Bs', nombre: 'Bolívares', multiplicador: 45.50 },
+  UYU: { simbolo: '$', nombre: 'Pesos Uruguayos', multiplicador: 43.50 }
 };
 
 export const PAISES = [
@@ -25,7 +25,7 @@ export const PAISES = [
   { codigo: 'peru', nombre: 'Perú', bandera: '🇵🇪', moneda: 'PEN' },
   { codigo: 'chile', nombre: 'Chile', bandera: '🇨🇱', moneda: 'CLP' },
   { codigo: 'argentina', nombre: 'Argentina', bandera: '🇦🇷', moneda: 'ARS' },
-  { codigo: 'venezuela', nombre: 'Venezuela', bandera: '🇻🇪', moneda: 'USD' },
+  { codigo: 'venezuela', nombre: 'Venezuela', bandera: '🇻🇪', moneda: 'VES' },
   { codigo: 'uruguay', nombre: 'Uruguay', bandera: '🇺🇾', moneda: 'UYU' }
 ];
 
@@ -33,7 +33,6 @@ export const PaisProvider = ({ children }) => {
   const [paisSeleccionado, setPaisSeleccionado] = useState(() => {
     const guardado = localStorage.getItem('paisSeleccionado');
     
-    // Migrar códigos antiguos a nuevos
     const conversion = {
       'USD': 'internacional',
       'PE': 'peru',
@@ -45,7 +44,6 @@ export const PaisProvider = ({ children }) => {
     
     const codigoConvertido = conversion[guardado] || guardado || 'internacional';
     
-    // Guardar el código convertido
     if (guardado && conversion[guardado]) {
       localStorage.setItem('paisSeleccionado', codigoConvertido);
     }
@@ -62,7 +60,7 @@ export const PaisProvider = ({ children }) => {
     const moneda = pais?.moneda || 'USD';
     const tasa = TASAS_CONVERSION[moneda];
     
-    const precioConvertido = precioUSD * tasa.multiplicador;
+    const precioConvertido = parseFloat(precioUSD) * tasa.multiplicador;
     
     return {
       precio: precioConvertido,
@@ -73,11 +71,9 @@ export const PaisProvider = ({ children }) => {
   };
 
   const formatearPrecio = (precio, simbolo, moneda) => {
-    // Para monedas grandes (CLP, ARS), sin decimales
     if (moneda === 'CLP' || moneda === 'ARS') {
       return `${simbolo}${Math.round(precio).toLocaleString('es')}`;
     }
-    // Para el resto, con 2 decimales
     return `${simbolo}${precio.toFixed(2)}`;
   };
 

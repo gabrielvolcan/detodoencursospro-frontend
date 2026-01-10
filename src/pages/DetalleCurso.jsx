@@ -21,7 +21,7 @@ const DetalleCurso = () => {
   
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
   const { usuario } = useAuth();
-  const { paisSeleccionado, obtenerMoneda } = usePais();
+  const { convertirPrecio } = usePais();
 
   useEffect(() => {
     cargarCurso();
@@ -31,7 +31,6 @@ const DetalleCurso = () => {
   useEffect(() => {
     if (!curso) return;
     
-    // Usar número más alto si el curso tiene pocos estudiantes
     const valorFinal = Math.max(curso.estudiantes || 0, 1247);
     let inicio = 0;
     const duracion = 2000;
@@ -78,36 +77,26 @@ const DetalleCurso = () => {
     setModuloExpandido(moduloExpandido === index ? null : index);
   };
 
-  // Obtener precio según país
+  // ========================================
+  // 💰 OBTENER PRECIO USANDO PAISCONTEXT (UNIFICADO)
+  // ========================================
+  
   const obtenerPrecio = () => {
     if (!curso) return { formatted: '$0', simbolo: '$', precio: 0 };
 
-    // Sistema nuevo de precios
-    if (curso.precios && curso.precios[paisSeleccionado]) {
-      const { monto, moneda } = curso.precios[paisSeleccionado];
-      const simbolos = { USD: '$', PEN: 'S/', CLP: '$', ARS: '$', UYU: '$', VES: 'Bs' };
-      const simbolo = simbolos[moneda] || '$';
-      
-      const formatted = moneda === 'CLP' || moneda === 'ARS' 
-        ? `${simbolo}${Math.round(monto).toLocaleString('es')}`
-        : `${simbolo}${parseFloat(monto).toFixed(2)}`;
-      
-      return { formatted, simbolo, precio: parseFloat(monto), moneda };
+    // Usamos convertirPrecio del contexto
+    if (curso.precioUSD && !isNaN(curso.precioUSD)) {
+      return convertirPrecio(parseFloat(curso.precioUSD));
     }
 
-    // Fallback a precioUSD
-    if (curso.precioUSD) {
-      const moneda = obtenerMoneda();
-      const tasas = { USD: 1, PEN: 3.36, CLP: 894, ARS: 1490, UYU: 39, VES: 1 };
-      const precio = parseFloat(curso.precioUSD) * (tasas[moneda] || 1);
-      const simbolos = { USD: '$', PEN: 'S/', CLP: '$', ARS: '$', UYU: '$', VES: 'Bs' };
-      const simbolo = simbolos[moneda] || '$';
-      
-      const formatted = moneda === 'CLP' || moneda === 'ARS'
-        ? `${simbolo}${Math.round(precio).toLocaleString('es')}`
-        : `${simbolo}${precio.toFixed(2)}`;
-      
-      return { formatted, simbolo, precio, moneda };
+    // Fallback
+    if (curso.precio && !isNaN(curso.precio)) {
+      return {
+        precio: parseFloat(curso.precio),
+        moneda: 'USD',
+        simbolo: '$',
+        formatted: `$${parseFloat(curso.precio).toFixed(2)}`
+      };
     }
 
     return { formatted: 'Consultar precio', simbolo: '$', precio: 0 };

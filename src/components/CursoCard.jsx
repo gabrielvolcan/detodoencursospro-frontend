@@ -8,7 +8,7 @@ import './CursoCard.css';
 const CursoCard = ({ curso }) => {
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
   const { usuario } = useAuth();
-  const { paisSeleccionado, obtenerMoneda } = usePais();
+  const { convertirPrecio } = usePais();
   const navigate = useNavigate();
 
   const yaComprado = usuario?.cursosComprados?.some(
@@ -34,78 +34,22 @@ const CursoCard = ({ curso }) => {
   };
 
   // ========================================
-  // 💰 OBTENER PRECIO SEGÚN PAÍS SELECCIONADO
+  // 💰 OBTENER PRECIO USANDO PAISCONTEXT (UNIFICADO)
   // ========================================
   
-  const obtenerSimbolo = (moneda) => {
-    const simbolos = {
-      USD: '$',
-      PEN: 'S/',
-      CLP: '$',
-      ARS: '$',
-      UYU: '$',
-      VES: 'Bs'
-    };
-    return simbolos[moneda] || '$';
-  };
-
-  const formatearPrecio = (precio, moneda) => {
-    // Asegurar que precio es un número válido
-    const precioNumero = parseFloat(precio) || 0;
-    const simbolo = obtenerSimbolo(moneda);
-    
-    // Para monedas grandes (CLP, ARS), sin decimales
-    if (moneda === 'CLP' || moneda === 'ARS') {
-      return `${simbolo}${Math.round(precioNumero).toLocaleString('es')}`;
-    }
-    
-    // Para el resto, con 2 decimales
-    return `${simbolo}${precioNumero.toFixed(2)}`;
-  };
-
   const obtenerPrecio = () => {
-    // Si el curso tiene el sistema nuevo de precios por país
-    if (curso.precios && typeof curso.precios === 'object' && curso.precios[paisSeleccionado]) {
-      const precioObj = curso.precios[paisSeleccionado];
-      const monto = parseFloat(precioObj.monto) || 0;
-      
-      return {
-        precio: monto,
-        moneda: precioObj.moneda || 'USD',
-        simbolo: obtenerSimbolo(precioObj.moneda || 'USD'),
-        formatted: formatearPrecio(monto, precioObj.moneda || 'USD')
-      };
-    }
-    
-    // Fallback: si tiene precioUSD, convertir manualmente
+    // Si el curso tiene precioUSD, usamos convertirPrecio del contexto
     if (curso.precioUSD && !isNaN(curso.precioUSD)) {
-      const moneda = obtenerMoneda();
-      const tasas = {
-        USD: 1,
-        PEN: 3.36,
-        CLP: 894,
-        ARS: 1490,
-        UYU: 39,
-        VES: 1
-      };
-      const precio = parseFloat(curso.precioUSD) * (tasas[moneda] || 1);
-      
-      return {
-        precio,
-        moneda,
-        simbolo: obtenerSimbolo(moneda),
-        formatted: formatearPrecio(precio, moneda)
-      };
+      return convertirPrecio(parseFloat(curso.precioUSD));
     }
     
-    // Último fallback: si tiene precio antiguo
+    // Fallback: precio antiguo sin conversión
     if (curso.precio && !isNaN(curso.precio)) {
-      const precioNumero = parseFloat(curso.precio);
       return {
-        precio: precioNumero,
+        precio: parseFloat(curso.precio),
         moneda: 'USD',
         simbolo: '$',
-        formatted: formatearPrecio(precioNumero, 'USD')
+        formatted: `$${parseFloat(curso.precio).toFixed(2)}`
       };
     }
     
