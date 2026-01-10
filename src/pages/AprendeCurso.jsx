@@ -71,11 +71,32 @@ const AprendeCurso = () => {
     });
   };
 
-  const extraerVideoId = (url) => {
-    if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+  // ========================================
+  // 🎥 EXTRAE ID DE YOUTUBE O GOOGLE DRIVE
+  // ========================================
+  const extraerVideoInfo = (url) => {
+    if (!url) return { tipo: null, id: null };
+    
+    // Detectar YouTube
+    const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const youtubeMatch = url.match(youtubeRegExp);
+    if (youtubeMatch && youtubeMatch[2].length === 11) {
+      return { tipo: 'youtube', id: youtubeMatch[2] };
+    }
+    
+    // Detectar Google Drive
+    const driveRegExp = /\/file\/d\/([a-zA-Z0-9_-]+)/;
+    const driveMatch = url.match(driveRegExp);
+    if (driveMatch && driveMatch[1]) {
+      return { tipo: 'drive', id: driveMatch[1] };
+    }
+    
+    // Si es directamente un ID de Drive (33 caracteres aprox)
+    if (url.length > 20 && url.length < 50 && !url.includes('/')) {
+      return { tipo: 'drive', id: url };
+    }
+    
+    return { tipo: null, id: null };
   };
 
   if (cargando) {
@@ -98,7 +119,7 @@ const AprendeCurso = () => {
 
   if (!curso) return null;
 
-  const videoId = videoActual?.videoUrl ? extraerVideoId(videoActual.videoUrl) : null;
+  const videoInfo = videoActual?.videoUrl ? extraerVideoInfo(videoActual.videoUrl) : { tipo: null, id: null };
 
   return (
     <div className="aprender-curso">
@@ -181,16 +202,28 @@ const AprendeCurso = () => {
 
         {/* Reproductor */}
         <main className="aprender-reproductor">
-          {videoId ? (
+          {videoInfo.id ? (
             <>
               <div className="video-container">
-                <iframe
-                  src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
-                  title={videoActual.titulo}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+                {videoInfo.tipo === 'youtube' && (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${videoInfo.id}?rel=0&modestbranding=1`}
+                    title={videoActual.titulo}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                )}
+                
+                {videoInfo.tipo === 'drive' && (
+                  <iframe
+                    src={`https://drive.google.com/file/d/${videoInfo.id}/preview`}
+                    title={videoActual.titulo}
+                    frameBorder="0"
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                  ></iframe>
+                )}
               </div>
               
               <div className="video-info">

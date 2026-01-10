@@ -47,11 +47,13 @@ Concepto: Pago Curso + Tu Nombre`
       {
         tipo: 'mercadopago',
         nombre: 'Mercado Pago',
-        instrucciones: `Gabriel Humberto Volcan Altuve
-CVU: 0000003100074314194223
-Alias: gabriel.040.dejar.mp
-CUIT/CUIL: 27963030407
-Mercado Pago
+        instrucciones: `👤 Juan Pablo Colasurdo Peniche
+Juampi — 19:53
+🏦📲 Mercado Pago🤝🏻
+CVU: 0000003100030001336978
+Alias: ⤵️
+
+Jp.market
 Concepto: Pago Curso + Tu Nombre`
       }
     ]
