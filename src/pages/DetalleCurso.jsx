@@ -98,7 +98,7 @@ const DetalleCurso = () => {
     // Fallback a precioUSD
     if (curso.precioUSD) {
       const moneda = obtenerMoneda();
-      const tasas = { USD: 1, PEN: 3.75, CLP: 950, ARS: 1000, UYU: 39, VES: 36 };
+      const tasas = { USD: 1, PEN: 3.36, CLP: 894, ARS: 1490, UYU: 39, VES: 1 };
       const precio = parseFloat(curso.precioUSD) * (tasas[moneda] || 1);
       const simbolos = { USD: '$', PEN: 'S/', CLP: '$', ARS: '$', UYU: '$', VES: 'Bs' };
       const simbolo = simbolos[moneda] || '$';

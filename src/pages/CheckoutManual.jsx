@@ -37,11 +37,11 @@ const CheckoutManual = () => {
     if (curso.precioUSD) {
       const tasas = {
         USD: 1,
-        PEN: 3.75,
-        CLP: 950,
-        ARS: 1000,
+        PEN: 3.36,
+        CLP: 894,
+        ARS: 1490,
         UYU: 39,
-        VES: 36
+        VES: 1
       };
       return curso.precioUSD * (tasas[monedaPais] || 1);
     }
