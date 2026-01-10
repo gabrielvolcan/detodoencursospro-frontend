@@ -10,14 +10,14 @@ export const usePais = () => {
   return context;
 };
 
-// 💰 TASAS DE CONVERSIÓN ÚNICAS - FUENTE DE VERDAD
+// 💰 TASAS DE CONVERSIÓN - ACTUALIZADAS 10 ENERO 2026
 const TASAS_CONVERSION = {
   USD: { simbolo: '$', nombre: 'Dólares', multiplicador: 1 },
-  PEN: { simbolo: 'S/', nombre: 'Soles', multiplicador: 3.75 },
-  CLP: { simbolo: '$', nombre: 'Pesos Chilenos', multiplicador: 980 },
-  ARS: { simbolo: '$', nombre: 'Pesos Argentinos', multiplicador: 1015 },
-  VES: { simbolo: 'Bs', nombre: 'Bolívares', multiplicador: 45.50 },
-  UYU: { simbolo: '$', nombre: 'Pesos Uruguayos', multiplicador: 43.50 }
+  PEN: { simbolo: 'S/', nombre: 'Soles', multiplicador: 3.36 },
+  CLP: { simbolo: '$', nombre: 'Pesos Chilenos', multiplicador: 894 },
+  ARS: { simbolo: '$', nombre: 'Pesos Argentinos', multiplicador: 1505 },
+  UYU: { simbolo: '$', nombre: 'Pesos Uruguayos', multiplicador: 38.9 },
+  VES: { simbolo: 'Bs', nombre: 'Bolívares', multiplicador: 50 }
 };
 
 export const PAISES = [
