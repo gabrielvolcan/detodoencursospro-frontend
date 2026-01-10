@@ -13,11 +13,11 @@ export const usePais = () => {
 // Tasas de conversión base USD
 const TASAS_CONVERSION = {
   USD: { simbolo: '$', nombre: 'Dólares', multiplicador: 1 },
-  PEN: { simbolo: 'S/', nombre: 'Soles', multiplicador: 3.75 },
-  CLP: { simbolo: '$', nombre: 'Pesos Chilenos', multiplicador: 950 },
-  ARS: { simbolo: '$', nombre: 'Pesos Argentinos', multiplicador: 1000 },
-  VES: { simbolo: 'Bs', nombre: 'Bolívares', multiplicador: 36 },
-  UYU: { simbolo: '$', nombre: 'Pesos Uruguayos', multiplicador: 39 }
+  PEN: { simbolo: 'S/', nombre: 'Soles', multiplicador: 3.36 },
+  CLP: { simbolo: '$', nombre: 'Pesos Chilenos', multiplicador: 894 },
+  ARS: { simbolo: '$', nombre: 'Pesos Argentinos', multiplicador: 1490 },
+  VES: { simbolo: 'Bs', nombre: 'Bolívares', multiplicador: 500 },
+  UYU: { simbolo: '$', nombre: 'Pesos Uruguayos', multiplicador: 38.6 }
 };
 
 export const PAISES = [
