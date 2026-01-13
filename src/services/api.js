@@ -24,7 +24,10 @@ export const authAPI = {
   registro: (datos) => axios.post('/auth/registro', datos),
   login: (datos) => axios.post('/auth/login', datos),
   perfil: () => axios.get('/auth/perfil'),
-  obtenerPerfil: () => axios.get('/auth/perfil')
+  obtenerPerfil: () => axios.get('/auth/perfil'),
+  verificarEmail: (token) => axios.get(`/auth/verificar-email/${token}`), // ← AGREGADO
+  recuperarContraseña: (email) => axios.post('/auth/recuperar-contraseña', { email }), // ← AGREGADO
+  restablecerContraseña: (token, password) => axios.post(`/auth/restablecer-contraseña/${token}`, { password }) // ← AGREGADO
 };
 
 // Cursos
