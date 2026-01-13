@@ -126,60 +126,57 @@
   pointer-events: none;
 }
 
-/* Código de verificación - Superior derecha */
+/* Código de verificación - Superior derecha sobre rectángulo verde */
 .campo-codigo {
   position: absolute;
-  top: 8%;
-  right: 5%;
-  font-size: clamp(12px, 1.2vw, 18px);
+  top: 11%;
+  right: 7%;
+  font-size: clamp(10px, 1vw, 16px);
   font-weight: 700;
-  color: #ffffff;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 8px 16px;
-  border-radius: 8px;
+  color: #000000;
+  padding: 0;
   font-family: 'Montserrat', sans-serif;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
-/* Nombre del estudiante - Centro sobre la línea */
+/* Nombre del estudiante - Centro grande */
 .campo-nombre {
   position: absolute;
-  top: 52%;
+  top: 48%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: clamp(28px, 3.5vw, 56px);
+  font-size: clamp(32px, 4vw, 64px);
   font-weight: 800;
   color: #ffffff;
   text-align: center;
-  width: 80%;
+  width: 70%;
   font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Nombre del curso - Párrafo inferior */
+/* Nombre del curso - Debajo del nombre del estudiante */
 .campo-curso {
   position: absolute;
-  top: 68%;
+  top: 66%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: clamp(16px, 1.8vw, 28px);
-  font-weight: 600;
+  font-size: clamp(18px, 2vw, 32px);
+  font-weight: 700;
   color: #ffffff;
   text-align: center;
-  width: 85%;
-  line-height: 1.4;
+  width: 80%;
   font-family: 'Montserrat', sans-serif;
 }
 
 /* Fecha - Inferior izquierda */
 .campo-fecha {
   position: absolute;
-  bottom: 14%;
-  left: 16%;
-  font-size: clamp(14px, 1.5vw, 22px);
-  font-weight: 600;
+  bottom: 16%;
+  left: 13%;
+  font-size: clamp(16px, 1.8vw, 28px);
+  font-weight: 700;
   color: #ffffff;
   text-align: center;
   font-family: 'Montserrat', sans-serif;
@@ -296,11 +293,11 @@
   }
 
   .campo-nombre {
-    font-size: clamp(24px, 3vw, 40px);
+    font-size: clamp(28px, 3.5vw, 48px);
   }
 
   .campo-curso {
-    font-size: clamp(14px, 1.6vw, 24px);
+    font-size: clamp(16px, 1.8vw, 28px);
   }
 }
 
@@ -319,24 +316,47 @@
   }
 
   .campo-codigo {
-    font-size: 10px;
-    padding: 4px 8px;
+    font-size: 8px;
+    top: 10%;
+    right: 5%;
   }
 
   .campo-nombre {
-    font-size: clamp(20px, 2.5vw, 32px);
+    font-size: clamp(24px, 3vw, 36px);
+    top: 47%;
   }
 
   .campo-curso {
-    font-size: clamp(12px, 1.4vw, 20px);
-    width: 90%;
+    font-size: clamp(14px, 1.6vw, 22px);
+    width: 85%;
+    top: 65%;
   }
 
   .campo-fecha {
-    font-size: clamp(12px, 1.3vw, 18px);
+    font-size: clamp(14px, 1.5vw, 20px);
+    bottom: 15%;
+    left: 10%;
   }
 
   .info-card ul {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .campo-codigo {
+    font-size: 7px;
+  }
+
+  .campo-nombre {
+    font-size: clamp(20px, 2.5vw, 28px);
+  }
+
+  .campo-curso {
+    font-size: clamp(12px, 1.4vw, 18px);
+  }
+
+  .campo-fecha {
+    font-size: clamp(12px, 1.3vw, 16px);
   }
 }
