@@ -1,792 +1,317 @@
-.home {
-  min-height: 100vh;
-}
-
-/* Hero Section */
-.hero {
-  position: relative;
-  min-height: 90vh;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  padding: 60px 0;
-}
-
-.hero-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/images/encabezado.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.50;
-  z-index: 0;
-}
-
-.hero-bg::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
-
-.hero-text {
-  animation: slideIn 0.8s ease-out;
-}
-
-.hero-titulo {
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 24px;
-  color: var(--blanco);
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-descripcion {
-  font-size: 1.2rem;
-  color: var(--blanco);
-  line-height: 1.8;
-  margin-bottom: 32px;
-  max-width: 600px;
-}
-
-.hero-stats {
-  display: flex;
-  gap: 40px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.stat svg {
-  color: var(--acento);
-}
-
-.stat div {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat strong {
-  font-size: 1.5rem;
-  color: var(--blanco);
-}
-
-.stat span {
-  font-size: 0.9rem;
-  color: var(--gris-claro);
-}
-
-.hero-actions {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.btn-primary, .btn-secondary, .btn-cta, .btn-ver-mas {
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.btn-primary, .btn-cta {
-  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
-  color: var(--negro);
-}
-
-.btn-primary:hover, .btn-cta:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 255, 136, 0.4);
-}
-
-.btn-secondary {
-  background: transparent;
-  border: 2px solid var(--acento);
-  color: var(--acento);
-}
-
-.btn-secondary:hover {
-  background: var(--acento);
-  color: var(--negro);
-  transform: translateY(-4px);
-}
-
 /* ========================================
-   🎯 HERO VISUAL - GRID SIMÉTRICO
+   📱 RESPONSIVE MÓVILES PEQUEÑOS (320px - 480px)
 ======================================== */
 
-.hero-visual {
-  position: relative;
-  height: 550px;
-  animation: fadeIn 1s ease-out 0.3s both;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  height: 100%;
-  padding: 20px;
-}
-
-/* Tarjetas de características */
-.feature-card {
-  background: rgba(26, 26, 26, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 16px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 12px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  opacity: 0;
-  transform: scale(0.9) translateY(20px);
-  animation: cardAppear 0.6s ease-out forwards;
-}
-
-/* Delays escalonados para cada card */
-.feature-1 { animation-delay: 0.1s; }
-.feature-2 { animation-delay: 0.2s; }
-.feature-3 { animation-delay: 0.3s; }
-.feature-4 { animation-delay: 0.4s; }
-.feature-5 { animation-delay: 0.5s; }
-.feature-6 { animation-delay: 0.6s; }
-
-@keyframes cardAppear {
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
+@media (max-width: 480px) {
+  /* Hero Section - Compacto */
+  .hero {
+    min-height: auto;
+    padding: 30px 0 40px;
   }
-}
 
-/* Efecto de brillo en hover */
-.feature-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 255, 136, 0.1),
-    transparent
-  );
-  transition: left 0.5s ease;
-}
-
-.feature-card:hover::before {
-  left: 100%;
-}
-
-/* Hover states */
-.feature-card:hover {
-  transform: translateY(-12px) scale(1.05);
-  border-color: var(--acento);
-  background: rgba(26, 26, 26, 0.95);
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(0, 255, 136, 0.2),
-    inset 0 0 20px rgba(0, 255, 136, 0.05);
-}
-
-.feature-card:hover .feature-icon {
-  transform: scale(1.2) rotate(10deg);
-  background: linear-gradient(135deg, var(--acento) 0%, #00ff88 100%);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
-}
-
-.feature-card:hover h4 {
-  color: var(--acento);
-}
-
-/* Icono de la característica */
-.feature-icon {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, var(--gris-oscuro) 0%, var(--negro-claro) 100%);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--acento);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-/* Efecto de pulso en el icono */
-.feature-icon::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  background: var(--acento);
-  opacity: 0;
-  animation: iconPulse 2s ease-in-out infinite;
-}
-
-@keyframes iconPulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 0.1;
-  }
-}
-
-.feature-card h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--blanco);
-  margin: 0;
-  transition: color 0.3s ease;
-}
-
-.feature-card p {
-  font-size: 0.9rem;
-  color: var(--gris-claro);
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* Características */
-.caracteristicas {
-  background: var(--negro-claro);
-  border-top: 1px solid var(--gris-oscuro);
-  border-bottom: 1px solid var(--gris-oscuro);
-}
-
-.caracteristica {
-  text-align: center;
-  padding: 30px;
-  background: var(--negro);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 16px;
-  transition: all 0.3s ease;
-}
-
-.caracteristica:hover {
-  transform: translateY(-8px);
-  border-color: var(--acento);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.15);
-}
-
-.caracteristica-icon {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 20px;
-  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--negro);
-}
-
-.caracteristica h3 {
-  font-size: 1.3rem;
-  margin-bottom: 12px;
-  color: var(--blanco);
-}
-
-.caracteristica p {
-  color: var(--gris-claro);
-  line-height: 1.6;
-}
-
-/* Sección */
-.section-header h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: var(--blanco);
-}
-
-.section-header p {
-  font-size: 1.1rem;
-  color: var(--gris-claro);
-}
-
-.btn-ver-mas {
-  background: var(--gris-oscuro);
-  color: var(--acento);
-  border: 2px solid var(--acento);
-}
-
-.btn-ver-mas:hover {
-  background: var(--acento);
-  color: var(--negro);
-  transform: translateY(-4px);
-}
-
-/* ========================================
-   🔥 ANIMACIONES BRUTALES - LOGO
-======================================== */
-
-.por-que {
-  background: var(--negro-claro);
-  overflow: hidden;
-}
-
-.por-que-content {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 60px;
-  align-items: center;
-}
-
-/* Contenedor principal con gradiente oscuro */
-.imagen-placeholder {
-  background: radial-gradient(circle at center, #1a3a2e 0%, var(--negro) 100%);
-  border-radius: 24px;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-/* Container del logo animado */
-.logo-animated-container {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Logo principal con animaciones BRUTALES */
-.logo-brutal {
-  width: 150px;
-  height: 150px;
-  object-fit: contain;
-  position: relative;
-  z-index: 10;
-  filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6))
-          drop-shadow(0 0 40px rgba(0, 255, 136, 0.4));
-  animation: logoFloat 4s ease-in-out infinite,
-             logoPulse 2s ease-in-out infinite;
-}
-
-@keyframes logoFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-15px) rotate(5deg);
-  }
-  50% {
-    transform: translateY(0) rotate(0deg);
-  }
-  75% {
-    transform: translateY(-10px) rotate(-5deg);
-  }
-}
-
-@keyframes logoPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6))
-            drop-shadow(0 0 40px rgba(0, 255, 136, 0.4));
-  }
-  50% {
-    filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.8))
-            drop-shadow(0 0 60px rgba(0, 255, 136, 0.6))
-            drop-shadow(0 0 80px rgba(0, 255, 136, 0.3));
-  }
-}
-
-/* Anillos de brillo girando */
-.glow-ring {
-  position: absolute;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  border-top-color: var(--acento);
-  border-right-color: var(--acento);
-  opacity: 0.6;
-}
-
-.ring-1 {
-  width: 180px;
-  height: 180px;
-  animation: rotateRing 4s linear infinite;
-}
-
-.ring-2 {
-  width: 220px;
-  height: 220px;
-  animation: rotateRing 6s linear infinite reverse;
-  opacity: 0.4;
-}
-
-.ring-3 {
-  width: 260px;
-  height: 260px;
-  animation: rotateRing 8s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes rotateRing {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Partículas flotantes alrededor del logo */
-.particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--acento);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--acento);
-  opacity: 0;
-  animation: particleFloat 3s ease-in-out infinite;
-}
-
-/* Posiciones de partículas en círculo */
-.particle-1 { top: 0%; left: 50%; animation-delay: 0s; }
-.particle-2 { top: 10%; left: 85%; animation-delay: 0.25s; }
-.particle-3 { top: 35%; left: 100%; animation-delay: 0.5s; }
-.particle-4 { top: 65%; left: 100%; animation-delay: 0.75s; }
-.particle-5 { top: 90%; left: 85%; animation-delay: 1s; }
-.particle-6 { top: 100%; left: 50%; animation-delay: 1.25s; }
-.particle-7 { top: 90%; left: 15%; animation-delay: 1.5s; }
-.particle-8 { top: 65%; left: 0%; animation-delay: 1.75s; }
-.particle-9 { top: 35%; left: 0%; animation-delay: 2s; }
-.particle-10 { top: 10%; left: 15%; animation-delay: 2.25s; }
-.particle-11 { top: 25%; left: 50%; animation-delay: 2.5s; }
-.particle-12 { top: 75%; left: 50%; animation-delay: 2.75s; }
-
-@keyframes particleFloat {
-  0%, 100% {
-    opacity: 0;
-    transform: translateY(0) scale(0);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(-30px) scale(1);
-  }
-}
-
-/* Efecto de ondas expansivas */
-.imagen-placeholder::before,
-.imagen-placeholder::after {
-  content: '';
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border: 2px solid var(--acento);
-  border-radius: 50%;
-  opacity: 0;
-  animation: ripple 4s ease-out infinite;
-}
-
-.imagen-placeholder::after {
-  animation-delay: 2s;
-}
-
-@keyframes ripple {
-  0% {
-    width: 100px;
-    height: 100px;
-    opacity: 0.8;
-  }
-  100% {
-    width: 400px;
-    height: 400px;
-    opacity: 0;
-  }
-}
-
-/* Texto con animación de entrada */
-.por-que-texto h2 {
-  font-size: 2.5rem;
-  margin-bottom: 32px;
-  color: var(--blanco);
-}
-
-.beneficios {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-/* Items de beneficios con animación */
-.beneficio-item {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  opacity: 0;
-  transform: translateX(-30px);
-  transition: all 0.4s ease;
-}
-
-/* Hover effect en cada beneficio */
-.beneficio-item:hover {
-  transform: translateX(8px);
-}
-
-.beneficio-item:hover .check {
-  transform: scale(1.1) rotate(10deg);
-  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.4);
-}
-
-/* Animación cuando entra en viewport */
-.animate-on-scroll.animate-in .beneficio-item {
-  opacity: 1;
-  transform: translateX(0);
-  animation: slideInLeft 0.6s ease-out forwards;
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Check con animación */
-.check {
-  width: 30px;
-  height: 30px;
-  background: var(--acento);
-  color: var(--negro);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 255, 136, 0.2);
-}
-
-.beneficios strong {
-  display: block;
-  font-size: 1.1rem;
-  margin-bottom: 4px;
-  color: var(--blanco);
-  transition: color 0.3s ease;
-}
-
-.beneficio-item:hover strong {
-  color: var(--acento);
-}
-
-.beneficios p {
-  color: var(--gris-claro);
-  line-height: 1.6;
-}
-
-/* Botón con efecto pulse */
-.btn-pulse {
-  animation: btnPulse 2s ease-in-out infinite;
-}
-
-@keyframes btnPulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
-  }
-}
-
-/* Animación de entrada general */
-.animate-on-scroll {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 0.8s ease-out;
-}
-
-.animate-on-scroll.animate-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* CTA Final */
-.cta-final {
-  background: linear-gradient(135deg, var(--gris-oscuro) 0%, var(--negro-claro) 100%);
-  border-top: 1px solid var(--gris-oscuro);
-}
-
-.cta-final h2 {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
-  color: var(--blanco);
-}
-
-.cta-final p {
-  font-size: 1.2rem;
-  color: var(--gris-claro);
-  margin-bottom: 32px;
-}
-
-.btn-cta {
-  font-size: 1.2rem;
-  padding: 20px 40px;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
   .hero-content {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 30px;
+    padding: 0 15px;
   }
 
-  .hero-visual {
-    height: auto;
-  }
-  
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
-  .por-que-content {
-    grid-template-columns: 1fr;
-  }
-  
-  .imagen-placeholder {
-    height: 300px;
-  }
-  
-  .logo-brutal {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .logo-animated-container {
-    width: 160px;
-    height: 160px;
-  }
-}
-
-@media (max-width: 768px) {
   .hero-titulo {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    margin-bottom: 16px;
   }
 
   .hero-descripcion {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
   }
 
+  /* Stats en columna */
   .hero-stats {
-    gap: 20px;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .stat svg {
+    width: 20px;
+    height: 20px;
   }
 
   .stat strong {
     font-size: 1.2rem;
   }
 
-  .section-header h2 {
-    font-size: 2rem;
+  .stat span {
+    font-size: 0.85rem;
   }
 
-  .cta-final h2 {
-    font-size: 2rem;
+  /* Botones más compactos */
+  .hero-actions {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
   }
-  
+
+  .btn-primary, .btn-secondary, .btn-cta, .btn-ver-mas {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Features Grid - Una columna */
+  .hero-visual {
+    height: auto;
+    padding: 0;
+  }
+
   .features-grid {
     grid-template-columns: 1fr;
     gap: 12px;
+    padding: 0;
   }
-  
+
   .feature-card {
-    padding: 20px;
+    padding: 16px;
   }
-  
+
   .feature-icon {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
+  }
+
+  .feature-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .feature-card h4 {
+    font-size: 0.95rem;
+  }
+
+  .feature-card p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  /* Características */
+  .caracteristicas {
+    padding: 30px 0;
+  }
+
+  .caracteristica {
+    padding: 20px 15px;
+  }
+
+  .caracteristica-icon {
+    width: 55px;
+    height: 55px;
+    margin-bottom: 16px;
+  }
+
+  .caracteristica-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .caracteristica h3 {
+    font-size: 1.1rem;
+  }
+
+  .caracteristica p {
+    font-size: 0.9rem;
+  }
+
+  /* Section Headers */
+  .section-header h2 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+  }
+
+  .section-header p {
+    font-size: 0.95rem;
+  }
+
+  /* Por qué elegirnos */
+  .por-que {
+    padding: 30px 0;
+  }
+
+  .por-que-content {
+    gap: 30px;
+    padding: 0 15px;
+  }
+
+  .por-que-texto h2 {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+  }
+
+  /* Logo más pequeño */
+  .imagen-placeholder {
+    height: 250px;
+    border-radius: 16px;
+  }
+
+  .logo-animated-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .logo-brutal {
+    width: 80px;
+    height: 80px;
+  }
+
+  .ring-1 { 
+    width: 110px; 
+    height: 110px; 
+    border-width: 1.5px;
   }
   
-  .feature-card h4 {
+  .ring-2 { 
+    width: 140px; 
+    height: 140px; 
+    border-width: 1.5px;
+  }
+  
+  .ring-3 { 
+    width: 170px; 
+    height: 170px; 
+    border-width: 1.5px;
+  }
+
+  .particle {
+    width: 4px;
+    height: 4px;
+  }
+
+  /* Beneficios más compactos */
+  .beneficios {
+    gap: 20px;
+  }
+
+  .beneficio-item {
+    gap: 12px;
+  }
+
+  .check {
+    width: 26px;
+    height: 26px;
+    font-size: 0.9rem;
+  }
+
+  .beneficios strong {
     font-size: 1rem;
   }
-  
+
+  .beneficios p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* CTA Final */
+  .cta-final {
+    padding: 30px 0;
+  }
+
+  .cta-final h2 {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+    padding: 0 15px;
+  }
+
+  .cta-final p {
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    padding: 0 15px;
+  }
+
+  .btn-cta {
+    font-size: 1rem;
+    padding: 16px 28px;
+    margin: 0 15px;
+    width: calc(100% - 30px);
+  }
+
+  /* Grid general */
+  .grid {
+    gap: 16px;
+  }
+
+  .grid-3, .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Container padding */
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  /* Espaciado de secciones */
+  .py-5 {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+}
+
+/* ========================================
+   📱 EXTRA PEQUEÑOS (max-width: 360px)
+======================================== */
+
+@media (max-width: 360px) {
+  .hero-titulo {
+    font-size: 1.6rem;
+  }
+
+  .hero-descripcion {
+    font-size: 0.9rem;
+  }
+
+  .btn-primary, .btn-secondary, .btn-cta, .btn-ver-mas {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+  }
+
+  .feature-card {
+    padding: 14px;
+  }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .feature-card h4 {
+    font-size: 0.9rem;
+  }
+
   .feature-card p {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
   }
-  
-  .por-que-texto h2 {
-    font-size: 2rem;
+
+  .section-header h2 {
+    font-size: 1.4rem;
   }
-  
-  .logo-brutal {
-    width: 100px;
-    height: 100px;
+
+  .por-que-texto h2,
+  .cta-final h2 {
+    font-size: 1.4rem;
   }
-  
-  .logo-animated-container {
-    width: 140px;
-    height: 140px;
+
+  .stat strong {
+    font-size: 1.1rem;
   }
-  
-  .ring-1 { width: 140px; height: 140px; }
-  .ring-2 { width: 170px; height: 170px; }
-  .ring-3 { width: 200px; height: 200px; }
+
+  .stat span {
+    font-size: 0.8rem;
+  }
 }
