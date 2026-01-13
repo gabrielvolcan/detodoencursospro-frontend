@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { CarritoProvider } from './context/CarritoContext';
 import { PaisProvider } from './context/PaisContext';
 import Header from './components/Header';
+import ChatbotFAQ from './components/ChatbotFAQ';
 import Home from './pages/Home';
 import Cursos from './pages/Cursos';
 import DetalleCurso from './pages/DetalleCurso';
@@ -74,6 +75,9 @@ function App() {
                   <Route path="/admin/curso/:id/editar" element={<AdminRoute><CursoForm /></AdminRoute>} />
                 </Routes>
               </main>
+              
+              {/* 🤖 Chatbot flotante (visible en todas las páginas) */}
+              <ChatbotFAQ />
             </div>
           </PaisProvider>
         </CarritoProvider>
