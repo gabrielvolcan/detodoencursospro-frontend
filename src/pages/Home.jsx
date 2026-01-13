@@ -36,9 +36,18 @@ const Home = () => {
   const cargarCursosDestacados = async () => {
     try {
       const { data } = await cursosAPI.obtenerTodos({ destacados: 'true' });
-      setCursosDestacados(data.slice(0, 3));
+      
+      // ========================================
+      // 🛡️ FILTRAR CURSOS NULL O INVÁLIDOS
+      // ========================================
+      const cursosValidos = (data || [])
+        .filter(curso => curso && curso._id)
+        .slice(0, 3);
+      
+      setCursosDestacados(cursosValidos);
     } catch (error) {
       console.error('Error cargando cursos:', error);
+      setCursosDestacados([]); // Set array vacío en caso de error
     } finally {
       setCargando(false);
     }

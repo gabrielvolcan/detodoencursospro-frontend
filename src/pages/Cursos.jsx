@@ -48,9 +48,15 @@ const Cursos = () => {
       if (filtros.busqueda) params.busqueda = filtros.busqueda;
 
       const { data } = await cursosAPI.obtenerTodos(params);
-      setCursos(data);
+      
+      // ========================================
+      // 🛡️ FILTRAR CURSOS NULL O INVÁLIDOS
+      // ========================================
+      const cursosValidos = (data || []).filter(curso => curso && curso._id);
+      setCursos(cursosValidos);
     } catch (error) {
       console.error('Error cargando cursos:', error);
+      setCursos([]); // Set array vacío en caso de error
     } finally {
       setCargando(false);
     }

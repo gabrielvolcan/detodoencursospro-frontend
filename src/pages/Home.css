@@ -690,7 +690,9 @@
   padding: 20px 40px;
 }
 
-/* Responsive */
+/* ========================================
+   📱 RESPONSIVE - TABLET (769px - 1024px)
+======================================== */
 @media (max-width: 1024px) {
   .hero-content {
     grid-template-columns: 1fr;
@@ -708,6 +710,7 @@
 
   .por-que-content {
     grid-template-columns: 1fr;
+    gap: 40px;
   }
   
   .imagen-placeholder {
@@ -723,36 +726,55 @@
     width: 160px;
     height: 160px;
   }
+  
+  .ring-1 { width: 150px; height: 150px; }
+  .ring-2 { width: 180px; height: 180px; }
+  .ring-3 { width: 210px; height: 210px; }
 }
 
+/* ========================================
+   📱 RESPONSIVE - MÓVIL (max 768px)
+======================================== */
 @media (max-width: 768px) {
+  /* Hero ajustes */
+  .hero {
+    min-height: auto;
+    padding: 40px 0;
+  }
+
   .hero-titulo {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .hero-descripcion {
     font-size: 1rem;
+    margin-bottom: 24px;
   }
 
   .hero-stats {
     gap: 20px;
+    margin-bottom: 30px;
   }
 
   .stat strong {
     font-size: 1.2rem;
   }
-
-  .section-header h2 {
-    font-size: 2rem;
-  }
-
-  .cta-final h2 {
-    font-size: 2rem;
-  }
   
+  .stat span {
+    font-size: 0.8rem;
+  }
+
+  /* Botones más compactos */
+  .btn-primary, .btn-secondary, .btn-cta {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  /* Grid de características 1 columna */
   .features-grid {
     grid-template-columns: 1fr;
     gap: 12px;
+    padding: 10px;
   }
   
   .feature-card {
@@ -771,9 +793,31 @@
   .feature-card p {
     font-size: 0.85rem;
   }
+
+  /* Secciones */
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
   
+  .section-header p {
+    font-size: 1rem;
+  }
+
+  .cta-final h2 {
+    font-size: 1.8rem;
+  }
+  
+  .cta-final p {
+    font-size: 1rem;
+  }
+  
+  /* Logo más pequeño */
   .por-que-texto h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+  
+  .imagen-placeholder {
+    height: 280px;
   }
   
   .logo-brutal {
@@ -789,4 +833,90 @@
   .ring-1 { width: 140px; height: 140px; }
   .ring-2 { width: 170px; height: 170px; }
   .ring-3 { width: 200px; height: 200px; }
+  
+  /* Beneficios más compactos */
+  .beneficios {
+    gap: 20px;
+  }
+  
+  .beneficio-item {
+    gap: 12px;
+  }
+  
+  .check {
+    width: 26px;
+    height: 26px;
+    font-size: 0.9rem;
+  }
+  
+  .beneficios strong {
+    font-size: 1rem;
+  }
+  
+  .beneficios p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ========================================
+   📱 RESPONSIVE - MÓVIL PEQUEÑO (max 480px)
+======================================== */
+@media (max-width: 480px) {
+  .hero-titulo {
+    font-size: 1.75rem;
+  }
+
+  .hero-descripcion {
+    font-size: 0.95rem;
+  }
+
+  .hero-stats {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .stat {
+    width: 100%;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .section-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .cta-final h2 {
+    font-size: 1.5rem;
+  }
+  
+  .por-que-texto h2 {
+    font-size: 1.5rem;
+  }
+  
+  .imagen-placeholder {
+    height: 240px;
+  }
+  
+  .logo-brutal {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .logo-animated-container {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .ring-1 { width: 120px; height: 120px; }
+  .ring-2 { width: 140px; height: 140px; }
+  .ring-3 { width: 160px; height: 160px; }
 }

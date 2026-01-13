@@ -6,14 +6,27 @@ import { useNavigate } from 'react-router-dom';
 import './CursoCard.css';
 
 const CursoCard = ({ curso }) => {
+  // ========================================
+  // 🛡️ VALIDACIÓN CRÍTICA - PREVIENE ERROR NULL
+  // ========================================
+  if (!curso || !curso._id) {
+    console.warn('CursoCard recibió un curso inválido:', curso);
+    return null; // No renderiza nada si curso es null
+  }
+
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
   const { usuario } = useAuth();
   const { convertirPrecio } = usePais();
   const navigate = useNavigate();
 
-  const yaComprado = usuario?.cursosComprados?.some(
-    c => c.curso._id === curso._id || c.curso === curso._id
-  );
+  // ========================================
+  // 🛡️ VALIDACIÓN SEGURA DE CURSOS COMPRADOS
+  // ========================================
+  const yaComprado = usuario?.cursosComprados?.some(c => {
+    if (!c || !c.curso) return false; // Protección contra null
+    const cursoId = typeof c.curso === 'object' ? c.curso._id : c.curso;
+    return cursoId === curso._id;
+  }) || false;
 
   const enCarrito = estaEnCarrito(curso._id);
 
