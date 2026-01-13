@@ -1,3 +1,548 @@
+.header {
+  background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  gap: 16px;
+}
+
+/* ========================================
+   LOGO
+======================================== */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.logo-icon {
+  width: 50px;
+  height: 50px;
+  background: transparent;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-text-img {
+  height: 35px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo:hover .logo-icon {
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 16px rgba(0, 255, 136, 0.4));
+}
+
+/* ========================================
+   NAVEGACIÓN
+======================================== */
+
+.nav {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nav-link {
+  padding: 10px 20px;
+  color: var(--gris-claro);
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: var(--acento);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--blanco);
+  background: rgba(0, 255, 136, 0.05);
+}
+
+.nav-link:hover::after {
+  width: 60%;
+}
+
+/* ========================================
+   ACCIONES DEL HEADER
+======================================== */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Botón Admin */
+.btn-admin-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--acento);
+  color: var(--acento);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.btn-admin-header:hover {
+  background: var(--acento);
+  color: var(--negro);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+/* Carrito */
+.btn-carrito {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--gris-oscuro);
+  border: 1px solid var(--gris);
+  border-radius: 10px;
+  color: var(--blanco);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.btn-carrito:hover {
+  background: var(--gris);
+  border-color: var(--acento);
+  transform: translateY(-2px);
+}
+
+.carrito-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: var(--negro);
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--negro);
+}
+
+/* ========================================
+   MENÚ DE USUARIO
+======================================== */
+
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--gris-oscuro);
+  border: 1px solid var(--gris);
+  border-radius: 10px;
+  color: var(--blanco);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-btn:hover {
+  background: var(--gris);
+  border-color: var(--acento);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--negro);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.chevron.rotado {
+  transform: rotate(180deg);
+}
+
+/* Dropdown de usuario */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 240px;
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-dropdown-header {
+  padding: 16px;
+  background: var(--gris-oscuro);
+}
+
+.user-dropdown-header strong {
+  display: block;
+  color: var(--blanco);
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.user-dropdown-header span {
+  color: var(--gris-claro);
+  font-size: 0.85rem;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background: var(--gris-oscuro);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  color: var(--gris-claro);
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+  background: var(--gris-oscuro);
+  color: var(--blanco);
+}
+
+.dropdown-item svg {
+  color: var(--acento);
+}
+
+.dropdown-item.logout {
+  color: var(--rojo);
+}
+
+.dropdown-item.logout svg {
+  color: var(--rojo);
+}
+
+.dropdown-item.logout:hover {
+  background: rgba(255, 51, 102, 0.1);
+}
+
+/* ========================================
+   BOTONES DE AUTENTICACIÓN
+======================================== */
+
+.btn-login,
+.btn-registro {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-login {
+  color: var(--blanco);
+  background: transparent;
+  border: 1px solid var(--gris);
+}
+
+.btn-login:hover {
+  background: var(--gris-oscuro);
+  border-color: var(--acento);
+}
+
+.btn-registro {
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: var(--negro);
+  border: none;
+}
+
+.btn-registro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+}
+
+/* ========================================
+   MENÚ MÓVIL TOGGLE
+======================================== */
+
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--gris-oscuro);
+  border: 1px solid var(--gris);
+  border-radius: 10px;
+  color: var(--blanco);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+  background: var(--gris);
+  border-color: var(--acento);
+}
+
+/* ========================================
+   📱 RESPONSIVE MÓVIL
+======================================== */
+
+@media (max-width: 1024px) {
+  .user-name {
+    max-width: 80px;
+  }
+  
+  .btn-admin-header {
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 14px 0;
+  }
+
+  /* Logo tamaño medio en móvil */
+  .logo {
+    gap: 8px;
+  }
+
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .logo-text-img {
+    height: 28px;
+  }
+
+  /* ========================================
+     🎯 OCULTAR TODO MENOS ESENCIALES
+  ======================================== */
+  
+  /* Ocultar navegación principal en móvil */
+  .nav {
+    display: none;
+  }
+
+  /* Ocultar COMPLETAMENTE el selector de país en móvil */
+  .header-actions > :first-child {
+    display: none !important;
+  }
+
+  /* Ocultar botón admin en móvil (lo pondremos en el menú) */
+  .btn-admin-header {
+    display: none !important;
+  }
+
+  /* Ocultar menú de usuario completo en móvil */
+  .user-menu-wrapper {
+    display: none !important;
+  }
+
+  /* Ocultar botones de login/registro en header */
+  .btn-login,
+  .btn-registro {
+    display: none !important;
+  }
+
+  /* Mostrar SOLO: Carrito + Menú Toggle */
+  .header-actions {
+    gap: 8px;
+  }
+
+  /* Mostrar menú toggle */
+  .menu-toggle {
+    display: flex;
+  }
+
+  /* ========================================
+     🍔 MENÚ HAMBURGUESA ACTIVO
+  ======================================== */
+  
+  .nav.activo {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 73px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--negro);
+    border-top: 1px solid var(--gris-oscuro);
+    padding: 20px;
+    gap: 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    z-index: 999;
+  }
+
+  /* Links de navegación en el menú */
+  .nav.activo .nav-link {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .nav.activo .nav-link:hover {
+    background: var(--gris-oscuro);
+  }
+
+  /* ========================================
+     ⚠️ NO TOCAR EL CARRITO - SIEMPRE VISIBLE
+  ======================================== */
+  .btn-carrito {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 12px 0;
+  }
+
+  /* Logo más pequeño en pantallas muy pequeñas */
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .logo-text-img {
+    height: 24px;
+  }
+
+  /* Reducir tamaño de botones */
+  .btn-carrito,
+  .menu-toggle {
+    width: 42px;
+    height: 42px;
+  }
+
+  /* Ajustar menú hamburguesa para pantallas pequeñas */
+  .nav.activo {
+    top: 67px;
+    padding: 16px;
+  }
+
+  .nav.activo .nav-link {
+    padding: 14px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  /* Ocultar texto del logo en pantallas muy pequeñas */
+  .logo-text-img {
+    display: none;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .btn-carrito,
+  .menu-toggle {
+    width: 40px;
+    height: 40px;
+  }
+}
+
 /* ========================================
    🍔 MENÚ MÓVIL FULLSCREEN
 ======================================== */
