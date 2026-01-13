@@ -2,14 +2,16 @@
   min-height: 100vh;
 }
 
-/* Hero Section */
+/* ========================================
+   HERO SECTION
+======================================== */
 .hero {
   position: relative;
   min-height: 90vh;
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding: 60px 0;
+  padding: 80px 0 60px;
 }
 
 .hero-bg {
@@ -89,6 +91,7 @@
 
 .stat svg {
   color: var(--acento);
+  flex-shrink: 0;
 }
 
 .stat div {
@@ -122,6 +125,8 @@
   gap: 10px;
   transition: all 0.3s ease;
   text-decoration: none;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-primary, .btn-cta {
@@ -147,9 +152,8 @@
 }
 
 /* ========================================
-   🎯 HERO VISUAL - GRID SIMÉTRICO
+   HERO VISUAL - GRID DE CARACTERÍSTICAS
 ======================================== */
-
 .hero-visual {
   position: relative;
   height: 550px;
@@ -164,7 +168,6 @@
   padding: 20px;
 }
 
-/* Tarjetas de características */
 .feature-card {
   background: rgba(26, 26, 26, 0.8);
   backdrop-filter: blur(10px);
@@ -185,7 +188,6 @@
   animation: cardAppear 0.6s ease-out forwards;
 }
 
-/* Delays escalonados para cada card */
 .feature-1 { animation-delay: 0.1s; }
 .feature-2 { animation-delay: 0.2s; }
 .feature-3 { animation-delay: 0.3s; }
@@ -200,7 +202,22 @@
   }
 }
 
-/* Efecto de brillo en hover */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .feature-card::before {
   content: '';
   position: absolute;
@@ -208,12 +225,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 255, 136, 0.1),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
   transition: left 0.5s ease;
 }
 
@@ -221,7 +233,6 @@
   left: 100%;
 }
 
-/* Hover states */
 .feature-card:hover {
   transform: translateY(-12px) scale(1.05);
   border-color: var(--acento);
@@ -242,7 +253,6 @@
   color: var(--acento);
 }
 
-/* Icono de la característica */
 .feature-icon {
   width: 60px;
   height: 60px;
@@ -253,30 +263,6 @@
   justify-content: center;
   color: var(--acento);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-/* Efecto de pulso en el icono */
-.feature-icon::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  background: var(--acento);
-  opacity: 0;
-  animation: iconPulse 2s ease-in-out infinite;
-}
-
-@keyframes iconPulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 0.1;
-  }
 }
 
 .feature-card h4 {
@@ -294,7 +280,9 @@
   line-height: 1.4;
 }
 
-/* Características */
+/* ========================================
+   CARACTERÍSTICAS
+======================================== */
 .caracteristicas {
   background: var(--negro-claro);
   border-top: 1px solid var(--gris-oscuro);
@@ -339,7 +327,9 @@
   line-height: 1.6;
 }
 
-/* Sección */
+/* ========================================
+   SECCIONES
+======================================== */
 .section-header h2 {
   font-size: 2.5rem;
   font-weight: 700;
@@ -365,9 +355,8 @@
 }
 
 /* ========================================
-   🔥 ANIMACIONES BRUTALES - LOGO
+   POR QUÉ ELEGIRNOS
 ======================================== */
-
 .por-que {
   background: var(--negro-claro);
   overflow: hidden;
@@ -380,7 +369,6 @@
   align-items: center;
 }
 
-/* Contenedor principal con gradiente oscuro */
 .imagen-placeholder {
   background: radial-gradient(circle at center, #1a3a2e 0%, var(--negro) 100%);
   border-radius: 24px;
@@ -393,7 +381,6 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
-/* Container del logo animado */
 .logo-animated-container {
   position: relative;
   width: 200px;
@@ -403,47 +390,32 @@
   justify-content: center;
 }
 
-/* Logo principal con animaciones BRUTALES */
 .logo-brutal {
   width: 150px;
   height: 150px;
   object-fit: contain;
   position: relative;
   z-index: 10;
-  filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6))
-          drop-shadow(0 0 40px rgba(0, 255, 136, 0.4));
-  animation: logoFloat 4s ease-in-out infinite,
-             logoPulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6)) drop-shadow(0 0 40px rgba(0, 255, 136, 0.4));
+  animation: logoFloat 4s ease-in-out infinite, logoPulse 2s ease-in-out infinite;
 }
 
 @keyframes logoFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-15px) rotate(5deg);
-  }
-  50% {
-    transform: translateY(0) rotate(0deg);
-  }
-  75% {
-    transform: translateY(-10px) rotate(-5deg);
-  }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-15px) rotate(5deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(-10px) rotate(-5deg); }
 }
 
 @keyframes logoPulse {
   0%, 100% {
-    filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6))
-            drop-shadow(0 0 40px rgba(0, 255, 136, 0.4));
+    filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6)) drop-shadow(0 0 40px rgba(0, 255, 136, 0.4));
   }
   50% {
-    filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.8))
-            drop-shadow(0 0 60px rgba(0, 255, 136, 0.6))
-            drop-shadow(0 0 80px rgba(0, 255, 136, 0.3));
+    filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.8)) drop-shadow(0 0 60px rgba(0, 255, 136, 0.6)) drop-shadow(0 0 80px rgba(0, 255, 136, 0.3));
   }
 }
 
-/* Anillos de brillo girando */
 .glow-ring {
   position: absolute;
   border: 2px solid transparent;
@@ -474,15 +446,10 @@
 }
 
 @keyframes rotateRing {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-/* Partículas flotantes alrededor del logo */
 .particles {
   position: absolute;
   width: 100%;
@@ -501,7 +468,6 @@
   animation: particleFloat 3s ease-in-out infinite;
 }
 
-/* Posiciones de partículas en círculo */
 .particle-1 { top: 0%; left: 50%; animation-delay: 0s; }
 .particle-2 { top: 10%; left: 85%; animation-delay: 0.25s; }
 .particle-3 { top: 35%; left: 100%; animation-delay: 0.5s; }
@@ -526,37 +492,6 @@
   }
 }
 
-/* Efecto de ondas expansivas */
-.imagen-placeholder::before,
-.imagen-placeholder::after {
-  content: '';
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border: 2px solid var(--acento);
-  border-radius: 50%;
-  opacity: 0;
-  animation: ripple 4s ease-out infinite;
-}
-
-.imagen-placeholder::after {
-  animation-delay: 2s;
-}
-
-@keyframes ripple {
-  0% {
-    width: 100px;
-    height: 100px;
-    opacity: 0.8;
-  }
-  100% {
-    width: 400px;
-    height: 400px;
-    opacity: 0;
-  }
-}
-
-/* Texto con animación de entrada */
 .por-que-texto h2 {
   font-size: 2.5rem;
   margin-bottom: 32px;
@@ -570,7 +505,6 @@
   gap: 24px;
 }
 
-/* Items de beneficios con animación */
 .beneficio-item {
   display: flex;
   gap: 16px;
@@ -580,7 +514,6 @@
   transition: all 0.4s ease;
 }
 
-/* Hover effect en cada beneficio */
 .beneficio-item:hover {
   transform: translateX(8px);
 }
@@ -590,7 +523,6 @@
   box-shadow: 0 4px 16px rgba(0, 255, 136, 0.4);
 }
 
-/* Animación cuando entra en viewport */
 .animate-on-scroll.animate-in .beneficio-item {
   opacity: 1;
   transform: translateX(0);
@@ -608,7 +540,6 @@
   }
 }
 
-/* Check con animación */
 .check {
   width: 30px;
   height: 30px;
@@ -641,7 +572,6 @@
   line-height: 1.6;
 }
 
-/* Botón con efecto pulse */
 .btn-pulse {
   animation: btnPulse 2s ease-in-out infinite;
 }
@@ -655,7 +585,6 @@
   }
 }
 
-/* Animación de entrada general */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(40px);
@@ -667,7 +596,9 @@
   transform: translateY(0);
 }
 
-/* CTA Final */
+/* ========================================
+   CTA FINAL
+======================================== */
 .cta-final {
   background: linear-gradient(135deg, var(--gris-oscuro) 0%, var(--negro-claro) 100%);
   border-top: 1px solid var(--gris-oscuro);
@@ -691,8 +622,10 @@
 }
 
 /* ========================================
-   📱 RESPONSIVE - TABLET (769px - 1024px)
+   📱 RESPONSIVE - TABLET Y MÓVIL
 ======================================== */
+
+/* TABLET (769px - 1024px) */
 @media (max-width: 1024px) {
   .hero-content {
     grid-template-columns: 1fr;
@@ -706,6 +639,7 @@
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+    padding: 10px;
   }
 
   .por-que-content {
@@ -732,18 +666,17 @@
   .ring-3 { width: 210px; height: 210px; }
 }
 
-/* ========================================
-   📱 RESPONSIVE - MÓVIL (max 768px)
-======================================== */
+/* MÓVIL (max 768px) */
 @media (max-width: 768px) {
   /* Hero ajustes */
   .hero {
     min-height: auto;
-    padding: 40px 0;
+    padding: 60px 0 40px;
   }
 
   .hero-titulo {
     font-size: 2rem;
+    margin-bottom: 16px;
   }
 
   .hero-descripcion {
@@ -765,16 +698,26 @@
   }
 
   /* Botones más compactos */
-  .btn-primary, .btn-secondary, .btn-cta {
+  .btn-primary, .btn-secondary, .btn-cta, .btn-ver-mas {
     padding: 12px 24px;
     font-size: 1rem;
+    justify-content: center;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary {
+    width: 100%;
   }
 
   /* Grid de características 1 columna */
   .features-grid {
     grid-template-columns: 1fr;
     gap: 12px;
-    padding: 10px;
+    padding: 0;
   }
   
   .feature-card {
@@ -858,9 +801,7 @@
   }
 }
 
-/* ========================================
-   📱 RESPONSIVE - MÓVIL PEQUEÑO (max 480px)
-======================================== */
+/* MÓVIL PEQUEÑO (max 480px) */
 @media (max-width: 480px) {
   .hero-titulo {
     font-size: 1.75rem;
@@ -878,16 +819,6 @@
   
   .stat {
     width: 100%;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .btn-primary, .btn-secondary {
-    width: 100%;
-    justify-content: center;
   }
 
   .section-header h2 {
