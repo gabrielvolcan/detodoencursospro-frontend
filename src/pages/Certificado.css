@@ -1,77 +1,61 @@
+/* ========================================
+   IMPORTAR MONTSERRAT DE GOOGLE FONTS
+======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
 .certificado-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-  padding: 2rem 0;
+  background: var(--negro-claro);
+  padding: 20px;
 }
 
-.certificado-loading,
-.certificado-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-  color: var(--blanco);
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(0, 255, 136, 0.2);
-  border-top-color: var(--acento);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
+/* ========================================
+   HEADER CON BOTONES
+======================================== */
 .certificado-header {
-  max-width: 1200px;
-  margin: 0 auto 2rem;
-  padding: 0 2rem;
+  max-width: 1400px;
+  margin: 0 auto 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .btn-back {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: transparent;
-  border: 2px solid var(--gris-oscuro);
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--gris-oscuro);
   color: var(--blanco);
-  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--gris-medio);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .btn-back:hover {
-  border-color: var(--acento);
-  color: var(--acento);
+  background: var(--gris-medio);
+  transform: translateX(-4px);
 }
 
 .header-actions {
   display: flex;
-  gap: 1rem;
+  gap: 12px;
 }
 
-.btn-compartir,
-.btn-descargar {
+.btn-compartir, .btn-descargar {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  gap: 8px;
+  padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: none;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .btn-compartir {
@@ -88,11 +72,12 @@
 .btn-descargar {
   background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
+  border: none;
 }
 
 .btn-descargar:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
 }
 
 .btn-descargar:disabled {
@@ -101,267 +86,224 @@
 }
 
 /* ========================================
-   🎓 CERTIFICADO
+   CERTIFICADO CON IMAGEN DE FONDO
 ======================================== */
-
 .certificado-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
+  background: var(--negro);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .certificado-wrapper {
-  background: #ffffff;
-  aspect-ratio: 1.414;
-  max-width: 1000px;
-  margin: 0 auto;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  aspect-ratio: 16/9;
+  max-width: 1920px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
 }
 
-/* Borde decorativo */
-.certificado-border {
+.certificado-background {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ========================================
+   OVERLAY CON CAMPOS DINÁMICOS
+======================================== */
+.certificado-overlay {
   position: absolute;
-  inset: 20px;
-  border: 3px solid var(--acento);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
-.certificado-border::before {
-  content: '';
+/* Código de verificación - Superior derecha */
+.campo-codigo {
   position: absolute;
-  inset: 8px;
-  border: 1px solid var(--acento);
-  opacity: 0.3;
-}
-
-.border-corner {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--acento);
-}
-
-.border-corner.tl {
-  top: -3px;
-  left: -3px;
-  border-right: none;
-  border-bottom: none;
-}
-
-.border-corner.tr {
-  top: -3px;
-  right: -3px;
-  border-left: none;
-  border-bottom: none;
-}
-
-.border-corner.bl {
-  bottom: -3px;
-  left: -3px;
-  border-right: none;
-  border-top: none;
-}
-
-.border-corner.br {
-  bottom: -3px;
-  right: -3px;
-  border-left: none;
-  border-top: none;
-}
-
-/* Contenido */
-.certificado-content {
-  position: relative;
-  z-index: 1;
-  padding: 4rem 6rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.certificado-logo {
-  margin-bottom: 2rem;
-}
-
-.certificado-logo img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-}
-
-.certificado-titulo {
-  font-size: 3rem;
+  top: 8%;
+  right: 5%;
+  font-size: clamp(12px, 1.2vw, 18px);
   font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;
+}
+
+/* Nombre del estudiante - Centro sobre la línea */
+.campo-nombre {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(28px, 3.5vw, 56px);
+  font-weight: 800;
+  color: #ffffff;
+  text-align: center;
+  width: 80%;
+  font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
   letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.certificado-subtitulo {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 2rem;
-}
-
-.certificado-nombre {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--acento);
-  margin-bottom: 2rem;
-  border-bottom: 2px solid var(--acento);
-  padding-bottom: 0.5rem;
-  min-width: 400px;
-}
-
-.certificado-texto {
-  font-size: 1.1rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.certificado-curso {
-  font-size: 2rem;
+/* Nombre del curso - Párrafo inferior */
+.campo-curso {
+  position: absolute;
+  top: 68%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(16px, 1.8vw, 28px);
   font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 3rem;
-  max-width: 80%;
-}
-
-/* Detalles */
-.certificado-detalles {
-  display: flex;
-  gap: 3rem;
-  margin-bottom: 3rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.detalle-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: #666;
-}
-
-.detalle-item svg {
-  color: var(--acento);
-  flex-shrink: 0;
-}
-
-.detalle-item > div {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-}
-
-.detalle-label {
-  font-size: 0.85rem;
-  color: #999;
-}
-
-.detalle-valor {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-}
-
-/* Firma */
-.certificado-firma {
-  margin-bottom: 2rem;
-}
-
-.firma-linea {
-  width: 300px;
-  height: 2px;
-  background: #333;
-  margin: 0 auto 0.5rem;
-}
-
-.firma-texto {
+  color: #ffffff;
   text-align: center;
+  width: 85%;
+  line-height: 1.4;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.firma-nombre {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 0.25rem;
+/* Fecha - Inferior izquierda */
+.campo-fecha {
+  position: absolute;
+  bottom: 14%;
+  left: 16%;
+  font-size: clamp(14px, 1.5vw, 22px);
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.firma-cargo {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-/* Código */
-.certificado-codigo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #f5f5f5;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-  color: #666;
-}
-
-.certificado-codigo svg {
-  color: var(--acento);
-}
-
-.certificado-codigo strong {
-  color: #1a1a1a;
-  font-family: monospace;
-}
-
-/* Footer */
-.certificado-footer {
-  font-size: 0.9rem;
-  color: #999;
-}
-
-/* Info adicional */
+/* ========================================
+   INFO ADICIONAL
+======================================== */
 .certificado-info {
-  max-width: 1200px;
-  margin: 3rem auto 0;
-  padding: 0 2rem;
+  max-width: 1400px;
+  margin: 40px auto 0;
 }
 
 .info-card {
-  background: var(--negro-claro);
+  background: var(--negro);
   border: 1px solid var(--gris-oscuro);
   border-radius: 12px;
-  padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
+  padding: 32px;
 }
 
 .info-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
   color: var(--blanco);
-  margin-bottom: 1rem;
-  font-size: 1.3rem;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .info-card ul {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
 }
 
 .info-card li {
+  font-size: 1.1rem;
   color: var(--gris-claro);
-  font-size: 1rem;
+  padding: 12px;
+  background: var(--negro-claro);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
 }
 
-/* Responsive */
+.info-card li:hover {
+  background: var(--gris-oscuro);
+  transform: translateX(4px);
+}
+
+/* ========================================
+   ESTADOS DE CARGA Y ERROR
+======================================== */
+.certificado-loading {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.certificado-loading p {
+  font-size: 1.2rem;
+  color: var(--gris-claro);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.certificado-error {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  text-align: center;
+  padding: 40px;
+}
+
+.certificado-error h2 {
+  font-size: 2rem;
+  color: var(--blanco);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.certificado-error p {
+  font-size: 1.1rem;
+  color: var(--gris-claro);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.btn-volver {
+  padding: 16px 32px;
+  background: var(--acento);
+  color: var(--negro);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.btn-volver:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 1024px) {
+  .certificado-container {
+    padding: 20px;
+  }
+
+  .campo-nombre {
+    font-size: clamp(24px, 3vw, 40px);
+  }
+
+  .campo-curso {
+    font-size: clamp(14px, 1.6vw, 24px);
+  }
+}
+
 @media (max-width: 768px) {
   .certificado-header {
     flex-direction: column;
@@ -369,39 +311,32 @@
   }
 
   .header-actions {
-    justify-content: stretch;
-  }
-
-  .btn-compartir,
-  .btn-descargar {
-    flex: 1;
-  }
-
-  .certificado-content {
-    padding: 2rem;
-  }
-
-  .certificado-titulo {
-    font-size: 2rem;
-  }
-
-  .certificado-nombre {
-    font-size: 1.8rem;
-    min-width: auto;
-    max-width: 100%;
-  }
-
-  .certificado-curso {
-    font-size: 1.5rem;
-    max-width: 100%;
-  }
-
-  .certificado-detalles {
     flex-direction: column;
-    gap: 1rem;
   }
 
-  .firma-linea {
-    width: 200px;
+  .certificado-container {
+    padding: 16px;
+  }
+
+  .campo-codigo {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .campo-nombre {
+    font-size: clamp(20px, 2.5vw, 32px);
+  }
+
+  .campo-curso {
+    font-size: clamp(12px, 1.4vw, 20px);
+    width: 90%;
+  }
+
+  .campo-fecha {
+    font-size: clamp(12px, 1.3vw, 18px);
+  }
+
+  .info-card ul {
+    grid-template-columns: 1fr;
   }
 }

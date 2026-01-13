@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Download, Share2, ArrowLeft, Award, Calendar, Clock, BookOpen } from 'lucide-react';
+import { Download, Share2, ArrowLeft } from 'lucide-react';
 import { cursosAPI } from '../services/api';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -27,7 +27,6 @@ const Certificado = () => {
     } catch (error) {
       console.error('Error cargando certificado:', error);
       
-      // Mensajes de error más específicos
       if (error.response?.status === 403) {
         setError('No has comprado este curso');
       } else if (error.response?.status === 400) {
@@ -55,23 +54,22 @@ const Certificado = () => {
     setDescargando(true);
     try {
       const canvas = await html2canvas(certificadoRef.current, {
-        scale: 2,
+        scale: 3,
         logging: false,
         useCORS: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: null,
+        width: 1920,
+        height: 1080
       });
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4'
+        unit: 'px',
+        format: [1920, 1080]
       });
 
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, 'PNG', 0, 0, 1920, 1080);
       pdf.save(`Certificado-${certificado.nombreCurso.replace(/\s+/g, '-')}.pdf`);
     } catch (error) {
       console.error('Error generando PDF:', error);
@@ -96,7 +94,6 @@ const Certificado = () => {
         console.log('Error compartiendo:', error);
       }
     } else {
-      // Fallback: copiar al portapapeles
       navigator.clipboard.writeText(`${texto}\n${url}`);
       alert('¡Enlace copiado al portapapeles!');
     }
@@ -105,8 +102,8 @@ const Certificado = () => {
   const formatearFecha = (fecha) => {
     if (!fecha) return 'Fecha no disponible';
     return new Date(fecha).toLocaleDateString('es-ES', {
-      day: 'numeric',
-      month: 'long',
+      day: '2-digit',
+      month: '2-digit',
       year: 'numeric'
     });
   };
@@ -159,84 +156,36 @@ const Certificado = () => {
         </div>
       </div>
 
-      {/* Certificado */}
+      {/* Certificado con imagen de fondo */}
       <div className="certificado-container">
         <div className="certificado-wrapper" ref={certificadoRef}>
-          {/* Borde decorativo */}
-          <div className="certificado-border">
-            <div className="border-corner tl"></div>
-            <div className="border-corner tr"></div>
-            <div className="border-corner bl"></div>
-            <div className="border-corner br"></div>
-          </div>
-
-          {/* Contenido */}
-          <div className="certificado-content">
-            {/* Logo */}
-            <div className="certificado-logo">
-              <img src="/images/dtcisotipo.webp" alt="Logo" />
+          {/* Imagen de fondo */}
+          <img 
+            src="/images/certificado.png" 
+            alt="Certificado Template" 
+            className="certificado-background"
+          />
+          
+          {/* Campos dinámicos superpuestos */}
+          <div className="certificado-overlay">
+            {/* Código de verificación - Superior derecha */}
+            <div className="campo-codigo">
+              {certificado.codigoCertificado}
             </div>
 
-            {/* Título */}
-            <h1 className="certificado-titulo">Certificado de Finalización</h1>
-            <p className="certificado-subtitulo">Este documento certifica que</p>
-
-            {/* Nombre del estudiante */}
-            <h2 className="certificado-nombre">{certificado.nombreEstudiante}</h2>
-
-            {/* Texto */}
-            <p className="certificado-texto">
-              ha completado satisfactoriamente el curso
-            </p>
-
-            {/* Nombre del curso */}
-            <h3 className="certificado-curso">{certificado.nombreCurso}</h3>
-
-            {/* Detalles */}
-            <div className="certificado-detalles">
-              <div className="detalle-item">
-                <Calendar size={18} />
-                <div>
-                  <span className="detalle-label">Fecha de finalización</span>
-                  <span className="detalle-valor">{formatearFecha(certificado.fechaCompletado)}</span>
-                </div>
-              </div>
-              
-              <div className="detalle-item">
-                <Clock size={18} />
-                <div>
-                  <span className="detalle-label">Duración</span>
-                  <span className="detalle-valor">{certificado.duracionCurso}</span>
-                </div>
-              </div>
-              
-              <div className="detalle-item">
-                <BookOpen size={18} />
-                <div>
-                  <span className="detalle-label">Categoría</span>
-                  <span className="detalle-valor">{certificado.categoria}</span>
-                </div>
-              </div>
+            {/* Nombre del estudiante - Centro */}
+            <div className="campo-nombre">
+              {certificado.nombreEstudiante}
             </div>
 
-            {/* Firma digital */}
-            <div className="certificado-firma">
-              <div className="firma-linea"></div>
-              <div className="firma-texto">
-                <p className="firma-nombre">Detodo en Cursos</p>
-                <p className="firma-cargo">Plataforma de Educación Online</p>
-              </div>
+            {/* Nombre del curso - Párrafo inferior */}
+            <div className="campo-curso">
+              {certificado.nombreCurso}
             </div>
 
-            {/* Código de verificación */}
-            <div className="certificado-codigo">
-              <Award size={16} />
-              <span>Código de verificación: <strong>{certificado.codigoCertificado}</strong></span>
-            </div>
-
-            {/* Footer */}
-            <div className="certificado-footer">
-              <p>www.detodoencursos.com</p>
+            {/* Fecha - Inferior izquierda */}
+            <div className="campo-fecha">
+              {formatearFecha(certificado.fechaCompletado)}
             </div>
           </div>
         </div>
