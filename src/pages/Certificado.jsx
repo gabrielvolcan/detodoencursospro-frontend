@@ -57,7 +57,7 @@ const Certificado = () => {
         scale: 3,
         logging: false,
         useCORS: true,
-        backgroundColor: '#3a3a3a',
+        backgroundColor: null,
         width: 1920,
         height: 1080
       });
@@ -156,102 +156,38 @@ const Certificado = () => {
         </div>
       </div>
 
-      {/* Certificado diseñado con CSS puro */}
+      {/* Certificado con imagen de fondo */}
       <div className="certificado-container">
-        <div className="certificado-canvas" ref={certificadoRef}>
+        <div className="certificado-wrapper" ref={certificadoRef}>
+          {/* Imagen de fondo */}
+          <img 
+            src="/images/certificado.png" 
+            alt="Certificado Template" 
+            className="certificado-background"
+          />
           
-          {/* Formas geométricas decorativas */}
-          <div className="geometric-shapes">
-            {/* Triángulos y hexágonos izquierda */}
-            <div className="shape triangle-left"></div>
-            <div className="shape hexagon-left-top"></div>
-            <div className="shape hexagon-left-bottom"></div>
-            
-            {/* Hexágonos derecha */}
-            <div className="shape hexagon-right-top"></div>
-            <div className="shape hexagon-right-bottom"></div>
-            
-            {/* Formas verdes esquinas */}
-            <div className="shape green-corner-tl"></div>
-            <div className="shape green-corner-tr"></div>
-            <div className="shape green-corner-br"></div>
-            <div className="shape green-corner-bl"></div>
+          {/* Campos dinámicos superpuestos */}
+          <div className="certificado-overlay">
+            {/* Código de verificación - Superior derecha */}
+            <div className="campo-codigo">
+              {certificado.codigoCertificado}
+            </div>
+
+            {/* Nombre del estudiante - Centro */}
+            <div className="campo-nombre">
+              {certificado.nombreEstudiante}
+            </div>
+
+            {/* Nombre del curso - Debajo del nombre */}
+            <div className="campo-curso">
+              {certificado.nombreCurso}
+            </div>
+
+            {/* Fecha - Inferior izquierda */}
+            <div className="campo-fecha">
+              {formatearFecha(certificado.fechaCompletado)}
+            </div>
           </div>
-
-          {/* Logo superior izquierdo */}
-          <div className="cert-logo-top">
-            <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-              <g>
-                <path d="M32.5 10L50 20V40L32.5 50L15 40V20L32.5 10Z" fill="none" stroke="#00ff88" strokeWidth="2"/>
-                <rect x="20" y="15" width="10" height="30" fill="#ffffff"/>
-                <rect x="35" y="15" width="10" height="30" fill="#ffffff"/>
-                <rect x="27.5" y="35" width="10" height="10" fill="#00ff88"/>
-                <text x="65" y="30" fill="#00ff88" fontSize="18" fontWeight="700" fontFamily="Montserrat">Detodo</text>
-                <text x="65" y="48" fill="#ffffff" fontSize="16" fontWeight="400" fontFamily="Montserrat">Cursos</text>
-                <text x="65" y="58" fill="#cccccc" fontSize="8" fontFamily="Montserrat">¡Aprende lo que necesitas Hoy!</text>
-              </g>
-            </svg>
-          </div>
-
-          {/* Línea diagonal decorativa superior */}
-          <div className="diagonal-line-top"></div>
-
-          {/* Código de verificación - rectángulo verde claro */}
-          <div className="codigo-box">
-            <span className="codigo-text">{certificado.codigoCertificado}</span>
-          </div>
-
-          {/* Contenido principal */}
-          <div className="cert-content">
-            {/* Título principal */}
-            <h1 className="cert-titulo-principal">CERTIFICADO</h1>
-            <p className="cert-subtitulo">DE CURSO COMPLETADO</p>
-
-            {/* Texto de otorgamiento */}
-            <p className="cert-texto-otorga">Este certificado se otorga a:</p>
-
-            {/* Nombre del estudiante */}
-            <h2 className="cert-nombre-estudiante">{certificado.nombreEstudiante}</h2>
-            
-            {/* Línea decorativa */}
-            <div className="cert-linea-nombre"></div>
-
-            {/* Nombre del curso */}
-            <h3 className="cert-nombre-curso">{certificado.nombreCurso}</h3>
-
-            {/* Texto explicativo */}
-            <p className="cert-texto-explicativo">
-              Se otorga el presente certificado por haber completado satisfactoriamente el curso de<br />
-              {certificado.nombreCurso} aplicada a casos reales en el ámbito laboral
-            </p>
-          </div>
-
-          {/* Fecha inferior izquierda */}
-          <div className="cert-fecha-box">
-            <div className="fecha-valor">{formatearFecha(certificado.fechaCompletado)}</div>
-            <div className="fecha-linea"></div>
-            <div className="fecha-label">FECHA</div>
-          </div>
-
-          {/* Logo y plataforma inferior derecha */}
-          <div className="cert-logo-bottom">
-            <svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg">
-              <g>
-                <path d="M20 10L30 15V25L20 30L10 25V15L20 10Z" fill="none" stroke="#00ff88" strokeWidth="1.5"/>
-                <rect x="15" y="13" width="4" height="14" fill="#ffffff"/>
-                <rect x="21" y="13" width="4" height="14" fill="#ffffff"/>
-                <rect x="18" y="21" width="4" height="4" fill="#00ff88"/>
-                <text x="35" y="20" fill="#00ff88" fontSize="10" fontWeight="700" fontFamily="Montserrat">Detodo</text>
-                <text x="35" y="28" fill="#ffffff" fontSize="8" fontWeight="400" fontFamily="Montserrat">Cursos</text>
-                <text x="35" y="33" fill="#cccccc" fontSize="4" fontFamily="Montserrat">¡Aprende lo que necesitas Hoy!</text>
-              </g>
-            </svg>
-            <div className="plataforma-linea"></div>
-            <div className="plataforma-label">PLATAFORMA</div>
-          </div>
-
-          {/* Triángulo decorativo inferior central */}
-          <div className="triangulo-inferior"></div>
         </div>
       </div>
 
