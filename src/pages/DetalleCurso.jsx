@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Clock, Users, Star, ShoppingCart, Check, BookOpen, Award, Video, 
-  ChevronDown, ChevronUp, Zap, DollarSign, Target, TrendingUp, 
-  Sparkles, Rocket, Brain, Code
+  ChevronDown, ChevronUp, Zap, Target, Sparkles, Rocket
 } from 'lucide-react';
 import { cursosAPI } from '../services/api';
 import { useCarrito } from '../context/CarritoContext';
@@ -119,40 +118,6 @@ const DetalleCurso = () => {
   const enCarrito = estaEnCarrito(curso._id);
   const precioInfo = obtenerPrecio();
 
-  // Beneficios destacados
-  const beneficios = [
-    {
-      icono: <DollarSign size={32} />,
-      titulo: 'Monetiza desde el Día 1',
-      descripcion: 'Aprende a vender servicios de IA mientras estudias el curso'
-    },
-    {
-      icono: <Rocket size={32} />,
-      titulo: '22+ Agentes Listos para Vender',
-      descripcion: 'Cada agente es un producto que puedes vender a empresas'
-    },
-    {
-      icono: <Zap size={32} />,
-      titulo: 'Automatizaciones que se Pagan Solas',
-      descripcion: 'Cobra retainers mensuales por mantener sistemas automáticos'
-    },
-    {
-      icono: <TrendingUp size={32} />,
-      titulo: 'De Cero a Agencia de IA',
-      descripcion: 'Modelo de negocio completo paso a paso'
-    },
-    {
-      icono: <Code size={32} />,
-      titulo: 'Integra con Cualquier Herramienta',
-      descripcion: 'Make, n8n, WhatsApp, Meta Ads, OpenAI y más'
-    },
-    {
-      icono: <Target size={32} />,
-      titulo: 'Casos Reales de Monetización',
-      descripcion: 'Estrategias probadas para obtener tus primeros $1000'
-    }
-  ];
-
   return (
     <div className="detalle-curso-mejorado">
       {/* HERO IMPACTANTE */}
@@ -251,8 +216,8 @@ const DetalleCurso = () => {
       <div className="cta-principal">
         <div className="container">
           <div className="cta-content">
-            <h2>¿Listo para transformar tu carrera con IA?</h2>
-            <p>Únete a {estudiantesAnimados}+ estudiantes que ya están generando ingresos con IA</p>
+            <h2>¿Listo para transformar tu carrera?</h2>
+            <p>Únete a {estudiantesAnimados}+ estudiantes que ya están generando resultados</p>
             
             {!yaComprado && (
               <button 
@@ -282,32 +247,6 @@ const DetalleCurso = () => {
         </div>
       </div>
 
-      {/* BENEFICIOS DESTACADOS */}
-      <div className="beneficios-section">
-        <div className="container">
-          <h2 className="section-title">
-            <Brain size={32} />
-            ¿Por qué este curso cambiará tu carrera?
-          </h2>
-          
-          <div className="beneficios-grid">
-            {beneficios.map((beneficio, index) => (
-              <div 
-                key={index} 
-                className="beneficio-card"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="beneficio-icono">
-                  {beneficio.icono}
-                </div>
-                <h3>{beneficio.titulo}</h3>
-                <p>{beneficio.descripcion}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* LO QUE APRENDERÁS */}
       <div className="aprenderas-section-mejorada">
         <div className="container">
@@ -319,27 +258,27 @@ const DetalleCurso = () => {
           <div className="aprenderas-grid-mejorada">
             <div className="aprenderas-item-mejorado">
               <Check size={24} />
-              <span>Crear y vender chatbots de IA a empresas por $500-$2000 USD</span>
+              <span>Dominar todas las herramientas y técnicas del curso</span>
             </div>
             <div className="aprenderas-item-mejorado">
               <Check size={24} />
-              <span>Automatizar procesos con Make y n8n para cobrar retainers mensuales</span>
+              <span>Aplicar conocimientos en proyectos reales</span>
             </div>
             <div className="aprenderas-item-mejorado">
               <Check size={24} />
-              <span>Desarrollar 22+ agentes especializados listos para comercializar</span>
+              <span>Desarrollar habilidades profesionales avanzadas</span>
             </div>
             <div className="aprenderas-item-mejorado">
               <Check size={24} />
-              <span>Integrar ChatGPT con WhatsApp, emails y redes sociales</span>
+              <span>Obtener certificación al completar el curso</span>
             </div>
             <div className="aprenderas-item-mejorado">
               <Check size={24} />
-              <span>Crear páginas web con IA y monetizarlas con ads y afiliados</span>
+              <span>Acceso a recursos y materiales exclusivos</span>
             </div>
             <div className="aprenderas-item-mejorado">
               <Check size={24} />
-              <span>Lanzar tu propia agencia de servicios de IA en 30 días</span>
+              <span>Soporte continuo y actualizaciones</span>
             </div>
           </div>
         </div>
@@ -350,12 +289,12 @@ const DetalleCurso = () => {
         <div className="container">
           <h2 className="section-title">
             <BookOpen size={32} />
-            Contenido del Curso (23+ horas)
+            Contenido del Curso
           </h2>
 
-          {curso.contenido && curso.contenido.length > 0 ? (
+          {curso.temario && curso.temario.length > 0 ? (
             <div className="modulos-lista">
-              {curso.contenido.map((modulo, index) => (
+              {curso.temario.map((modulo, index) => (
                 <div key={index} className="modulo-card">
                   <button 
                     className="modulo-header-btn"
@@ -366,7 +305,7 @@ const DetalleCurso = () => {
                       <div>
                         <h3>Módulo {index + 1}: {modulo.titulo}</h3>
                         <span className="modulo-duracion">
-                          {modulo.videos?.length || 0} lecciones
+                          {modulo.temas?.length || 0} lecciones
                         </span>
                       </div>
                     </div>
@@ -376,12 +315,12 @@ const DetalleCurso = () => {
                   {moduloExpandido === index && (
                     <div className="modulo-contenido-expandido">
                       <p className="modulo-descripcion">{modulo.descripcion}</p>
-                      {modulo.videos && modulo.videos.length > 0 && (
+                      {modulo.temas && modulo.temas.length > 0 && (
                         <div className="videos-lista">
-                          {modulo.videos.map((video, vIndex) => (
+                          {modulo.temas.map((tema, vIndex) => (
                             <div key={vIndex} className="video-item">
                               <Video size={16} />
-                              <span>{video.titulo}</span>
+                              <span>{tema.titulo}</span>
                             </div>
                           ))}
                         </div>
@@ -394,7 +333,7 @@ const DetalleCurso = () => {
           ) : (
             <div className="temario-placeholder">
               <BookOpen size={64} />
-              <p>El temario detallado incluye más de 100 lecciones prácticas</p>
+              <p>El temario detallado incluye lecciones prácticas y teóricas</p>
             </div>
           )}
         </div>
@@ -405,7 +344,7 @@ const DetalleCurso = () => {
         <div className="container">
           <div className="cta-content-small">
             <h3>¿Tienes dudas? Es tu momento</h3>
-            <p>Únete a {estudiantesAnimados}+ estudiantes generando ingresos con IA</p>
+            <p>Únete a {estudiantesAnimados}+ estudiantes</p>
             
             {!yaComprado && !enCarrito && (
               <button 
