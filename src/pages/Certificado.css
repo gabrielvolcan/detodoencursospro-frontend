@@ -1,5 +1,5 @@
 /* ========================================
-   IMPORTAR MONTSERRAT DE GOOGLE FONTS
+   IMPORTAR MONTSERRAT
 ======================================== */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
 
@@ -86,7 +86,7 @@
 }
 
 /* ========================================
-   CERTIFICADO CON IMAGEN DE FONDO
+   CANVAS DEL CERTIFICADO
 ======================================== */
 .certificado-container {
   max-width: 1400px;
@@ -97,89 +97,423 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.certificado-wrapper {
+.certificado-canvas {
   position: relative;
   width: 100%;
   aspect-ratio: 16/9;
   max-width: 1920px;
   margin: 0 auto;
-  overflow: hidden;
+  background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
   border-radius: 12px;
-}
-
-.certificado-background {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
+  overflow: hidden;
 }
 
 /* ========================================
-   OVERLAY CON CAMPOS DINÁMICOS
+   FORMAS GEOMÉTRICAS DECORATIVAS
 ======================================== */
-.certificado-overlay {
+.geometric-shapes {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
 }
 
-/* Código de verificación - Superior derecha sobre rectángulo verde */
-.campo-codigo {
+.shape {
   position: absolute;
-  top: 11%;
-  right: 7%;
-  font-size: clamp(10px, 1vw, 16px);
-  font-weight: 700;
-  color: #000000;
-  padding: 0;
+}
+
+/* Triángulo izquierda superior */
+.triangle-left {
+  width: 0;
+  height: 0;
+  border-left: 120px solid transparent;
+  border-right: 0;
+  border-bottom: 150px solid #c0c0c0;
+  top: 20%;
+  left: 3%;
+  opacity: 0.8;
+}
+
+/* Hexágonos izquierda */
+.hexagon-left-top {
+  width: 100px;
+  height: 58px;
+  background: #5a9d6f;
+  position: relative;
+  top: 28%;
+  left: 8%;
+}
+
+.hexagon-left-top::before {
+  content: "";
+  position: absolute;
+  top: -29px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 29px solid #5a9d6f;
+}
+
+.hexagon-left-top::after {
+  content: "";
+  position: absolute;
+  bottom: -29px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-top: 29px solid #5a9d6f;
+}
+
+.hexagon-left-bottom {
+  width: 140px;
+  height: 81px;
+  background: #d0d0d0;
+  position: relative;
+  bottom: 8%;
+  left: 6%;
+}
+
+.hexagon-left-bottom::before {
+  content: "";
+  position: absolute;
+  top: -40.5px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 70px solid transparent;
+  border-right: 70px solid transparent;
+  border-bottom: 40.5px solid #d0d0d0;
+}
+
+.hexagon-left-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: -40.5px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 70px solid transparent;
+  border-right: 70px solid transparent;
+  border-top: 40.5px solid #d0d0d0;
+}
+
+/* Hexágonos derecha */
+.hexagon-right-top {
+  width: 120px;
+  height: 69px;
+  background: #d0d0d0;
+  position: relative;
+  top: 32%;
+  right: 6%;
+}
+
+.hexagon-right-top::before {
+  content: "";
+  position: absolute;
+  top: -34.5px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 34.5px solid #d0d0d0;
+}
+
+.hexagon-right-top::after {
+  content: "";
+  position: absolute;
+  bottom: -34.5px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-top: 34.5px solid #d0d0d0;
+}
+
+.hexagon-right-bottom {
+  width: 160px;
+  height: 92px;
+  background: #c0c0c0;
+  position: relative;
+  bottom: 5%;
+  right: 3%;
+}
+
+.hexagon-right-bottom::before {
+  content: "";
+  position: absolute;
+  top: -46px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 80px solid transparent;
+  border-right: 80px solid transparent;
+  border-bottom: 46px solid #c0c0c0;
+}
+
+.hexagon-right-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: -46px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 80px solid transparent;
+  border-right: 80px solid transparent;
+  border-top: 46px solid #c0c0c0;
+}
+
+/* Formas verdes en esquinas */
+.green-corner-tl {
+  width: 200px;
+  height: 200px;
+  background: #5a9d6f;
+  top: -100px;
+  left: -100px;
+  border-radius: 0 0 100% 0;
+  opacity: 0.6;
+}
+
+.green-corner-tr {
+  width: 250px;
+  height: 80px;
+  background: linear-gradient(90deg, #a8d5ba 0%, transparent 100%);
+  top: 0;
+  right: 0;
+  border-radius: 0 0 0 50px;
+}
+
+.green-corner-br {
+  width: 300px;
+  height: 150px;
+  background: #5a9d6f;
+  bottom: -75px;
+  right: -150px;
+  border-radius: 100% 0 0 0;
+  opacity: 0.5;
+}
+
+.green-corner-bl {
+  width: 0;
+  height: 0;
+  border-left: 200px solid transparent;
+  border-bottom: 300px solid #5a9d6f;
+  bottom: 0;
+  left: 0;
+  opacity: 0.5;
+}
+
+/* ========================================
+   LOGO SUPERIOR IZQUIERDO
+======================================== */
+.cert-logo-top {
+  position: absolute;
+  top: 4%;
+  left: 4%;
+  width: 200px;
+  z-index: 10;
+}
+
+.cert-logo-top svg {
+  width: 100%;
+  height: auto;
+}
+
+/* ========================================
+   LÍNEA DIAGONAL SUPERIOR
+======================================== */
+.diagonal-line-top {
+  position: absolute;
+  top: 0;
+  left: 22%;
+  width: 3px;
+  height: 180px;
+  background: linear-gradient(180deg, transparent 0%, #ffffff 50%, transparent 100%);
+  transform: rotate(20deg);
+  z-index: 5;
+}
+
+/* ========================================
+   CÓDIGO DE VERIFICACIÓN
+======================================== */
+.codigo-box {
+  position: absolute;
+  top: 8%;
+  right: 5%;
+  background: #a8d5ba;
+  padding: 12px 24px;
+  border-radius: 12px;
+  z-index: 10;
+}
+
+.codigo-text {
   font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
   letter-spacing: 0.5px;
 }
 
-/* Nombre del estudiante - Centro grande */
-.campo-nombre {
-  position: absolute;
-  top: 48%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: clamp(32px, 4vw, 64px);
+/* ========================================
+   CONTENIDO PRINCIPAL
+======================================== */
+.cert-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding-top: 18%;
+}
+
+.cert-titulo-principal {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 96px;
   font-weight: 800;
   color: #ffffff;
-  text-align: center;
-  width: 70%;
-  font-family: 'Montserrat', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 3px;
+  margin: 0;
+  letter-spacing: 8px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Nombre del curso - Debajo del nombre del estudiante */
-.campo-curso {
-  position: absolute;
-  top: 66%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: clamp(18px, 2vw, 32px);
-  font-weight: 700;
-  color: #ffffff;
-  text-align: center;
-  width: 80%;
+.cert-subtitulo {
   font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 8px 0 40px;
+  letter-spacing: 4px;
 }
 
-/* Fecha - Inferior izquierda */
-.campo-fecha {
-  position: absolute;
-  bottom: 16%;
-  left: 13%;
-  font-size: clamp(16px, 1.8vw, 28px);
+.cert-texto-otorga {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.cert-nombre-estudiante {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 56px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.cert-linea-nombre {
+  width: 600px;
+  height: 2px;
+  background: #ffffff;
+  margin: 20px auto;
+}
+
+.cert-nombre-curso {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 32px;
   font-weight: 700;
   color: #ffffff;
-  text-align: center;
+  margin: 20px 0;
+}
+
+.cert-texto-explicativo {
   font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #cccccc;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ========================================
+   FECHA INFERIOR IZQUIERDA
+======================================== */
+.cert-fecha-box {
+  position: absolute;
+  bottom: 12%;
+  left: 8%;
+  z-index: 10;
+  text-align: center;
+}
+
+.fecha-valor {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.fecha-linea {
+  width: 180px;
+  height: 2px;
+  background: #ffffff;
+  margin: 0 auto 8px;
+}
+
+.fecha-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+/* ========================================
+   LOGO Y PLATAFORMA INFERIOR DERECHA
+======================================== */
+.cert-logo-bottom {
+  position: absolute;
+  bottom: 12%;
+  right: 8%;
+  z-index: 10;
+  text-align: center;
+}
+
+.cert-logo-bottom svg {
+  width: 100px;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.plataforma-linea {
+  width: 150px;
+  height: 2px;
+  background: #ffffff;
+  margin: 0 auto 8px;
+}
+
+.plataforma-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+/* ========================================
+   TRIÁNGULO DECORATIVO INFERIOR
+======================================== */
+.triangulo-inferior {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-bottom: 150px solid #5a9d6f;
+  opacity: 0.4;
+  z-index: 1;
 }
 
 /* ========================================
@@ -288,16 +622,20 @@
    RESPONSIVE
 ======================================== */
 @media (max-width: 1024px) {
-  .certificado-container {
-    padding: 20px;
+  .cert-titulo-principal {
+    font-size: 72px;
   }
-
-  .campo-nombre {
-    font-size: clamp(28px, 3.5vw, 48px);
+  
+  .cert-nombre-estudiante {
+    font-size: 42px;
   }
-
-  .campo-curso {
-    font-size: clamp(16px, 1.8vw, 28px);
+  
+  .cert-nombre-curso {
+    font-size: 24px;
+  }
+  
+  .cert-linea-nombre {
+    width: 400px;
   }
 }
 
@@ -314,49 +652,36 @@
   .certificado-container {
     padding: 16px;
   }
-
-  .campo-codigo {
-    font-size: 8px;
-    top: 10%;
-    right: 5%;
+  
+  .cert-titulo-principal {
+    font-size: 48px;
   }
-
-  .campo-nombre {
-    font-size: clamp(24px, 3vw, 36px);
-    top: 47%;
+  
+  .cert-subtitulo {
+    font-size: 18px;
   }
-
-  .campo-curso {
-    font-size: clamp(14px, 1.6vw, 22px);
-    width: 85%;
-    top: 65%;
+  
+  .cert-nombre-estudiante {
+    font-size: 32px;
   }
-
-  .campo-fecha {
-    font-size: clamp(14px, 1.5vw, 20px);
-    bottom: 15%;
-    left: 10%;
+  
+  .cert-nombre-curso {
+    font-size: 20px;
   }
-
+  
+  .cert-linea-nombre {
+    width: 300px;
+  }
+  
+  .codigo-text {
+    font-size: 10px;
+  }
+  
+  .fecha-valor {
+    font-size: 20px;
+  }
+  
   .info-card ul {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .campo-codigo {
-    font-size: 7px;
-  }
-
-  .campo-nombre {
-    font-size: clamp(20px, 2.5vw, 28px);
-  }
-
-  .campo-curso {
-    font-size: clamp(12px, 1.4vw, 18px);
-  }
-
-  .campo-fecha {
-    font-size: clamp(12px, 1.3vw, 16px);
   }
 }
