@@ -25,8 +25,25 @@ const Certificado = () => {
       const { data } = await cursosAPI.obtenerCertificado(cursoId);
       setCertificado(data);
     } catch (error) {
-      setError(error.response?.data?.error || 'Error cargando certificado');
-      setTimeout(() => navigate('/mis-cursos-aprender'), 3000);
+      console.error('Error cargando certificado:', error);
+      
+      // Mensajes de error más específicos
+      if (error.response?.status === 403) {
+        setError('No has comprado este curso');
+      } else if (error.response?.status === 400) {
+        const progreso = error.response?.data?.progreso;
+        if (progreso) {
+          setError(`Debes completar el curso para obtener el certificado. Progreso: ${progreso.videosVistos}/${progreso.totalVideos} videos vistos.`);
+        } else {
+          setError('Debes completar el curso para obtener el certificado');
+        }
+      } else if (error.response?.status === 404) {
+        setError('Curso no encontrado');
+      } else {
+        setError(error.response?.data?.error || 'Error cargando certificado');
+      }
+      
+      setTimeout(() => navigate('/mis-cursos-aprender'), 4000);
     } finally {
       setCargando(false);
     }
@@ -86,6 +103,7 @@ const Certificado = () => {
   };
 
   const formatearFecha = (fecha) => {
+    if (!fecha) return 'Fecha no disponible';
     return new Date(fecha).toLocaleDateString('es-ES', {
       day: 'numeric',
       month: 'long',
@@ -105,7 +123,8 @@ const Certificado = () => {
   if (error) {
     return (
       <div className="certificado-error">
-        <p>{error}</p>
+        <h2>⚠️ {error}</h2>
+        <p>Serás redirigido a Mis Cursos en unos segundos...</p>
         <button onClick={() => navigate('/mis-cursos-aprender')} className="btn-volver">
           Volver a Mis Cursos
         </button>
