@@ -590,13 +590,11 @@ td {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5000; /* 🔧 FIX CRÍTICO: ya no bloquea el header */
+  z-index: 1000;
   padding: 20px;
 }
 
 .modal-content {
-  position: relative; /* 🔧 FIX: asegura clicks correctos */
-  z-index: 5001;
   background: var(--fondo-tarjeta);
   border-radius: 12px;
   padding: 30px;
@@ -608,8 +606,6 @@ td {
 }
 
 .modal-content-large {
-  position: relative; /* 🔧 FIX */
-  z-index: 5001;
   background: var(--fondo-tarjeta);
   border-radius: 12px;
   padding: 30px;
@@ -688,7 +684,6 @@ td {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 230, 118, 0.3);
 }
-
 
 /* ========================================
    🆕 DETALLE DE VENTA
