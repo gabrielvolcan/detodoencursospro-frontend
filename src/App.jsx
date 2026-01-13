@@ -19,6 +19,8 @@ import RestablecerContraseña from './pages/RestablecerContraseña';
 import VerificarEmail from './pages/VerificarEmail';
 import Admin from './pages/Admin';
 import CursoForm from './pages/CursoForm';
+import Certificado from './pages/Certificado';
+
 
 // Componente para rutas privadas
 const PrivateRoute = ({ children }) => {
@@ -63,6 +65,7 @@ function App() {
                   <Route path="/checkout" element={<PrivateRoute><CheckoutManual /></PrivateRoute>} />
                   <Route path="/mis-compras" element={<PrivateRoute><MisCompras /></PrivateRoute>} />
                   <Route path="/mis-cursos-aprender" element={<PrivateRoute><MisCursos /></PrivateRoute>} />
+                  <Route path="/certificado/:cursoId" element={<PrivateRoute><Certificado /></PrivateRoute>} />
                   
                   {/* 🎥 Reproductor de curso */}
                   <Route path="/aprender/:cursoId" element={<PrivateRoute><AprendeCurso /></PrivateRoute>} />

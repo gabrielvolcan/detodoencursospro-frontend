@@ -39,6 +39,7 @@ export const cursosAPI = {
   eliminar: (id) => axios.delete(`/cursos/${id}`),
   obtenerCategorias: () => axios.get('/cursos/meta/categorias'),
   obtenerNiveles: () => axios.get('/cursos/meta/niveles'),
+obtenerCertificado: (id) => axios.get(`/cursos/${id}/certificado`),
   
   // 🎥 REPRODUCTOR DE VIDEOS
   obtenerParaAprender: (id) => axios.get(`/cursos/${id}/aprender`),
@@ -79,5 +80,6 @@ export const adminAPI = {
   // 🔔 Notificaciones
   obtenerContadorNotificaciones: () => axios.get('/admin/notificaciones/contador')
 };
+
 
 export default axios;
