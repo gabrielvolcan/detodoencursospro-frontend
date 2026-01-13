@@ -1,0 +1,150 @@
+.verificar-email-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.verificar-email-card {
+  background: #1e1e1e;
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 16px;
+  padding: 3rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.verificar-icono {
+  margin: 0 auto 2rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verificar-icono.verificando {
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+}
+
+.verificar-icono.exito {
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+}
+
+.verificar-icono.error {
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff4444;
+}
+
+.verificar-email-card h1 {
+  color: #fff;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.verificar-email-card p {
+  color: #aaa;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.redirect-msg {
+  color: #00ff88;
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.verificar-acciones {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-login-manual,
+.btn-registro,
+.btn-login {
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn-login-manual {
+  background: #00ff88;
+  color: #0a0a0a;
+  border: 2px solid #00ff88;
+}
+
+.btn-login-manual:hover {
+  background: transparent;
+  color: #00ff88;
+  transform: translateY(-2px);
+}
+
+.btn-registro {
+  background: transparent;
+  color: #00ff88;
+  border: 2px solid #00ff88;
+}
+
+.btn-registro:hover {
+  background: #00ff88;
+  color: #0a0a0a;
+  transform: translateY(-2px);
+}
+
+.btn-login {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #333;
+}
+
+.btn-login:hover {
+  border-color: #00ff88;
+  color: #00ff88;
+  transform: translateY(-2px);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .verificar-email-card {
+    padding: 2rem;
+  }
+
+  .verificar-email-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .verificar-acciones {
+    flex-direction: column;
+  }
+
+  .btn-login-manual,
+  .btn-registro,
+  .btn-login {
+    width: 100%;
+  }
+}

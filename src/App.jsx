@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Registro from './pages/Registro';
 import RecuperarContraseña from './pages/RecuperarContraseña';
 import RestablecerContraseña from './pages/RestablecerContraseña';
+import VerificarEmail from './pages/VerificarEmail';
 import Admin from './pages/Admin';
 import CursoForm from './pages/CursoForm';
 
@@ -52,6 +53,7 @@ function App() {
                   <Route path="/registro" element={<Registro />} />
                   <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
                   <Route path="/restablecer-contraseña/:token" element={<RestablecerContraseña />} />
+                  <Route path="/verificar-email/:token" element={<VerificarEmail />} />
                   
                   {/* ========================================
                       RUTAS PRIVADAS (requieren login)
