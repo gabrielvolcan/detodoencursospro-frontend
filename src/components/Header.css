@@ -368,6 +368,12 @@
   color: var(--blanco);
   cursor: pointer;
   flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+  background: var(--gris);
+  border-color: var(--acento);
 }
 
 /* ========================================
@@ -386,26 +392,56 @@
 
 @media (max-width: 768px) {
   .header-container {
-    padding: 12px 0;
+    padding: 14px 0;
   }
 
-  /* Logo más pequeño en móvil */
+  /* Logo tamaño medio en móvil */
   .logo {
     gap: 8px;
   }
 
   .logo-icon {
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
   }
 
   .logo-text-img {
-    height: 26px;
+    height: 28px;
   }
 
-  /* Ocultar navegación principal */
+  /* ========================================
+     🎯 OCULTAR TODO MENOS ESENCIALES
+  ======================================== */
+  
+  /* Ocultar navegación principal en móvil */
   .nav {
     display: none;
+  }
+
+  /* Ocultar COMPLETAMENTE el selector de país en móvil */
+  .header-actions > :first-child {
+    display: none !important;
+  }
+
+  /* Ocultar botón admin en móvil (lo pondremos en el menú) */
+  .btn-admin-header {
+    display: none !important;
+  }
+
+  /* Ocultar menú de usuario completo en móvil */
+  .user-menu-wrapper {
+    display: none !important;
+  }
+
+  /* Ocultar botones de login/registro en header */
+  .btn-login,
+  .btn-registro {
+    display: none !important;
+  }
+
+  /* Mostrar SOLO: Carrito + Menú Toggle */
+  .header-actions {
+    gap: 8px;
   }
 
   /* Mostrar menú toggle */
@@ -413,122 +449,96 @@
     display: flex;
   }
 
-  /* Navegación móvil activa */
+  /* ========================================
+     🍔 MENÚ HAMBURGUESA ACTIVO
+  ======================================== */
+  
   .nav.activo {
     display: flex;
     flex-direction: column;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 73px;
     left: 0;
     right: 0;
-    background: var(--negro-claro);
+    bottom: 0;
+    background: var(--negro);
     border-top: 1px solid var(--gris-oscuro);
-    border-bottom: 1px solid var(--gris-oscuro);
-    padding: 16px 20px;
-    gap: 4px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    gap: 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    z-index: 999;
   }
 
-  /* Ajustar acciones en móvil */
-  .header-actions {
-    gap: 6px;
+  /* Links de navegación en el menú */
+  .nav.activo .nav-link {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
   }
 
-  /* Ocultar nombre de usuario en móvil */
-  .user-name {
-    display: none;
+  .nav.activo .nav-link:hover {
+    background: var(--gris-oscuro);
   }
 
-  /* Ocultar texto del botón admin */
-  .btn-admin-header span {
-    display: none;
-  }
-
-  .btn-admin-header {
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    justify-content: center;
-  }
-
-  /* Botones de auth más pequeños */
-  .btn-login,
-  .btn-registro {
-    padding: 10px 14px;
-    font-size: 0.85rem;
-  }
-
-  /* User dropdown más angosto */
-  .user-dropdown {
-    min-width: 200px;
+  /* ========================================
+     ⚠️ NO TOCAR EL CARRITO - SIEMPRE VISIBLE
+  ======================================== */
+  .btn-carrito {
+    display: flex !important;
   }
 }
 
 @media (max-width: 480px) {
   .header-container {
-    padding: 10px 0;
+    padding: 12px 0;
   }
 
-  /* Logo aún más pequeño en pantallas muy pequeñas */
+  /* Logo más pequeño en pantallas muy pequeñas */
   .logo-icon {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
   }
 
   .logo-text-img {
-    height: 22px;
+    height: 24px;
   }
 
-  /* Reducir gap entre acciones */
-  .header-actions {
-    gap: 4px;
-  }
-
-  /* Botones más compactos */
+  /* Reducir tamaño de botones */
   .btn-carrito,
-  .btn-admin-header,
-  .user-btn,
   .menu-toggle {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
   }
 
-  .user-avatar {
-    width: 28px;
-    height: 28px;
-    font-size: 0.9rem;
+  /* Ajustar menú hamburguesa para pantallas pequeñas */
+  .nav.activo {
+    top: 67px;
+    padding: 16px;
   }
 
-  /* Botones de auth aún más pequeños */
-  .btn-login,
-  .btn-registro {
-    padding: 8px 12px;
-    font-size: 0.8rem;
-  }
-
-  /* Ajustar dropdown */
-  .user-dropdown {
-    min-width: 180px;
-  }
-
-  .dropdown-item {
-    padding: 12px 14px;
-    font-size: 0.9rem;
+  .nav.activo .nav-link {
+    padding: 14px;
+    font-size: 1rem;
   }
 }
 
-/* Evitar que el contenido se salga */
 @media (max-width: 360px) {
+  /* Ocultar texto del logo en pantallas muy pequeñas */
   .logo-text-img {
     display: none;
   }
 
-  .btn-login {
-    display: none;
+  .logo-icon {
+    width: 36px;
+    height: 36px;
   }
 
-  .btn-registro {
-    padding: 8px 10px;
-    font-size: 0.75rem;
+  .btn-carrito,
+  .menu-toggle {
+    width: 40px;
+    height: 40px;
   }
 }
