@@ -130,11 +130,11 @@
    ✅ CAMPOS CORREGIDOS - POSICIONAMIENTO EXACTO
 ======================================== */
 
-/* 1️⃣ Código de verificación - Superior derecha sobre rectángulo verde */
+/* 1️⃣ Código de verificación - RECTÁNGULO VERDE SUPERIOR DERECHA */
 .campo-codigo {
   position: absolute;
-  top: 4%;
-  right: 4.5%;
+  top: 5%;
+  right: 5%;
   font-size: clamp(12px, 1vw, 17px);
   font-weight: 800;
   color: #000000;
@@ -146,10 +146,10 @@
   line-height: 1;
 }
 
-/* 2️⃣ Nombre del estudiante - POSICIÓN CORRECTA */
+/* 2️⃣ Nombre del estudiante - SOBRE LA LÍNEA DECORATIVA */
 .campo-nombre {
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: clamp(32px, 3.8vw, 62px);
@@ -164,10 +164,10 @@
   line-height: 1.1;
 }
 
-/* 3️⃣ Nombre del curso - DEBAJO DEL NOMBRE CON SEPARACIÓN */
+/* 3️⃣ Nombre del curso - DEBAJO DE LA LÍNEA DECORATIVA */
 .campo-curso {
   position: absolute;
-  top: 60%;
+  top: 59%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: clamp(19px, 2vw, 34px);
@@ -180,11 +180,11 @@
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
-/* 4️⃣ Fecha - EN LA LÍNEA AZUL */
+/* 4️⃣ Fecha - SOBRE EL LABEL "FECHA" */
 .campo-fecha {
   position: absolute;
-  top: 86.5%;
-  left: 9.5%;
+  top: 89%;
+  left: 10%;
   transform: translateY(-50%);
   font-size: clamp(16px, 1.5vw, 26px);
   font-weight: 700;
