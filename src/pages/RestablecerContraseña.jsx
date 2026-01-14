@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
-import axios from '../services/api';
+import { authAPI } from '../services/api';
 import './Auth.css';
 
 const RestablecerContraseña = () => {
@@ -81,9 +81,8 @@ const RestablecerContraseña = () => {
     setCargando(true);
 
     try {
-      await axios.post(`/auth/restablecer-contraseña/${token}`, {
-        password: formData.password
-      });
+      // ✅ USAR authAPI en lugar de axios directo
+      await authAPI.restablecerContrasena(token, formData.password);
       setExito(true);
       setTimeout(() => {
         navigate('/login');
