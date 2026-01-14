@@ -587,17 +587,17 @@
 
   /* Overlay del menú móvil */
   .menu-mobile-overlay {
-    display: block;
-    position: fixed;
-    top: 73px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--negro);
-    z-index: 2000; /* ✅ FIX: debajo del header, pero visible */
-    overflow-y: auto;
-    animation: slideDown 0.3s ease;
-  }
+  display: block;
+  position: fixed;
+  top: 73px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--negro);
+  z-index: 2900; /* ✅ FIX: justo debajo del header-container pero visible */
+  overflow-y: auto;
+  animation: slideDown 0.3s ease;
+}
 
   .menu-mobile-content {
     padding: 20px;
