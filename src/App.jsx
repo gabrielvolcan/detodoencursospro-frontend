@@ -51,12 +51,18 @@ function App() {
                   <Route path="/cursos" element={<Cursos />} />
                   <Route path="/curso/:id" element={<DetalleCurso />} />
                   
-                  {/* Auth - ✅ RUTAS SIN Ñ PARA EVITAR PROBLEMAS DE ENCODING */}
+                  {/* ========================================
+                      AUTH - RUTAS PRINCIPALES (sin ñ)
+                  ======================================== */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/registro" element={<Registro />} />
                   <Route path="/recuperar-contrasena" element={<RecuperarContraseña />} />
                   <Route path="/restablecer-contrasena/:token" element={<RestablecerContraseña />} />
                   <Route path="/verificar-email/:token" element={<VerificarEmail />} />
+                  
+                  {/* ✅ RUTAS ALTERNATIVAS CON Ñ (para compatibilidad) */}
+                  <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
+                  <Route path="/restablecer-contraseña/:token" element={<RestablecerContraseña />} />
                   
                   {/* ========================================
                       RUTAS PRIVADAS (requieren login)
