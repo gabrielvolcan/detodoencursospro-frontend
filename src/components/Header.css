@@ -3,7 +3,7 @@
   border-bottom: 1px solid rgba(0, 255, 136, 0.1);
   position: sticky;
   top: 0;
-  z-index: 3000; /* ✅ FIX: asegurar header por encima */
+  z-index: 1000; /* ✅ FIX: bajado de 3000 a 1000 */
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
@@ -14,9 +14,8 @@
   justify-content: space-between;
   padding: 20px 0;
   gap: 16px;
-
-  position: relative; /* ✅ FIX: contexto para z-index */
-  z-index: 3100;      /* ✅ FIX: evita overlays bloqueando clicks */
+  position: relative;
+  /* ✅ FIX: eliminado z-index 3100 que bloqueaba el menú */
 }
 
 /* ========================================
@@ -182,7 +181,7 @@
 
 .user-menu-wrapper {
   position: relative;
-  z-index: 3200; /* ✅ FIX: asegura menú por encima */
+  z-index: 1100; /* ✅ FIX: bajado de 3200 a 1100 */
 }
 
 .user-btn {
@@ -247,8 +246,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   animation: slideDown 0.3s ease;
-
-  z-index: 3300; /* ✅ FIX: dropdown por encima */
+  z-index: 1200; /* ✅ FIX: bajado de 3300 a 1200 */
 }
 
 @keyframes slideDown {
@@ -383,6 +381,26 @@
 }
 
 /* ========================================
+   🍔 MENÚ MÓVIL FULLSCREEN
+======================================== */
+
+.menu-mobile-overlay {
+  display: none;
+}
+
+.nav-desktop {
+  display: flex;
+}
+
+.header-actions-desktop {
+  display: flex;
+}
+
+.header-actions-mobile {
+  display: none;
+}
+
+/* ========================================
    📱 RESPONSIVE MÓVIL
 ======================================== */
 
@@ -415,161 +433,6 @@
     height: 28px;
   }
 
-  /* ========================================
-     🎯 OCULTAR TODO MENOS ESENCIALES
-  ======================================== */
-
-  /* Ocultar navegación principal en móvil */
-  .nav {
-    display: none;
-  }
-
-  /* Ocultar COMPLETAMENTE el selector de país en móvil */
-  .header-actions > :first-child {
-    display: none !important;
-  }
-
-  /* Ocultar botón admin en móvil (lo pondremos en el menú) */
-  .btn-admin-header {
-    display: none !important;
-  }
-
-  /* Ocultar menú de usuario completo en móvil */
-  .user-menu-wrapper {
-    display: none !important;
-  }
-
-  /* Ocultar botones de login/registro en header */
-  .btn-login,
-  .btn-registro {
-    display: none !important;
-  }
-
-  /* Mostrar SOLO: Carrito + Menú Toggle */
-  .header-actions {
-    gap: 8px;
-  }
-
-  /* Mostrar menú toggle */
-  .menu-toggle {
-    display: flex;
-  }
-
-  /* ========================================
-     🍔 MENÚ HAMBURGUESA ACTIVO
-  ======================================== */
-
-  .nav.activo {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 73px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--negro);
-    border-top: 1px solid var(--gris-oscuro);
-    padding: 20px;
-    gap: 0;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    overflow-y: auto;
-    z-index: 999;
-  }
-
-  /* Links de navegación en el menú */
-  .nav.activo .nav-link {
-    width: 100%;
-    padding: 16px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-  }
-
-  .nav.activo .nav-link:hover {
-    background: var(--gris-oscuro);
-  }
-
-  /* ========================================
-     ⚠️ NO TOCAR EL CARRITO - SIEMPRE VISIBLE
-  ======================================== */
-  .btn-carrito {
-    display: flex !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-container {
-    padding: 12px 0;
-  }
-
-  /* Logo más pequeño en pantallas muy pequeñas */
-  .logo-icon {
-    width: 38px;
-    height: 38px;
-  }
-
-  .logo-text-img {
-    height: 24px;
-  }
-
-  /* Reducir tamaño de botones */
-  .btn-carrito,
-  .menu-toggle {
-    width: 42px;
-    height: 42px;
-  }
-
-  /* Ajustar menú hamburguesa para pantallas pequeñas */
-  .nav.activo {
-    top: 67px;
-    padding: 16px;
-  }
-
-  .nav.activo .nav-link {
-    padding: 14px;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 360px) {
-  /* Ocultar texto del logo en pantallas muy pequeñas */
-  .logo-text-img {
-    display: none;
-  }
-
-  .logo-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .btn-carrito,
-  .menu-toggle {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-/* ========================================
-   🍔 MENÚ MÓVIL FULLSCREEN
-======================================== */
-
-.menu-mobile-overlay {
-  display: none;
-}
-
-.nav-desktop {
-  display: flex;
-}
-
-.header-actions-desktop {
-  display: flex;
-}
-
-.header-actions-mobile {
-  display: none;
-}
-
-@media (max-width: 768px) {
   /* Ocultar versión desktop */
   .nav-desktop {
     display: none !important;
@@ -585,19 +448,27 @@
     gap: 8px;
   }
 
-  /* Overlay del menú móvil */
+  /* Mostrar menú toggle */
+  .menu-toggle {
+    display: flex;
+  }
+
+  /* ========================================
+     🍔 OVERLAY DEL MENÚ MÓVIL
+  ======================================== */
+  
   .menu-mobile-overlay {
-  display: block;
-  position: fixed;
-  top: 73px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--negro);
-  z-index: 2900; /* ✅ FIX: justo debajo del header-container pero visible */
-  overflow-y: auto;
-  animation: slideDown 0.3s ease;
-}
+    display: block;
+    position: fixed;
+    top: 73px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--negro);
+    z-index: 999; /* ✅ FIX: bajado de 2000 a 999 (justo debajo del header 1000) */
+    overflow-y: auto;
+    animation: slideDown 0.3s ease;
+  }
 
   .menu-mobile-content {
     padding: 20px;
@@ -764,9 +635,36 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
   }
+
+  /* Carrito siempre visible */
+  .btn-carrito {
+    display: flex !important;
+  }
 }
 
 @media (max-width: 480px) {
+  .header-container {
+    padding: 12px 0;
+  }
+
+  /* Logo más pequeño en pantallas muy pequeñas */
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .logo-text-img {
+    height: 24px;
+  }
+
+  /* Reducir tamaño de botones */
+  .btn-carrito,
+  .menu-toggle {
+    width: 42px;
+    height: 42px;
+  }
+
+  /* Ajustar menú móvil */
   .menu-mobile-overlay {
     top: 67px;
   }
@@ -778,6 +676,24 @@
   .menu-mobile-link {
     padding: 14px;
     font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 360px) {
+  /* Ocultar texto del logo en pantallas muy pequeñas */
+  .logo-text-img {
+    display: none;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .btn-carrito,
+  .menu-toggle {
+    width: 40px;
+    height: 40px;
   }
 }
 
