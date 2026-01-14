@@ -132,7 +132,7 @@ const DetalleCurso = () => {
               </div>
               
               <h1 className="hero-titulo">{curso.titulo}</h1>
-              <p className="hero-subtitulo">De Cero a Experto en IA</p>
+              {curso.subtitulo && <p className="hero-subtitulo">{curso.subtitulo}</p>}
               
               <p className="hero-descripcion">{curso.descripcion}</p>
 
