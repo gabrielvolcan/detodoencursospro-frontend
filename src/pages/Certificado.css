@@ -133,57 +133,59 @@
 /* 1️⃣ Código de verificación - Superior derecha sobre rectángulo verde */
 .campo-codigo {
   position: absolute;
-  top: 7.5%;
-  right: 6%;
-  font-size: clamp(11px, 0.95vw, 16px);
-  font-weight: 700;
-  color: #1a1a1a;
+  top: 4%;
+  right: 4.5%;
+  font-size: clamp(12px, 1vw, 17px);
+  font-weight: 800;
+  color: #000000;
   font-family: 'Montserrat', sans-serif;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.3);
   padding: 0;
   background: transparent;
   line-height: 1;
 }
 
-/* 2️⃣ Nombre del estudiante - Centro, SOBRE la línea decorativa */
+/* 2️⃣ Nombre del estudiante - EN LA LÍNEA ROJA */
 .campo-nombre {
   position: absolute;
-  top: 48%;
+  top: 44.5%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: clamp(30px, 3.5vw, 58px);
-  font-weight: 800;
+  font-size: clamp(32px, 3.8vw, 62px);
+  font-weight: 900;
   color: #ffffff;
   text-align: center;
   width: 70%;
   font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
-  line-height: 1.2;
+  letter-spacing: 4px;
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
+  line-height: 1.1;
 }
 
-/* 3️⃣ Nombre del curso - DEBAJO de la línea decorativa */
+/* 3️⃣ Nombre del curso - EN LA LÍNEA MOSTAZA */
 .campo-curso {
   position: absolute;
-  top: 62%;
+  top: 52.5%;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: clamp(18px, 1.8vw, 32px);
+  transform: translate(-50%, -50%);
+  font-size: clamp(19px, 2vw, 34px);
   font-weight: 600;
   color: #ffffff;
   text-align: center;
   width: 75%;
   font-family: 'Montserrat', sans-serif;
   line-height: 1.4;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
-/* 4️⃣ Fecha - Inferior izquierda sobre label "FECHA" */
+/* 4️⃣ Fecha - EN LA LÍNEA AZUL */
 .campo-fecha {
   position: absolute;
-  bottom: 16.5%;
+  top: 86.5%;
   left: 9.5%;
+  transform: translateY(-50%);
   font-size: clamp(16px, 1.5vw, 26px);
   font-weight: 700;
   color: #ffffff;
