@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-export const BASE_URL = API_URL; // ✅ URL base sin /api
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const BASE_URL = API_URL.replace('/api', ''); // ✅ URL base sin /api para archivos estáticos
 
 axios.defaults.baseURL = API_URL;
 
@@ -39,8 +39,8 @@ export const authAPI = {
   perfil: () => axios.get('/auth/perfil'),
   obtenerPerfil: () => axios.get('/auth/perfil'),
   verificarEmail: (token) => axios.get(`/auth/verificar-email/${token}`),
-  recuperarContraseña: (email) => axios.post('/auth/recuperar-contraseña', { email }),
-  restablecerContraseña: (token, password) => axios.post(`/auth/restablecer-contraseña/${token}`, { password })
+  recuperarContrasena: (email) => axios.post('/auth/recuperar-contrasena', { email }),
+  restablecerContrasena: (token, password) => axios.post(`/auth/restablecer-contrasena/${token}`, { password })
 };
 
 // Cursos

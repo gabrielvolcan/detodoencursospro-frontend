@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
-import axios from '../services/api';
+import { authAPI } from '../services/api';
 import './Auth.css';
 
 const RecuperarContraseña = () => {
@@ -16,7 +16,7 @@ const RecuperarContraseña = () => {
     setCargando(true);
 
     try {
-      await axios.post('/auth/recuperar-contraseña', { email });
+      await authAPI.recuperarContrasena(email);
       setEnviado(true);
     } catch (err) {
       setError(err.response?.data?.error || 'Error al enviar el email. Intenta de nuevo.');
