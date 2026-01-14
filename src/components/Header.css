@@ -3,7 +3,7 @@
   border-bottom: 1px solid rgba(0, 255, 136, 0.1);
   position: sticky;
   top: 0;
-  z-index: 1000; /* ✅ FIX: bajado de 3000 a 1000 */
+  z-index: 1000;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
@@ -14,13 +14,7 @@
   justify-content: space-between;
   padding: 20px 0;
   gap: 16px;
-  position: relative;
-  /* ✅ FIX: eliminado z-index 3100 que bloqueaba el menú */
 }
-
-/* ========================================
-   LOGO
-======================================== */
 
 .logo {
   display: flex;
@@ -34,12 +28,9 @@
 .logo-icon {
   width: 50px;
   height: 50px;
-  background: transparent;
-  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
   flex-shrink: 0;
 }
 
@@ -60,10 +51,6 @@
   filter: drop-shadow(0 4px 16px rgba(0, 255, 136, 0.4));
 }
 
-/* ========================================
-   NAVEGACIÓN
-======================================== */
-
 .nav {
   display: flex;
   gap: 8px;
@@ -78,33 +65,12 @@
   font-weight: 500;
   border-radius: 8px;
   transition: all 0.3s ease;
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background: var(--acento);
-  transition: width 0.3s ease;
 }
 
 .nav-link:hover {
   color: var(--blanco);
   background: rgba(0, 255, 136, 0.05);
 }
-
-.nav-link:hover::after {
-  width: 60%;
-}
-
-/* ========================================
-   ACCIONES DEL HEADER
-======================================== */
 
 .header-actions {
   display: flex;
@@ -113,7 +79,6 @@
   flex-shrink: 0;
 }
 
-/* Botón Admin */
 .btn-admin-header {
   display: flex;
   align-items: center;
@@ -129,14 +94,6 @@
   transition: all 0.3s ease;
 }
 
-.btn-admin-header:hover {
-  background: var(--acento);
-  color: var(--negro);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
-}
-
-/* Carrito */
 .btn-carrito {
   position: relative;
   display: flex;
@@ -150,12 +107,6 @@
   color: var(--blanco);
   transition: all 0.3s ease;
   flex-shrink: 0;
-}
-
-.btn-carrito:hover {
-  background: var(--gris);
-  border-color: var(--acento);
-  transform: translateY(-2px);
 }
 
 .carrito-count {
@@ -175,13 +126,8 @@
   border: 2px solid var(--negro);
 }
 
-/* ========================================
-   MENÚ DE USUARIO
-======================================== */
-
 .user-menu-wrapper {
   position: relative;
-  z-index: 1100; /* ✅ FIX: bajado de 3200 a 1100 */
 }
 
 .user-btn {
@@ -195,11 +141,6 @@
   color: var(--blanco);
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.user-btn:hover {
-  background: var(--gris);
-  border-color: var(--acento);
 }
 
 .user-avatar {
@@ -234,7 +175,6 @@
   transform: rotate(180deg);
 }
 
-/* Dropdown de usuario */
 .user-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -245,19 +185,7 @@
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   overflow: hidden;
-  animation: slideDown 0.3s ease;
-  z-index: 1200; /* ✅ FIX: bajado de 3300 a 1200 */
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  z-index: 1100;
 }
 
 .user-dropdown-header {
@@ -315,14 +243,6 @@
   color: var(--rojo);
 }
 
-.dropdown-item.logout:hover {
-  background: rgba(255, 51, 102, 0.1);
-}
-
-/* ========================================
-   BOTONES DE AUTENTICACIÓN
-======================================== */
-
 .btn-login,
 .btn-registro {
   padding: 10px 18px;
@@ -340,25 +260,11 @@
   border: 1px solid var(--gris);
 }
 
-.btn-login:hover {
-  background: var(--gris-oscuro);
-  border-color: var(--acento);
-}
-
 .btn-registro {
   background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
   border: none;
 }
-
-.btn-registro:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
-}
-
-/* ========================================
-   MENÚ MÓVIL TOGGLE
-======================================== */
 
 .menu-toggle {
   display: none;
@@ -372,17 +278,7 @@
   color: var(--blanco);
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.3s ease;
 }
-
-.menu-toggle:hover {
-  background: var(--gris);
-  border-color: var(--acento);
-}
-
-/* ========================================
-   🍔 MENÚ MÓVIL FULLSCREEN
-======================================== */
 
 .menu-mobile-overlay {
   display: none;
@@ -400,40 +296,8 @@
   display: none;
 }
 
-/* ========================================
-   📱 RESPONSIVE MÓVIL
-======================================== */
-
-@media (max-width: 1024px) {
-  .user-name {
-    max-width: 80px;
-  }
-
-  .btn-admin-header {
-    padding: 10px 14px;
-  }
-}
-
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .header-container {
-    padding: 14px 0;
-  }
-
-  /* Logo tamaño medio en móvil */
-  .logo {
-    gap: 8px;
-  }
-
-  .logo-icon {
-    width: 42px;
-    height: 42px;
-  }
-
-  .logo-text-img {
-    height: 28px;
-  }
-
-  /* Ocultar versión desktop */
   .nav-desktop {
     display: none !important;
   }
@@ -442,95 +306,76 @@
     display: none !important;
   }
 
-  /* Mostrar versión móvil */
   .header-actions-mobile {
     display: flex !important;
     gap: 8px;
   }
 
-  /* Mostrar menú toggle */
   .menu-toggle {
     display: flex;
   }
 
-  /* ========================================
-     🍔 OVERLAY DEL MENÚ MÓVIL
-  ======================================== */
-  
   .menu-mobile-overlay {
     display: block;
     position: fixed;
-    top: 73px;
+    top: 70px;
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--negro);
-    z-index: 999; /* ✅ FIX: bajado de 2000 a 999 (justo debajo del header 1000) */
+    background: #0a0a0a;
+    z-index: 900;
     overflow-y: auto;
-    animation: slideDown 0.3s ease;
+    padding: 20px;
   }
 
   .menu-mobile-content {
-    padding: 20px;
     max-width: 500px;
     margin: 0 auto;
   }
 
-  /* Secciones del menú */
   .menu-mobile-section {
     margin-bottom: 8px;
   }
 
   .menu-mobile-divider {
     height: 1px;
-    background: var(--gris-oscuro);
+    background: #333;
     margin: 20px 0;
   }
 
-  /* Label de sección */
   .menu-mobile-label {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 12px 16px;
-    color: var(--gris-claro);
+    color: #999;
     font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
 
   .menu-mobile-label svg {
     color: var(--acento);
   }
 
-  /* Links del menú */
   .menu-mobile-link {
     display: flex;
     align-items: center;
     gap: 12px;
     width: 100%;
     padding: 16px;
-    background: var(--gris-oscuro);
-    border: 1px solid var(--gris);
+    background: #1a1a1a;
+    border: 1px solid #333;
     border-radius: 12px;
-    color: var(--blanco);
+    color: #fff;
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
     margin-bottom: 8px;
-    transition: all 0.3s ease;
-  }
-
-  .menu-mobile-link:hover {
-    background: var(--gris);
-    border-color: var(--acento);
-    transform: translateX(4px);
   }
 
   .menu-mobile-link svg {
     color: var(--acento);
-    flex-shrink: 0;
   }
 
   .menu-mobile-link.admin {
@@ -538,32 +383,23 @@
     background: rgba(0, 255, 136, 0.05);
   }
 
-  .menu-mobile-link.admin:hover {
-    background: rgba(0, 255, 136, 0.1);
-  }
-
   .menu-mobile-link.logout {
-    color: var(--rojo);
-    border-color: var(--rojo);
+    color: #ff3366;
+    border-color: #ff3366;
     background: rgba(255, 51, 102, 0.05);
   }
 
   .menu-mobile-link.logout svg {
-    color: var(--rojo);
+    color: #ff3366;
   }
 
-  .menu-mobile-link.logout:hover {
-    background: rgba(255, 51, 102, 0.1);
-  }
-
-  /* Info de usuario en móvil */
   .menu-mobile-user-info {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 16px;
-    background: var(--gris-oscuro);
-    border: 1px solid var(--gris);
+    background: #1a1a1a;
+    border: 1px solid #333;
     border-radius: 12px;
     margin-bottom: 12px;
   }
@@ -577,25 +413,23 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    color: var(--negro);
+    color: #000;
     font-size: 1.2rem;
-    flex-shrink: 0;
   }
 
   .menu-mobile-user-info strong {
     display: block;
-    color: var(--blanco);
+    color: #fff;
     font-size: 1rem;
     margin-bottom: 4px;
   }
 
   .menu-mobile-user-info span {
     display: block;
-    color: var(--gris-claro);
+    color: #999;
     font-size: 0.85rem;
   }
 
-  /* Botones de autenticación en móvil */
   .menu-mobile-auth {
     display: flex;
     flex-direction: column;
@@ -611,89 +445,18 @@
     font-size: 1rem;
     text-align: center;
     text-decoration: none;
-    transition: all 0.3s ease;
   }
 
   .btn-mobile-login {
     background: transparent;
-    border: 2px solid var(--gris);
-    color: var(--blanco);
-  }
-
-  .btn-mobile-login:hover {
-    background: var(--gris-oscuro);
-    border-color: var(--acento);
+    border: 2px solid #333;
+    color: #fff;
   }
 
   .btn-mobile-registro {
     background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
-    color: var(--negro);
+    color: #000;
     border: none;
-  }
-
-  .btn-mobile-registro:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
-  }
-
-  /* Carrito siempre visible */
-  .btn-carrito {
-    display: flex !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-container {
-    padding: 12px 0;
-  }
-
-  /* Logo más pequeño en pantallas muy pequeñas */
-  .logo-icon {
-    width: 38px;
-    height: 38px;
-  }
-
-  .logo-text-img {
-    height: 24px;
-  }
-
-  /* Reducir tamaño de botones */
-  .btn-carrito,
-  .menu-toggle {
-    width: 42px;
-    height: 42px;
-  }
-
-  /* Ajustar menú móvil */
-  .menu-mobile-overlay {
-    top: 67px;
-  }
-
-  .menu-mobile-content {
-    padding: 16px;
-  }
-
-  .menu-mobile-link {
-    padding: 14px;
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 360px) {
-  /* Ocultar texto del logo en pantallas muy pequeñas */
-  .logo-text-img {
-    display: none;
-  }
-
-  .logo-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .btn-carrito,
-  .menu-toggle {
-    width: 40px;
-    height: 40px;
   }
 }
 
