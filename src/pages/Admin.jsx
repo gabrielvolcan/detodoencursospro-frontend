@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye, X, ShoppingCart, Bell
+  DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye, X, ShoppingCart, Bell,
+  Globe, CreditCard, BarChart3, TrendingDown, Activity
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, BASE_URL } from '../services/api';
@@ -29,6 +30,12 @@ const Admin = () => {
   // 🔔 Sistema de notificaciones
   const { contador, hayNuevas, marcarComoVistas, verificarNotificaciones } = useNotificaciones(true);
   const [mostrarToast, setMostrarToast] = useState(false);
+
+  // 📊 Datos calculados para dashboard
+  const [ventasPorPais, setVentasPorPais] = useState([]);
+  const [metodosPago, setMetodosPago] = useState([]);
+  const [cursosIngresos, setCursosIngresos] = useState([]);
+  const [ventasUltimos7Dias, setVentasUltimos7Dias] = useState([]);
 
   useEffect(() => {
     if (!esAdmin()) {
@@ -64,11 +71,145 @@ const Admin = () => {
       setCursos(cursosRes.data);
       setUsuarios(usuariosRes.data);
       setComprasPendientes(comprasRes.data);
+      
+      // Calcular métricas adicionales
+      calcularVentasPorPais(statsRes.data.ultimasVentas || []);
+      calcularMetodosPago(statsRes.data.ultimasVentas || []);
+      calcularCursosIngresos(statsRes.data.ultimasVentas || [], cursosRes.data);
+      calcularVentasUltimos7Dias(statsRes.data.ultimasVentas || []);
     } catch (error) {
       console.error('Error cargando datos:', error);
     } finally {
       setCargando(false);
     }
+  };
+
+  // 🌎 Calcular ventas por país
+  const calcularVentasPorPais = (ventas) => {
+    const paisesMap = {};
+    let totalVentas = 0;
+
+    ventas.forEach(venta => {
+      if (venta.estadoPago === 'aprobado') {
+        const pais = venta.metodoPago?.pais || venta.usuario?.pais || 'Internacional';
+        paisesMap[pais] = (paisesMap[pais] || 0) + venta.total;
+        totalVentas += venta.total;
+      }
+    });
+
+    const paisesArray = Object.entries(paisesMap).map(([pais, total]) => ({
+      pais,
+      total,
+      porcentaje: totalVentas > 0 ? ((total / totalVentas) * 100).toFixed(1) : 0,
+      bandera: obtenerBandera(pais)
+    }));
+
+    paisesArray.sort((a, b) => b.total - a.total);
+    setVentasPorPais(paisesArray.slice(0, 6));
+  };
+
+  // 🏴 Obtener emoji de bandera
+  const obtenerBandera = (pais) => {
+    const banderas = {
+      'Argentina': '🇦🇷',
+      'Peru': '🇵🇪',
+      'Perú': '🇵🇪',
+      'Chile': '🇨🇱',
+      'Uruguay': '🇺🇾',
+      'Venezuela': '🇻🇪',
+      'Colombia': '🇨🇴',
+      'México': '🇲🇽',
+      'Mexico': '🇲🇽',
+      'Internacional': '🌍'
+    };
+    return banderas[pais] || '🌍';
+  };
+
+  // 💳 Calcular métodos de pago más usados
+  const calcularMetodosPago = (ventas) => {
+    const metodosMap = {};
+
+    ventas.forEach(venta => {
+      if (venta.estadoPago === 'aprobado') {
+        const metodo = venta.metodoPago?.nombre || 'Otro';
+        metodosMap[metodo] = (metodosMap[metodo] || 0) + 1;
+      }
+    });
+
+    const metodosArray = Object.entries(metodosMap).map(([metodo, cantidad]) => ({
+      metodo,
+      cantidad
+    }));
+
+    metodosArray.sort((a, b) => b.cantidad - a.cantidad);
+    setMetodosPago(metodosArray.slice(0, 5));
+  };
+
+  // 💰 Calcular top cursos por ingresos
+  const calcularCursosIngresos = (ventas, cursos) => {
+    const ingresosMap = {};
+
+    ventas.forEach(venta => {
+      if (venta.estadoPago === 'aprobado') {
+        venta.cursos.forEach(item => {
+          const cursoId = item.curso?._id || item.curso;
+          ingresosMap[cursoId] = (ingresosMap[cursoId] || 0) + item.precio;
+        });
+      }
+    });
+
+    const cursosConIngresos = cursos.map(curso => ({
+      ...curso,
+      ingresos: ingresosMap[curso._id] || 0
+    }));
+
+    cursosConIngresos.sort((a, b) => b.ingresos - a.ingresos);
+    setCursosIngresos(cursosConIngresos.slice(0, 5));
+  };
+
+  // 📈 Calcular ventas últimos 7 días
+  const calcularVentasUltimos7Dias = (ventas) => {
+    const hoy = new Date();
+    const ultimos7Dias = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const fecha = new Date(hoy);
+      fecha.setDate(fecha.getDate() - i);
+      const fechaStr = fecha.toISOString().split('T')[0];
+      
+      const ventasDia = ventas.filter(v => {
+        if (v.estadoPago !== 'aprobado') return false;
+        const ventaFecha = new Date(v.createdAt).toISOString().split('T')[0];
+        return ventaFecha === fechaStr;
+      });
+
+      const totalDia = ventasDia.reduce((sum, v) => sum + v.total, 0);
+
+      ultimos7Dias.push({
+        fecha: fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+        total: totalDia,
+        cantidad: ventasDia.length
+      });
+    }
+
+    setVentasUltimos7Dias(ultimos7Dias);
+  };
+
+  // 💵 Calcular ticket promedio
+  const calcularTicketPromedio = () => {
+    if (!estadisticas?.ultimasVentas) return 0;
+    const ventasAprobadas = estadisticas.ultimasVentas.filter(v => v.estadoPago === 'aprobado');
+    if (ventasAprobadas.length === 0) return 0;
+    const total = ventasAprobadas.reduce((sum, v) => sum + v.total, 0);
+    return (total / ventasAprobadas.length).toFixed(2);
+  };
+
+  // 📊 Calcular tasa de conversión (simplificada)
+  const calcularTasaConversion = () => {
+    if (!estadisticas) return 0;
+    const ventasAprobadas = estadisticas.estadisticas?.ventasCompletadas || 0;
+    const totalUsuarios = estadisticas.estadisticas?.totalUsuarios || 1;
+    return ((ventasAprobadas / totalUsuarios) * 100).toFixed(1);
   };
 
   const cargarTodasCompras = async () => {
@@ -277,11 +418,14 @@ const Admin = () => {
       </div>
 
       <div className="admin-content">
-        {/* DASHBOARD */}
+        {/* ========================================
+            🆕 DASHBOARD MEJORADO
+        ======================================== */}
         {vista === 'dashboard' && (
           <div className="dashboard">
             <h1>Dashboard</h1>
             
+            {/* MÉTRICAS PRINCIPALES */}
             <div className="stats-grid">
               <div className="stat-card">
                 <div className="stat-icon" style={{background: 'linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%)'}}>
@@ -322,24 +466,137 @@ const Admin = () => {
                   <span className="stat-value">{estadisticas?.estadisticas?.ventasCompletadas || 0}</span>
                 </div>
               </div>
-            </div>
 
-            <div className="dashboard-sections">
-              <div className="section">
-                <h2>Cursos Populares</h2>
-                <div className="cursos-populares">
-                  {estadisticas?.cursosPopulares?.map(curso => (
-                    <div key={curso._id} className="curso-popular-item">
-                      <img src={curso.imagen} alt={curso.titulo} />
-                      <div>
-                        <h4>{curso.titulo}</h4>
-                        <p>{curso.estudiantes} estudiantes • ${curso.precio}</p>
-                      </div>
-                    </div>
-                  ))}
+              {/* 🆕 MÉTRICAS ADICIONALES */}
+              <div className="stat-card">
+                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'}}>
+                  <Activity size={32} />
+                </div>
+                <div className="stat-info">
+                  <span className="stat-label">Ticket Promedio</span>
+                  <span className="stat-value">${calcularTicketPromedio()}</span>
                 </div>
               </div>
 
+              <div className="stat-card">
+                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'}}>
+                  <BarChart3 size={32} />
+                </div>
+                <div className="stat-info">
+                  <span className="stat-label">Tasa de Conversión</span>
+                  <span className="stat-value">{calcularTasaConversion()}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 🆕 GRID DE 3 COLUMNAS */}
+            <div className="dashboard-grid-mejorado">
+              
+              {/* 🌎 VENTAS POR PAÍS */}
+              <div className="dashboard-card">
+                <h2>
+                  <Globe size={24} />
+                  Ventas por País
+                </h2>
+                <div className="ventas-pais-lista">
+                  {ventasPorPais.length > 0 ? (
+                    ventasPorPais.map((item, index) => (
+                      <div key={index} className="venta-pais-item">
+                        <div className="pais-info">
+                          <span className="bandera">{item.bandera}</span>
+                          <span className="pais-nombre">{item.pais}</span>
+                        </div>
+                        <div className="pais-stats">
+                          <span className="pais-total">${item.total.toFixed(2)}</span>
+                          <span className="pais-porcentaje">{item.porcentaje}%</span>
+                        </div>
+                        <div className="pais-barra">
+                          <div 
+                            className="pais-barra-fill" 
+                            style={{width: `${item.porcentaje}%`}}
+                          ></div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="sin-datos">No hay ventas registradas aún</p>
+                  )}
+                </div>
+              </div>
+
+              {/* 📈 VENTAS ÚLTIMOS 7 DÍAS */}
+              <div className="dashboard-card">
+                <h2>
+                  <TrendingUp size={24} />
+                  Ventas Últimos 7 Días
+                </h2>
+                <div className="grafico-ventas">
+                  {ventasUltimos7Dias.map((dia, index) => {
+                    const maxTotal = Math.max(...ventasUltimos7Dias.map(d => d.total), 1);
+                    const altura = (dia.total / maxTotal) * 100;
+                    return (
+                      <div key={index} className="dia-barra">
+                        <div className="barra-container">
+                          <div 
+                            className="barra-fill" 
+                            style={{height: `${altura}%`}}
+                            title={`$${dia.total.toFixed(2)} (${dia.cantidad} ventas)`}
+                          >
+                            <span className="barra-valor">${dia.total.toFixed(0)}</span>
+                          </div>
+                        </div>
+                        <span className="dia-label">{dia.fecha}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 💳 MÉTODOS DE PAGO */}
+              <div className="dashboard-card">
+                <h2>
+                  <CreditCard size={24} />
+                  Métodos de Pago
+                </h2>
+                <div className="metodos-pago-lista">
+                  {metodosPago.length > 0 ? (
+                    metodosPago.map((item, index) => (
+                      <div key={index} className="metodo-item">
+                        <span className="metodo-nombre">{item.metodo}</span>
+                        <span className="metodo-cantidad">{item.cantidad} ventas</span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="sin-datos">No hay datos de métodos de pago</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* SECCIONES INFERIORES */}
+            <div className="dashboard-sections">
+              
+              {/* 💰 TOP CURSOS POR INGRESOS */}
+              <div className="section">
+                <h2>Top Cursos por Ingresos</h2>
+                <div className="cursos-populares">
+                  {cursosIngresos.length > 0 ? (
+                    cursosIngresos.map(curso => (
+                      <div key={curso._id} className="curso-popular-item">
+                        <img src={curso.imagen} alt={curso.titulo} />
+                        <div>
+                          <h4>{curso.titulo}</h4>
+                          <p>{curso.estudiantes || 0} estudiantes • <strong>${curso.ingresos.toFixed(2)} ingresos</strong></p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="sin-datos">No hay cursos con ventas aún</p>
+                  )}
+                </div>
+              </div>
+
+              {/* ÚLTIMAS VENTAS */}
               <div className="section">
                 <h2>Últimas Ventas</h2>
                 <div className="ultimas-ventas">
@@ -358,6 +615,9 @@ const Admin = () => {
           </div>
         )}
 
+        {/* RESTO DEL CÓDIGO SIN CAMBIOS... */}
+        {/* (GESTIÓN DE CURSOS, USUARIOS, PAGOS, VENTAS) */}
+        
         {/* GESTIÓN DE CURSOS */}
         {vista === 'cursos' && (
           <div className="gestion-cursos">
@@ -686,7 +946,7 @@ const Admin = () => {
         )}
       </div>
 
-      {/* MODAL EDITAR USUARIO */}
+      {/* MODALES (sin cambios) */}
       {modalEditarUsuario && (
         <div className="modal-overlay" onClick={() => setModalEditarUsuario(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -744,7 +1004,6 @@ const Admin = () => {
         </div>
       )}
 
-      {/* MODAL DETALLE VENTA */}
       {modalDetalleVenta && (
         <div className="modal-overlay" onClick={() => setModalDetalleVenta(null)}>
           <div className="modal-content-large" onClick={(e) => e.stopPropagation()}>
@@ -794,7 +1053,6 @@ const Admin = () => {
         </div>
       )}
       
-      {/* MODAL EDITAR PRECIOS */}
       {modalEditarPrecios && (
         <div className="modal-overlay" onClick={() => setModalEditarPrecios(null)}>
           <div className="modal-content-large" onClick={(e) => e.stopPropagation()}>
@@ -883,7 +1141,6 @@ const Admin = () => {
         </div>
       )}
       
-      {/* 🔔 TOAST DE NOTIFICACIÓN */}
       {mostrarToast && (
         <div className="notification-toast">
           <Bell size={20} />

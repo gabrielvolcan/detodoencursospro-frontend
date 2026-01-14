@@ -590,7 +590,7 @@ td {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1500; /* ✅ FIX: por encima del header (1000) */
   padding: 20px;
 }
 
@@ -1062,5 +1062,489 @@ td {
 @media (max-width: 768px) {
   .precios-grid {
     grid-template-columns: 1fr;
+  }
+}
+/* ========================================
+   🆕 DASHBOARD MEJORADO
+======================================== */
+
+.dashboard-grid-mejorado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.dashboard-card {
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.dashboard-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--blanco);
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gris-oscuro);
+}
+
+.dashboard-card h2 svg {
+  color: var(--acento);
+}
+
+/* ========================================
+   🌎 VENTAS POR PAÍS
+======================================== */
+
+.ventas-pais-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.venta-pais-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pais-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bandera {
+  font-size: 1.8rem;
+}
+
+.pais-nombre {
+  color: var(--blanco);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.pais-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.pais-total {
+  color: var(--acento);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.pais-porcentaje {
+  color: var(--gris-claro);
+  font-size: 0.9rem;
+}
+
+.pais-barra {
+  width: 100%;
+  height: 8px;
+  background: var(--gris-oscuro);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pais-barra-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--acento), #00cc6e);
+  transition: width 0.5s ease;
+}
+
+/* ========================================
+   📈 GRÁFICO DE VENTAS
+======================================== */
+
+.grafico-ventas {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  height: 200px;
+  padding: 20px 0;
+}
+
+.dia-barra {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.barra-container {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.barra-fill {
+  width: 60%;
+  background: linear-gradient(to top, var(--acento), #00cc6e);
+  border-radius: 6px 6px 0 0;
+  position: relative;
+  min-height: 10px;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.barra-fill:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+.barra-valor {
+  color: var(--negro);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.dia-label {
+  color: var(--gris-claro);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ========================================
+   💳 MÉTODOS DE PAGO
+======================================== */
+
+.metodos-pago-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metodo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--gris-oscuro);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.metodo-item:hover {
+  background: var(--gris);
+  transform: translateX(4px);
+}
+
+.metodo-nombre {
+  color: var(--blanco);
+  font-weight: 600;
+}
+
+.metodo-cantidad {
+  color: var(--acento);
+  font-weight: 700;
+}
+
+/* ========================================
+   📊 SIN DATOS
+======================================== */
+
+.sin-datos {
+  color: var(--gris-claro);
+  text-align: center;
+  padding: 40px;
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   🎨 RESPONSIVE
+======================================== */
+
+@media (max-width: 1400px) {
+  .dashboard-grid-mejorado {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid-mejorado {
+    grid-template-columns: 1fr;
+  }
+  
+  .grafico-ventas {
+    height: 180px;
+  }
+  
+  .barra-container {
+    height: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pais-info {
+    flex-wrap: wrap;
+  }
+  
+  .grafico-ventas {
+    gap: 6px;
+  }
+  
+  .dia-label {
+    font-size: 0.7rem;
+  }
+}
+EOF
+cat /home/claude/Admin-ESTILOS-NUEVOS.css
+Salida
+
+/* ========================================
+   🆕 DASHBOARD MEJORADO
+======================================== */
+
+.dashboard-grid-mejorado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.dashboard-card {
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.dashboard-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--blanco);
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gris-oscuro);
+}
+
+.dashboard-card h2 svg {
+  color: var(--acento);
+}
+
+/* ========================================
+   🌎 VENTAS POR PAÍS
+======================================== */
+
+.ventas-pais-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.venta-pais-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pais-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bandera {
+  font-size: 1.8rem;
+}
+
+.pais-nombre {
+  color: var(--blanco);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.pais-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.pais-total {
+  color: var(--acento);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.pais-porcentaje {
+  color: var(--gris-claro);
+  font-size: 0.9rem;
+}
+
+.pais-barra {
+  width: 100%;
+  height: 8px;
+  background: var(--gris-oscuro);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pais-barra-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--acento), #00cc6e);
+  transition: width 0.5s ease;
+}
+
+/* ========================================
+   📈 GRÁFICO DE VENTAS
+======================================== */
+
+.grafico-ventas {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  height: 200px;
+  padding: 20px 0;
+}
+
+.dia-barra {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.barra-container {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.barra-fill {
+  width: 60%;
+  background: linear-gradient(to top, var(--acento), #00cc6e);
+  border-radius: 6px 6px 0 0;
+  position: relative;
+  min-height: 10px;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.barra-fill:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+.barra-valor {
+  color: var(--negro);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.dia-label {
+  color: var(--gris-claro);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ========================================
+   💳 MÉTODOS DE PAGO
+======================================== */
+
+.metodos-pago-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metodo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--gris-oscuro);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.metodo-item:hover {
+  background: var(--gris);
+  transform: translateX(4px);
+}
+
+.metodo-nombre {
+  color: var(--blanco);
+  font-weight: 600;
+}
+
+.metodo-cantidad {
+  color: var(--acento);
+  font-weight: 700;
+}
+
+/* ========================================
+   📊 SIN DATOS
+======================================== */
+
+.sin-datos {
+  color: var(--gris-claro);
+  text-align: center;
+  padding: 40px;
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   🎨 RESPONSIVE
+======================================== */
+
+@media (max-width: 1400px) {
+  .dashboard-grid-mejorado {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid-mejorado {
+    grid-template-columns: 1fr;
+  }
+  
+  .grafico-ventas {
+    height: 180px;
+  }
+  
+  .barra-container {
+    height: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pais-info {
+    flex-wrap: wrap;
+  }
+  
+  .grafico-ventas {
+    gap: 6px;
+  }
+  
+  .dia-label {
+    font-size: 0.7rem;
   }
 }
