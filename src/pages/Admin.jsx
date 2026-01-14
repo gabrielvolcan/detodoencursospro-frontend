@@ -867,24 +867,89 @@ const Admin = () => {
           </div>
         )}
 
-        {/* TODAS LAS VENTAS */}
+        {/* TODAS LAS VENTAS - MEJORADO */}
         {vista === 'ventas' && (
           <div className="gestion-ventas">
-            <div className="ventas-header">
+            <div className="ventas-header-mejorado">
               <h1>Todas las Ventas</h1>
-              <select 
-                value={filtroCompras}
-                onChange={(e) => setFiltroCompras(e.target.value)}
-                className="filtro-ventas"
-              >
-                <option value="todas">Todas</option>
-                <option value="aprobado">Aprobadas</option>
-                <option value="pendiente">Pendientes</option>
-                <option value="rechazado">Rechazadas</option>
-              </select>
+              <div className="filtros-ventas">
+                <button 
+                  className={`filtro-btn ${filtroCompras === 'todas' ? 'activo' : ''}`}
+                  onClick={() => setFiltroCompras('todas')}
+                >
+                  Todas
+                </button>
+                <button 
+                  className={`filtro-btn ${filtroCompras === 'aprobado' ? 'activo' : ''}`}
+                  onClick={() => setFiltroCompras('aprobado')}
+                >
+                  ✓ Aprobadas
+                </button>
+                <button 
+                  className={`filtro-btn ${filtroCompras === 'pendiente' ? 'activo' : ''}`}
+                  onClick={() => setFiltroCompras('pendiente')}
+                >
+                  ⏱ Pendientes
+                </button>
+                <button 
+                  className={`filtro-btn ${filtroCompras === 'rechazado' ? 'activo' : ''}`}
+                  onClick={() => setFiltroCompras('rechazado')}
+                >
+                  ✗ Rechazadas
+                </button>
+              </div>
             </div>
 
-            <div className="ventas-tabla">
+            {/* ESTADÍSTICAS DE VENTAS */}
+            <div className="ventas-stats-grid">
+              <div className="venta-stat-card">
+                <div className="stat-icono" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+                  <ShoppingCart size={24} />
+                </div>
+                <div className="stat-datos">
+                  <span className="stat-numero">{todasCompras.length}</span>
+                  <span className="stat-texto">Total Ventas</span>
+                </div>
+              </div>
+
+              <div className="venta-stat-card">
+                <div className="stat-icono" style={{background: 'linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%)'}}>
+                  <TrendingUp size={24} />
+                </div>
+                <div className="stat-datos">
+                  <span className="stat-numero">{todasCompras.filter(c => c.estadoPago === 'aprobado').length}</span>
+                  <span className="stat-texto">Aprobadas</span>
+                </div>
+              </div>
+
+              <div className="venta-stat-card">
+                <div className="stat-icono" style={{background: 'linear-gradient(135deg, #ffa500 0%, #ff8c00 100%)'}}>
+                  <Activity size={24} />
+                </div>
+                <div className="stat-datos">
+                  <span className="stat-numero">{todasCompras.filter(c => c.estadoPago === 'pendiente').length}</span>
+                  <span className="stat-texto">Pendientes</span>
+                </div>
+              </div>
+
+              <div className="venta-stat-card">
+                <div className="stat-icono" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'}}>
+                  <DollarSign size={24} />
+                </div>
+                <div className="stat-datos">
+                  <span className="stat-numero">
+                    ${todasCompras
+                      .filter(c => c.estadoPago === 'aprobado')
+                      .reduce((sum, c) => sum + c.total, 0)
+                      .toFixed(2)}
+                  </span>
+                  <span className="stat-texto">Total Recaudado</span>
+                </div>
+              </div>
+            </div>
+
+            {/* TABLA DE VENTAS */}
+            <div className="ventas-tabla-mejorada">
               <table>
                 <thead>
                   <tr>
@@ -892,61 +957,94 @@ const Admin = () => {
                     <th>Usuario</th>
                     <th>Total</th>
                     <th>Método</th>
+                    <th>País</th>
                     <th>Fecha</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {todasCompras.map(compra => (
-                    <tr key={compra._id}>
-                      <td>#{compra._id.slice(-6)}</td>
-                      <td>{compra.usuario?.nombre}</td>
-                      <td>${compra.total.toFixed(2)} {compra.moneda}</td>
-                      <td>{compra.metodoPago?.nombre}</td>
-                      <td>{new Date(compra.createdAt).toLocaleDateString()}</td>
-                      <td>
-                        <span className={`estado-badge ${compra.estadoPago}`}>
-                          {compra.estadoPago}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="acciones">
-                          <button 
-                            className="btn-icon"
-                            onClick={() => setModalDetalleVenta(compra)}
-                            title="Ver detalles"
-                          >
-                            <Eye size={18} />
-                          </button>
-                          {compra.estadoPago === 'pendiente' && (
+                  {todasCompras.length > 0 ? (
+                    todasCompras.map(compra => (
+                      <tr key={compra._id} className={`fila-venta ${compra.estadoPago}`}>
+                        <td>
+                          <span className="venta-id">#{compra._id.slice(-6)}</span>
+                        </td>
+                        <td>
+                          <div className="usuario-venta">
+                            <strong>{compra.usuario?.nombre}</strong>
+                            <span className="email-venta">{compra.usuario?.email}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span className="venta-monto">${compra.total.toFixed(2)} <span className="moneda">{compra.moneda}</span></span>
+                        </td>
+                        <td>
+                          <span className="metodo-badge">{compra.metodoPago?.nombre}</span>
+                        </td>
+                        <td>
+                          <span className="pais-badge">{obtenerBandera(compra.metodoPago?.pais || 'Internacional')} {compra.metodoPago?.pais || 'N/A'}</span>
+                        </td>
+                        <td>
+                          <span className="fecha-venta">{new Date(compra.createdAt).toLocaleDateString('es-ES', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                          })}</span>
+                        </td>
+                        <td>
+                          <span className={`estado-badge-mejorado ${compra.estadoPago}`}>
+                            {compra.estadoPago === 'aprobado' && '✓ Aprobado'}
+                            {compra.estadoPago === 'pendiente' && '⏱ Pendiente'}
+                            {compra.estadoPago === 'rechazado' && '✗ Rechazado'}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="acciones">
                             <button 
                               className="btn-icon"
-                              onClick={() => aprobarPago(compra._id)}
-                              title="Aprobar"
+                              onClick={() => setModalDetalleVenta(compra)}
+                              title="Ver detalles"
                             >
-                              ✓
+                              <Eye size={18} />
                             </button>
-                          )}
-                          <button 
-                            className="btn-icon eliminar"
-                            onClick={() => eliminarCompra(compra._id)}
-                            title="Eliminar"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
+                            {compra.estadoPago === 'pendiente' && (
+                              <button 
+                                className="btn-icon aprobar"
+                                onClick={() => aprobarPago(compra._id)}
+                                title="Aprobar"
+                              >
+                                ✓
+                              </button>
+                            )}
+                            <button 
+                              className="btn-icon eliminar"
+                              onClick={() => eliminarCompra(compra._id)}
+                              title="Eliminar"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="8" className="sin-ventas">
+                        <ShoppingCart size={48} />
+                        <p>No hay ventas {filtroCompras !== 'todas' && `con estado "${filtroCompras}"`}</p>
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         )}
       </div>
+      {/* ✅ CIERRE DE admin-content - ESTE ERA EL QUE FALTABA */}
 
-      {/* MODALES (sin cambios) */}
+      {/* MODALES */}
       {modalEditarUsuario && (
         <div className="modal-overlay" onClick={() => setModalEditarUsuario(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
