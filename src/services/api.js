@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-export const BASE_URL = API_URL.replace('/api', ''); // ✅ URL base sin /api para archivos estáticos
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+export const BASE_URL = API_URL; // ✅ URL base sin /api
 
 axios.defaults.baseURL = API_URL;
 
@@ -19,15 +19,28 @@ axios.interceptors.request.use(
   }
 );
 
+// Interceptor para manejar errores de autenticación
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Auth
 export const authAPI = {
   registro: (datos) => axios.post('/auth/registro', datos),
   login: (datos) => axios.post('/auth/login', datos),
   perfil: () => axios.get('/auth/perfil'),
   obtenerPerfil: () => axios.get('/auth/perfil'),
-  verificarEmail: (token) => axios.get(`/auth/verificar-email/${token}`), // ← AGREGADO
-  recuperarContraseña: (email) => axios.post('/auth/recuperar-contraseña', { email }), // ← AGREGADO
-  restablecerContraseña: (token, password) => axios.post(`/auth/restablecer-contraseña/${token}`, { password }) // ← AGREGADO
+  verificarEmail: (token) => axios.get(`/auth/verificar-email/${token}`),
+  recuperarContraseña: (email) => axios.post('/auth/recuperar-contraseña', { email }),
+  restablecerContraseña: (token, password) => axios.post(`/auth/restablecer-contraseña/${token}`, { password })
 };
 
 // Cursos
@@ -39,7 +52,7 @@ export const cursosAPI = {
   eliminar: (id) => axios.delete(`/cursos/${id}`),
   obtenerCategorias: () => axios.get('/cursos/meta/categorias'),
   obtenerNiveles: () => axios.get('/cursos/meta/niveles'),
-obtenerCertificado: (id) => axios.get(`/cursos/${id}/certificado`),
+  obtenerCertificado: (id) => axios.get(`/cursos/${id}/certificado`),
   
   // 🎥 REPRODUCTOR DE VIDEOS
   obtenerParaAprender: (id) => axios.get(`/cursos/${id}/aprender`),
@@ -80,6 +93,5 @@ export const adminAPI = {
   // 🔔 Notificaciones
   obtenerContadorNotificaciones: () => axios.get('/admin/notificaciones/contador')
 };
-
 
 export default axios;
