@@ -1,0 +1,14 @@
+{
+  "name": "Detodo en Cursos",
+  "short_name": "Detodo",
+  "icons": [
+    {
+      "src": "/favicons/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#00ff88",
+  "background_color": "#0a0a0a",
+  "display": "standalone"
+}

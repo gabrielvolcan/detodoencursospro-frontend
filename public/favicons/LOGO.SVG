@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-size: 20.35px;
+      }
+
+      .cls-2, .cls-3 {
+        font-family: Poppins-Regular, Poppins;
+      }
+
+      .cls-4, .cls-5 {
+        fill: #00ef80;
+      }
+
+      .cls-3 {
+        font-size: 91.68px;
+      }
+
+      .cls-5 {
+        font-family: Poppins-Bold, Poppins;
+        font-size: 112.57px;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <text class="cls-5" transform="translate(455.65 513.2)"><tspan x="0" y="0">Detodo</tspan></text>
+  <text class="cls-3" transform="translate(455.65 604.73)"><tspan x="0" y="0">Cursos</tspan></text>
+  <text class="cls-2" transform="translate(461.1 647.83)"><tspan x="0" y="0">¡Aprende lo que necesitas Hoy!</tspan></text>
+  <path class="cls-1" d="M300.9,500.12v157.78l-93.01-53.98v-72.25h19.93v63.11l54.81,29.9v-104.63h-72.25c-4.87-4.82-1.63-13.52-2.49-19.93h93.01Z"/>
+  <path class="cls-1" d="M433.77,537.49c-1.36,4.42-15.95,1.86-19.94,2.5v-19.94s-54.8,0-54.8,0v104.63l54.54-30.16.26-16.35,19.21,1.56-.08,25.04-92.2,53.13v-157.78h90.52l2.49,2.49v34.88Z"/>
+  <path class="cls-4" d="M432.13,474.36l-110.72-63.58-111.88,63.58-1.4,13.47-.51,3.63h21.31v-6.4l81.94-46.39v225.88c0,.58,9.93,4.73,10.54,4.67.52-.05,9.39-4.14,9.39-4.67v-225.88l82,46.38,1.98,5.22,19-.1-1.65-15.81Z"/>
+</svg>
