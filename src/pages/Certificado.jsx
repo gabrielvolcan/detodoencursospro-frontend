@@ -109,7 +109,7 @@ const Certificado = () => {
     });
   };
 
-  // URL para verificar el certificado
+  // URL para verificar el certificado con QR
   const urlVerificacion = certificado 
     ? `${window.location.origin}/verificar-certificado/${certificado.codigoCertificado}`
     : '';
