@@ -20,6 +20,7 @@ import VerificarEmail from './pages/VerificarEmail';
 import Admin from './pages/Admin';
 import CursoForm from './pages/CursoForm';
 import Certificado from './pages/Certificado';
+import VerificarCertificado from './pages/VerificarCertificado'; // 🆕 NUEVO
 
 
 // Componente para rutas privadas
@@ -50,6 +51,9 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/cursos" element={<Cursos />} />
                   <Route path="/curso/:id" element={<DetalleCurso />} />
+                  
+                  {/* 🆕 VERIFICAR CERTIFICADO (Pública - para que cualquiera pueda verificar) */}
+                  <Route path="/verificar-certificado/:codigo" element={<VerificarCertificado />} />
                   
                   {/* ========================================
                       AUTH - RUTAS PRINCIPALES (sin ñ)

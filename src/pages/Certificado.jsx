@@ -4,6 +4,7 @@ import { Download, Share2, ArrowLeft } from 'lucide-react';
 import { cursosAPI } from '../services/api';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { QRCodeSVG } from 'qrcode.react';
 import './Certificado.css';
 
 const Certificado = () => {
@@ -108,6 +109,11 @@ const Certificado = () => {
     });
   };
 
+  // URL para verificar el certificado
+  const urlVerificacion = certificado 
+    ? `${window.location.origin}/verificar-certificado/${certificado.codigoCertificado}`
+    : '';
+
   if (cargando) {
     return (
       <div className="certificado-loading">
@@ -171,10 +177,17 @@ const Certificado = () => {
             <img src="/images/letras_y_eslogan.webp" alt="Detodo Cursos" className="logo-letras" />
           </div>
 
-          {/* Código de verificación */}
-          <div className="codigo-verificacion">
-            <span className="codigo-label">CÓDIGO DE VERIFICACIÓN</span>
-            <span className="codigo-valor">{certificado.codigoCertificado}</span>
+          {/* QR CODE - Reemplaza código de texto ✅ */}
+          <div className="qr-container">
+            <QRCodeSVG 
+              value={urlVerificacion}
+              size={110}
+              bgColor="#00ff88"
+              fgColor="#000000"
+              level="H"
+              includeMargin={false}
+            />
+            <span className="qr-label">Verificar autenticidad</span>
           </div>
 
           {/* Contenido principal */}
@@ -231,7 +244,7 @@ const Certificado = () => {
           <h3>Sobre tu certificado</h3>
           <ul>
             <li>✅ Certificado digital oficial</li>
-            <li>✅ Código de verificación único</li>
+            <li>✅ Código QR de verificación único</li>
             <li>✅ Válido para CV y LinkedIn</li>
             <li>✅ Descargable en PDF de alta calidad</li>
           </ul>

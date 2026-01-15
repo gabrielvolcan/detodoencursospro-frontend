@@ -54,6 +54,9 @@ export const cursosAPI = {
   obtenerNiveles: () => axios.get('/cursos/meta/niveles'),
   obtenerCertificado: (id) => axios.get(`/cursos/${id}/certificado`),
   
+  // 🆕 VERIFICAR CERTIFICADO (ruta pública)
+  verificarCertificado: (codigo) => axios.get(`/cursos/verificar-certificado/${codigo}`),
+  
   // 🎥 REPRODUCTOR DE VIDEOS
   obtenerParaAprender: (id) => axios.get(`/cursos/${id}/aprender`),
   marcarVideoVisto: (cursoId, temaId) => axios.post(`/cursos/${cursoId}/marcar-visto`, { temaId }),
