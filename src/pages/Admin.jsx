@@ -434,7 +434,7 @@ const Admin = () => {
         )}
 
         {/* ========================================
-            VISTA: DASHBOARD
+            VISTA: DASHBOARD ✅ CORREGIDO
         ======================================== */}
         {vista === 'dashboard' && estadisticas && (
           <div className="admin-dashboard">
@@ -451,7 +451,7 @@ const Admin = () => {
               </button>
             </div>
 
-            {/* Estadísticas principales */}
+            {/* Estadísticas principales - CON VALIDACIÓN ✅ */}
             <div className="stats-grid">
               <div className="stat-card">
                 <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #00ff88 0%, #00cc6e 100%)' }}>
@@ -459,10 +459,12 @@ const Admin = () => {
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Ingresos Totales</span>
-                  <span className="stat-value">${estadisticas.estadisticas.ingresosCompletados.toLocaleString()}</span>
+                  <span className="stat-value">
+                    ${(estadisticas?.estadisticas?.ingresosCompletados || 0).toLocaleString()}
+                  </span>
                   <span className="stat-meta">
                     <TrendingUp size={14} />
-                    +{estadisticas.estadisticas.ventasCompletadas} ventas
+                    +{estadisticas?.estadisticas?.ventasCompletadas || 0} ventas
                   </span>
                 </div>
               </div>
@@ -473,7 +475,7 @@ const Admin = () => {
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Total Usuarios</span>
-                  <span className="stat-value">{estadisticas.estadisticas.totalUsuarios}</span>
+                  <span className="stat-value">{estadisticas?.estadisticas?.totalUsuarios || 0}</span>
                   <span className="stat-meta">
                     <Activity size={14} />
                     {calcularTasaConversion()}% conversión
@@ -487,7 +489,7 @@ const Admin = () => {
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Cursos Activos</span>
-                  <span className="stat-value">{estadisticas.estadisticas.totalCursos}</span>
+                  <span className="stat-value">{estadisticas?.estadisticas?.totalCursos || 0}</span>
                   <span className="stat-meta">
                     <Globe size={14} />
                     Plataforma activa
@@ -510,15 +512,568 @@ const Admin = () => {
               </div>
             </div>
 
-            {/* Resto del dashboard... (código que ya tienes) */}
+            {/* Gráfico de ventas últimos 7 días */}
+            {ventasUltimos7Dias.length > 0 && (
+              <div className="ventas-chart">
+                <h3>📈 Ventas Últimos 7 Días</h3>
+                <div className="chart-bars">
+                  {ventasUltimos7Dias.map((dia, idx) => {
+                    const maxTotal = Math.max(...ventasUltimos7Dias.map(d => d.total), 1);
+                    return (
+                      <div key={idx} className="chart-bar-container">
+                        <div 
+                          className="chart-bar" 
+                          style={{ 
+                            height: `${(dia.total / maxTotal) * 100}%`,
+                            minHeight: dia.total > 0 ? '20px' : '5px'
+                          }}
+                        >
+                          <span className="bar-value">${dia.total}</span>
+                        </div>
+                        <span className="bar-label">{dia.fecha}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Ventas por país */}
+            {ventasPorPais.length > 0 && (
+              <div className="section-grid">
+                <div className="paises-section">
+                  <h3>🌍 Ventas por País</h3>
+                  <div className="paises-list">
+                    {ventasPorPais.map((item, idx) => (
+                      <div key={idx} className="pais-item">
+                        <span className="pais-bandera">{item.bandera}</span>
+                        <div className="pais-info">
+                          <span className="pais-nombre">{item.pais}</span>
+                          <div className="pais-barra">
+                            <div 
+                              className="pais-progreso" 
+                              style={{ width: `${item.porcentaje}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                        <span className="pais-total">${item.total.toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Métodos de pago */}
+                {metodosPago.length > 0 && (
+                  <div className="metodos-section">
+                    <h3>💳 Métodos de Pago</h3>
+                    <div className="metodos-list">
+                      {metodosPago.map((item, idx) => (
+                        <div key={idx} className="metodo-item">
+                          <span className="metodo-nombre">{item.metodo}</span>
+                          <span className="metodo-cantidad">{item.cantidad} ventas</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Top cursos por ingresos */}
+            {cursosIngresos.length > 0 && (
+              <div className="top-cursos-section">
+                <h3>🏆 Top Cursos por Ingresos</h3>
+                <div className="top-cursos-list">
+                  {cursosIngresos.filter(c => c.ingresos > 0).slice(0, 5).map((curso, idx) => (
+                    <div key={curso._id} className="top-curso-item">
+                      <span className="curso-ranking">#{idx + 1}</span>
+                      <div className="curso-info-top">
+                        <span className="curso-titulo-top">{curso.titulo}</span>
+                        <span className="curso-categoria">{curso.categoria}</span>
+                      </div>
+                      <span className="curso-ingresos">${curso.ingresos.toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
         {/* ========================================
-            OTRAS VISTAS (cursos, usuarios, pagos, ventas)
+            VISTA: GESTIÓN DE CURSOS
         ======================================== */}
-        {/* ... Tu código existente para las demás vistas ... */}
+        {vista === 'cursos' && (
+          <div className="admin-cursos">
+            <div className="cursos-header">
+              <h1>Gestión de Cursos</h1>
+              <button onClick={() => navigate('/admin/curso/nuevo')} className="btn-nuevo">
+                <Plus size={20} />
+                Nuevo Curso
+              </button>
+            </div>
 
+            <div className="cursos-grid">
+              {cursos.map(curso => (
+                <div key={curso._id} className="curso-card-admin">
+                  {curso.imagenPortada && (
+                    <img 
+                      src={`${BASE_URL}${curso.imagenPortada}`} 
+                      alt={curso.titulo}
+                      className="curso-img-admin"
+                    />
+                  )}
+                  <div className="curso-info-admin">
+                    <h3>{curso.titulo}</h3>
+                    <p className="curso-categoria">{curso.categoria} • {curso.nivel}</p>
+                    <p className="curso-precio">${curso.precioUSD}</p>
+                    <div className="curso-acciones">
+                      <button onClick={() => navigate(`/curso/${curso._id}`)} className="btn-ver">
+                        <Eye size={18} />
+                        Ver
+                      </button>
+                      <button onClick={() => navigate(`/admin/curso/${curso._id}/editar`)} className="btn-editar">
+                        <Edit2 size={18} />
+                        Editar
+                      </button>
+                      <button onClick={() => setModalEditarPrecios(curso)} className="btn-precios">
+                        <DollarSign size={18} />
+                        Precios
+                      </button>
+                      <button onClick={() => eliminarCurso(curso._id)} className="btn-eliminar">
+                        <Trash2 size={18} />
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ========================================
+            VISTA: USUARIOS
+        ======================================== */}
+        {vista === 'usuarios' && (
+          <div className="admin-usuarios">
+            <h1>Gestión de Usuarios ({usuarios.length})</h1>
+            
+            <div className="usuarios-tabla-container">
+              <table className="usuarios-tabla">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>País</th>
+                    <th>Cursos</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {usuarios.map(usuario => (
+                    <tr key={usuario._id}>
+                      <td>{usuario.nombre}</td>
+                      <td>{usuario.email}</td>
+                      <td>
+                        <select 
+                          value={usuario.rol} 
+                          onChange={(e) => cambiarRol(usuario._id, e.target.value)}
+                          className="select-rol"
+                        >
+                          <option value="usuario">Usuario</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </td>
+                      <td>{usuario.pais || 'N/A'}</td>
+                      <td>{usuario.cursosComprados?.length || 0}</td>
+                      <td>
+                        <div className="acciones-usuario">
+                          <button 
+                            onClick={() => setModalEditarUsuario(usuario)} 
+                            className="btn-editar-small"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button 
+                            onClick={() => eliminarUsuario(usuario._id)} 
+                            className="btn-eliminar-small"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================
+            VISTA: PAGOS PENDIENTES
+        ======================================== */}
+        {vista === 'pagos' && (
+          <div className="admin-pagos">
+            <h1>Pagos Pendientes ({comprasPendientes.length})</h1>
+            
+            {comprasPendientes.length === 0 ? (
+              <div className="sin-pendientes">
+                <p>✅ No hay pagos pendientes</p>
+              </div>
+            ) : (
+              <div className="compras-grid">
+                {comprasPendientes.map(compra => (
+                  <div key={compra._id} className="compra-card">
+                    <div className="compra-header">
+                      <span className="compra-id">#{compra._id.slice(-6)}</span>
+                      <span className="compra-fecha">
+                        {new Date(compra.createdAt).toLocaleDateString('es-ES')}
+                      </span>
+                    </div>
+
+                    <div className="compra-usuario">
+                      <strong>{compra.usuario?.nombre}</strong>
+                      <span>{compra.usuario?.email}</span>
+                    </div>
+
+                    <div className="compra-detalles">
+                      <p><strong>Total:</strong> ${compra.total}</p>
+                      <p><strong>Método:</strong> {compra.metodoPago?.nombre}</p>
+                      <p><strong>Cursos:</strong> {compra.cursos.length}</p>
+                    </div>
+
+                    {compra.comprobante && (
+                      <a 
+                        href={`${BASE_URL}${compra.comprobante}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="btn-ver-comprobante"
+                      >
+                        Ver Comprobante
+                      </a>
+                    )}
+
+                    <div className="compra-acciones">
+                      <button 
+                        onClick={() => aprobarPago(compra._id)} 
+                        className="btn-aprobar"
+                      >
+                        ✅ Aprobar
+                      </button>
+                      <button 
+                        onClick={() => rechazarPago(compra._id)} 
+                        className="btn-rechazar"
+                      >
+                        ❌ Rechazar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ========================================
+            VISTA: TODAS LAS VENTAS
+        ======================================== */}
+        {vista === 'ventas' && (
+          <div className="admin-ventas">
+            <div className="ventas-header">
+              <h1>Todas las Ventas ({todasCompras.length})</h1>
+              
+              <select 
+                value={filtroCompras} 
+                onChange={(e) => setFiltroCompras(e.target.value)}
+                className="filtro-ventas"
+              >
+                <option value="todas">Todas</option>
+                <option value="aprobado">Aprobadas</option>
+                <option value="pendiente">Pendientes</option>
+                <option value="rechazado">Rechazadas</option>
+              </select>
+            </div>
+
+            <div className="ventas-tabla-container">
+              <table className="ventas-tabla">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Total</th>
+                    <th>Método</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {todasCompras.map(compra => (
+                    <tr key={compra._id}>
+                      <td>#{compra._id.slice(-6)}</td>
+                      <td>{new Date(compra.createdAt).toLocaleDateString('es-ES')}</td>
+                      <td>{compra.usuario?.nombre}</td>
+                      <td>${compra.total}</td>
+                      <td>{compra.metodoPago?.nombre}</td>
+                      <td>
+                        <span className={`estado-badge ${compra.estadoPago}`}>
+                          {compra.estadoPago}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="acciones-venta">
+                          <button 
+                            onClick={() => setModalDetalleVenta(compra)} 
+                            className="btn-ver-detalle"
+                          >
+                            <Eye size={16} />
+                          </button>
+                          {compra.estadoPago === 'pendiente' && (
+                            <>
+                              <button 
+                                onClick={() => aprobarPago(compra._id)} 
+                                className="btn-aprobar-small"
+                              >
+                                ✅
+                              </button>
+                              <button 
+                                onClick={() => rechazarPago(compra._id)} 
+                                className="btn-rechazar-small"
+                              >
+                                ❌
+                              </button>
+                            </>
+                          )}
+                          <button 
+                            onClick={() => eliminarCompra(compra._id)} 
+                            className="btn-eliminar-small"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================
+            MODALES
+        ======================================== */}
+        
+        {/* Modal Editar Usuario */}
+        {modalEditarUsuario && (
+          <div className="modal-overlay" onClick={() => setModalEditarUsuario(null)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Editar Usuario</h2>
+                <button onClick={() => setModalEditarUsuario(null)} className="btn-cerrar-modal">
+                  <X size={24} />
+                </button>
+              </div>
+
+              <form onSubmit={guardarEdicionUsuario} className="form-editar-usuario">
+                <div className="form-group">
+                  <label>Nombre</label>
+                  <input 
+                    type="text" 
+                    name="nombre" 
+                    defaultValue={modalEditarUsuario.nombre} 
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Email</label>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    defaultValue={modalEditarUsuario.email} 
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Teléfono</label>
+                  <input 
+                    type="text" 
+                    name="telefono" 
+                    defaultValue={modalEditarUsuario.telefono || ''} 
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>País</label>
+                  <input 
+                    type="text" 
+                    name="pais" 
+                    defaultValue={modalEditarUsuario.pais || ''} 
+                  />
+                </div>
+
+                <div className="modal-acciones">
+                  <button type="button" onClick={() => setModalEditarUsuario(null)} className="btn-cancelar">
+                    Cancelar
+                  </button>
+                  <button type="submit" className="btn-guardar">
+                    Guardar Cambios
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Detalle Venta */}
+        {modalDetalleVenta && (
+          <div className="modal-overlay" onClick={() => setModalDetalleVenta(null)}>
+            <div className="modal-content modal-detalle" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Detalle de Venta #{modalDetalleVenta._id.slice(-6)}</h2>
+                <button onClick={() => setModalDetalleVenta(null)} className="btn-cerrar-modal">
+                  <X size={24} />
+                </button>
+              </div>
+
+              <div className="detalle-venta-content">
+                <div className="detalle-seccion">
+                  <h3>Usuario</h3>
+                  <p><strong>Nombre:</strong> {modalDetalleVenta.usuario?.nombre}</p>
+                  <p><strong>Email:</strong> {modalDetalleVenta.usuario?.email}</p>
+                  <p><strong>País:</strong> {modalDetalleVenta.usuario?.pais || 'N/A'}</p>
+                </div>
+
+                <div className="detalle-seccion">
+                  <h3>Pago</h3>
+                  <p><strong>Total:</strong> ${modalDetalleVenta.total}</p>
+                  <p><strong>Método:</strong> {modalDetalleVenta.metodoPago?.nombre}</p>
+                  <p><strong>Estado:</strong> <span className={`estado-badge ${modalDetalleVenta.estadoPago}`}>{modalDetalleVenta.estadoPago}</span></p>
+                  <p><strong>Fecha:</strong> {new Date(modalDetalleVenta.createdAt).toLocaleString('es-ES')}</p>
+                </div>
+
+                <div className="detalle-seccion">
+                  <h3>Cursos ({modalDetalleVenta.cursos.length})</h3>
+                  <ul className="lista-cursos-detalle">
+                    {modalDetalleVenta.cursos.map((item, idx) => (
+                      <li key={idx}>
+                        <span>{item.curso?.titulo || 'Curso eliminado'}</span>
+                        <span>${item.precio}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {modalDetalleVenta.comprobante && (
+                  <div className="detalle-seccion">
+                    <h3>Comprobante</h3>
+                    <a 
+                      href={`${BASE_URL}${modalDetalleVenta.comprobante}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn-ver-comprobante-modal"
+                    >
+                      Ver Comprobante de Pago
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Editar Precios */}
+        {modalEditarPrecios && (
+          <div className="modal-overlay" onClick={() => setModalEditarPrecios(null)}>
+            <div className="modal-content modal-precios" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Editar Precios: {modalEditarPrecios.titulo}</h2>
+                <button onClick={() => setModalEditarPrecios(null)} className="btn-cerrar-modal">
+                  <X size={24} />
+                </button>
+              </div>
+
+              <form onSubmit={guardarPrecios} className="form-editar-precios">
+                <div className="precios-grid">
+                  <div className="form-group">
+                    <label>🌍 Internacional (USD)</label>
+                    <input 
+                      type="number" 
+                      name="precio_internacional" 
+                      defaultValue={modalEditarPrecios.precioUSD} 
+                      step="0.01"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>🇵🇪 Perú (PEN)</label>
+                    <input 
+                      type="number" 
+                      name="precio_peru" 
+                      defaultValue={modalEditarPrecios.precios?.peru?.monto || 0} 
+                      step="0.01"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>🇨🇱 Chile (CLP)</label>
+                    <input 
+                      type="number" 
+                      name="precio_chile" 
+                      defaultValue={modalEditarPrecios.precios?.chile?.monto || 0} 
+                      step="0.01"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>🇦🇷 Argentina (ARS)</label>
+                    <input 
+                      type="number" 
+                      name="precio_argentina" 
+                      defaultValue={modalEditarPrecios.precios?.argentina?.monto || 0} 
+                      step="0.01"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>🇺🇾 Uruguay (UYU)</label>
+                    <input 
+                      type="number" 
+                      name="precio_uruguay" 
+                      defaultValue={modalEditarPrecios.precios?.uruguay?.monto || 0} 
+                      step="0.01"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>🇻🇪 Venezuela (VES)</label>
+                    <input 
+                      type="number" 
+                      name="precio_venezuela" 
+                      defaultValue={modalEditarPrecios.precios?.venezuela?.monto || 0} 
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+
+                <div className="modal-acciones">
+                  <button type="button" onClick={() => setModalEditarPrecios(null)} className="btn-cancelar">
+                    Cancelar
+                  </button>
+                  <button type="submit" className="btn-guardar">
+                    Guardar Precios
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
