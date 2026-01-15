@@ -3,8 +3,6 @@
 ======================================== */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
 @import url('https://fonts.cdnfonts.com/css/blacksword');
-
-/* Si Blacksword no carga, usa esta alternativa elegante */
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700;900&display=swap');
 
 .certificado-page {
@@ -146,7 +144,7 @@
 }
 
 /* ========================================
-   HEADER CON LOGOS
+   HEADER CON LOGOS - CORREGIDO ✅
 ======================================== */
 .certificado-header-logo {
   position: absolute;
@@ -159,19 +157,19 @@
 }
 
 .logo-isotipo {
-  height: 80px;
+  height: 70px; /* Reducido de 80px */
   width: auto;
   filter: drop-shadow(0 4px 8px rgba(0, 255, 136, 0.3));
 }
 
 .logo-letras {
-  height: 50px;
+  height: 42px; /* Reducido de 50px */
   width: auto;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* ========================================
-   CÓDIGO DE VERIFICACIÓN
+   CÓDIGO DE VERIFICACIÓN - CORREGIDO ✅
 ======================================== */
 .codigo-verificacion {
   position: absolute;
@@ -180,33 +178,35 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
+  gap: 6px; /* Reducido de 8px */
   background: linear-gradient(135deg, #00ff88 0%, #00cc6e 100%);
-  padding: 16px 24px;
+  padding: 12px 20px; /* Reducido de 16px 24px */
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
   z-index: 10;
+  max-width: 320px; /* Añadido para evitar que se superponga */
 }
 
 .codigo-label {
   font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
+  font-size: 10px; /* Reducido de 11px */
   font-weight: 700;
   color: #000000;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.2px;
   opacity: 0.8;
 }
 
 .codigo-valor {
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-size: 14px; /* Reducido de 16px */
   font-weight: 900;
   color: #000000;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px; /* Reducido de 1px */
+  word-break: break-all; /* Para que el código no se salga */
 }
 
 /* ========================================
-   CONTENIDO PRINCIPAL - AJUSTADO
+   CONTENIDO PRINCIPAL - MÁS COMPACTO ✅
 ======================================== */
 .certificado-content {
   position: relative;
@@ -216,38 +216,39 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 120px 100px 80px; /* Reducido padding inferior */
+  padding: 110px 100px 60px; /* Ajustado: top reducido, bottom más reducido */
   z-index: 5;
 }
 
 .certificado-titulo {
   font-family: 'Montserrat', sans-serif;
-  font-size: 68px; /* Reducido un poco */
+  font-size: 64px; /* Reducido de 68px */
   font-weight: 900;
   color: #ffffff;
-  letter-spacing: 12px;
+  letter-spacing: 10px; /* Reducido de 12px */
   text-transform: uppercase;
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0; /* Reducido margen inferior */
   text-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+  line-height: 1;
 }
 
 .certificado-subtitulo {
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px; /* Reducido */
+  font-size: 16px; /* Reducido de 18px */
   font-weight: 600;
   color: #00ff88;
-  letter-spacing: 4px;
+  letter-spacing: 3px; /* Reducido de 4px */
   text-transform: uppercase;
-  margin: 0 0 35px 0; /* Reducido */
+  margin: 0 0 28px 0; /* Reducido de 35px */
 }
 
 .certificado-otorgado {
-  margin-bottom: 16px; /* Reducido */
+  margin-bottom: 12px; /* Reducido de 16px */
 }
 
 .otorgado-texto {
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px; /* Reducido */
+  font-size: 15px; /* Reducido de 16px */
   font-weight: 400;
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
@@ -255,60 +256,60 @@
 }
 
 /* ========================================
-   NOMBRE DEL ESTUDIANTE - AJUSTADO
+   NOMBRE DEL ESTUDIANTE - AJUSTADO ✅
 ======================================== */
 .estudiante-nombre {
   font-family: 'Blacksword', 'Great Vibes', 'Playfair Display', cursive;
-  font-size: 76px; /* Reducido */
+  font-size: 70px; /* Reducido de 76px */
   font-weight: 400;
   color: #00ff88;
-  margin: 0 0 30px 0; /* Reducido */
+  margin: 0 0 24px 0; /* Reducido de 30px */
   text-align: center;
-  line-height: 1.1;
+  line-height: 1;
   text-shadow: 0 6px 16px rgba(0, 255, 136, 0.4);
   letter-spacing: 2px;
 }
 
 /* ========================================
-   INFORMACIÓN DEL CURSO - AJUSTADA
+   INFORMACIÓN DEL CURSO - AJUSTADA ✅
 ======================================== */
 .curso-info {
-  margin-bottom: 30px; /* Reducido */
+  margin-bottom: 24px; /* Reducido de 30px */
   text-align: center;
   max-width: 900px;
 }
 
 .curso-descripcion {
   font-family: 'Montserrat', sans-serif;
-  font-size: 15px; /* Reducido */
+  font-size: 14px; /* Reducido de 15px */
   font-weight: 400;
   color: rgba(255, 255, 255, 0.7);
-  margin: 0 0 12px 0; /* Reducido */
+  margin: 0 0 10px 0; /* Reducido de 12px */
 }
 
 .curso-nombre {
   font-family: 'Montserrat', sans-serif;
-  font-size: 34px; /* Reducido */
+  font-size: 32px; /* Reducido de 34px */
   font-weight: 700;
   color: #ffffff;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 /* ========================================
-   LÍNEA DECORATIVA - AJUSTADA
+   LÍNEA DECORATIVA - AJUSTADA ✅
 ======================================== */
 .linea-decorativa {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin: 30px 0; /* Reducido */
+  margin: 24px 0; /* Reducido de 30px */
   width: 100%;
   max-width: 600px;
 }
 
 .linea-punto {
-  width: 10px; /* Reducido */
+  width: 10px;
   height: 10px;
   background: #00ff88;
   border-radius: 50%;
@@ -328,7 +329,7 @@
 }
 
 /* ========================================
-   FOOTER CON FECHA Y LOGO - CORREGIDO ✅
+   FOOTER CON FECHA Y LOGO - VISIBLE ✅
 ======================================== */
 .certificado-footer-content {
   display: flex;
@@ -337,27 +338,27 @@
   width: 100%;
   max-width: 1200px;
   margin-top: auto;
-  padding-top: 20px; /* Añadido para dar espacio */
+  padding-top: 16px; /* Añadido para separación */
 }
 
 .fecha-container {
   display: flex;
   flex-direction: column;
-  gap: 6px; /* Reducido */
+  gap: 5px;
 }
 
 .fecha-label {
   font-family: 'Montserrat', sans-serif;
-  font-size: 11px; /* Reducido */
+  font-size: 10px; /* Reducido de 11px */
   font-weight: 700;
   color: rgba(255, 255, 255, 0.5);
-  letter-spacing: 1.2px; /* Reducido */
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 
 .fecha-valor {
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px; /* Reducido */
+  font-size: 17px; /* Reducido de 18px */
   font-weight: 700;
   color: #ffffff;
 }
@@ -366,11 +367,11 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px; /* Reducido */
+  gap: 5px;
 }
 
 .logo-footer-img {
-  height: 45px; /* Reducido */
+  height: 40px; /* Reducido de 45px */
   width: auto;
   opacity: 0.8;
   filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
@@ -378,139 +379,10 @@
 
 .plataforma-nombre {
   font-family: 'Montserrat', sans-serif;
-  font-size: 13px; /* Reducido */
+  font-size: 12px; /* Reducido de 13px */
   font-weight: 600;
   color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 1px;
-}
-
-/* ========================================
-   NOMBRE DEL ESTUDIANTE - FUENTE BLACKSWORD
-======================================== */
-.estudiante-nombre {
-  font-family: 'Blacksword', 'Great Vibes', 'Playfair Display', cursive;
-  font-size: 86px;
-  font-weight: 400;
-  color: #00ff88;
-  margin: 0 0 40px 0;
-  text-align: center;
-  line-height: 1.1;
-  text-shadow: 0 6px 16px rgba(0, 255, 136, 0.4);
-  letter-spacing: 2px;
-}
-
-/* ========================================
-   INFORMACIÓN DEL CURSO
-======================================== */
-.curso-info {
-  margin-bottom: 40px;
-  text-align: center;
-  max-width: 900px;
-}
-
-.curso-descripcion {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 17px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0 0 16px 0;
-}
-
-.curso-nombre {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 38px;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
-  line-height: 1.3;
-}
-
-/* ========================================
-   LÍNEA DECORATIVA
-======================================== */
-.linea-decorativa {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin: 40px 0;
-  width: 100%;
-  max-width: 600px;
-}
-
-.linea-punto {
-  width: 12px;
-  height: 12px;
-  background: #00ff88;
-  border-radius: 50%;
-  box-shadow: 0 0 12px rgba(0, 255, 136, 0.6);
-}
-
-.linea-central {
-  flex: 1;
-  height: 2px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(0, 255, 136, 0.6) 20%,
-    rgba(0, 255, 136, 0.6) 80%,
-    transparent
-  );
-}
-
-/* ========================================
-   FOOTER CON FECHA Y LOGO
-======================================== */
-.certificado-footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  width: 100%;
-  max-width: 1200px;
-  margin-top: auto;
-}
-
-.fecha-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.fecha-label {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.5);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-
-.fecha-valor {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.logo-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.logo-footer-img {
-  height: 50px;
-  width: auto;
-  opacity: 0.8;
-  filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
-}
-
-.plataforma-nombre {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
 }
 
 /* ========================================
@@ -684,22 +556,22 @@
 ======================================== */
 @media (max-width: 1400px) {
   .certificado-titulo {
-    font-size: 60px;
+    font-size: 56px;
     letter-spacing: 8px;
   }
 
   .estudiante-nombre {
-    font-size: 72px;
+    font-size: 62px;
   }
 
   .curso-nombre {
-    font-size: 32px;
+    font-size: 28px;
   }
 }
 
 @media (max-width: 1024px) {
-  .certificado-canvas {
-    padding: 80px 60px 60px;
+  .certificado-content {
+    padding: 90px 60px 50px;
   }
 
   .certificado-header-logo {
@@ -708,30 +580,30 @@
   }
 
   .logo-isotipo {
-    height: 60px;
+    height: 55px;
   }
 
   .logo-letras {
-    height: 40px;
+    height: 35px;
   }
 
   .codigo-verificacion {
     top: 30px;
     right: 40px;
-    padding: 12px 20px;
+    padding: 10px 16px;
   }
 
   .certificado-titulo {
-    font-size: 48px;
+    font-size: 44px;
     letter-spacing: 6px;
   }
 
   .estudiante-nombre {
-    font-size: 60px;
+    font-size: 52px;
   }
 
   .curso-nombre {
-    font-size: 28px;
+    font-size: 24px;
   }
 }
 
@@ -745,8 +617,8 @@
     flex-direction: column;
   }
 
-  .certificado-canvas {
-    padding: 60px 40px 40px;
+  .certificado-content {
+    padding: 70px 40px 40px;
   }
 
   .certificado-header-logo {
@@ -756,27 +628,27 @@
   }
 
   .certificado-titulo {
-    font-size: 36px;
+    font-size: 34px;
     letter-spacing: 4px;
   }
 
   .certificado-subtitulo {
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 2px;
   }
 
   .estudiante-nombre {
-    font-size: 48px;
+    font-size: 42px;
   }
 
   .curso-nombre {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .certificado-footer-content {
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
     text-align: center;
   }
 
@@ -790,8 +662,8 @@
 }
 
 @media (max-width: 480px) {
-  .certificado-canvas {
-    padding: 40px 24px 24px;
+  .certificado-content {
+    padding: 50px 24px 30px;
   }
 
   .certificado-header-logo {
@@ -800,45 +672,45 @@
   }
 
   .logo-isotipo {
-    height: 40px;
+    height: 35px;
   }
 
   .logo-letras {
-    height: 28px;
+    height: 24px;
   }
 
   .codigo-verificacion {
     top: 20px;
     right: 24px;
-    padding: 8px 12px;
+    padding: 6px 10px;
   }
 
   .codigo-label {
-    font-size: 8px;
+    font-size: 7px;
   }
 
   .codigo-valor {
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .certificado-titulo {
-    font-size: 28px;
-    letter-spacing: 3px;
+    font-size: 26px;
+    letter-spacing: 2px;
   }
 
   .certificado-subtitulo {
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .estudiante-nombre {
-    font-size: 36px;
+    font-size: 32px;
   }
 
   .curso-nombre {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .fecha-valor {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
