@@ -417,6 +417,11 @@ const Admin = () => {
         </nav>
       </div>
 
+      <button onClick={() => navigate('/admin/email-masivo')} className="admin-action-btn">
+      <Mail size={20} />
+       Email Masivo
+      </button>
+
       <div className="admin-content">
         {/* ========================================
             🆕 DASHBOARD MEJORADO

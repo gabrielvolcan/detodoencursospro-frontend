@@ -97,4 +97,10 @@ export const adminAPI = {
   obtenerContadorNotificaciones: () => axios.get('/admin/notificaciones/contador')
 };
 
+// Email Masivo
+export const emailMasivoAPI = {
+  enviar: (datos) => axios.post('/email-masivo/enviar', datos),
+  previsualizar: (datos) => axios.post('/email-masivo/previsualizar', datos)
+};
+
 export default axios;

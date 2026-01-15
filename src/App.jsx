@@ -20,7 +20,8 @@ import VerificarEmail from './pages/VerificarEmail';
 import Admin from './pages/Admin';
 import CursoForm from './pages/CursoForm';
 import Certificado from './pages/Certificado';
-import VerificarCertificado from './pages/VerificarCertificado'; // 🆕 NUEVO
+import VerificarCertificado from './pages/VerificarCertificado';
+import EmailMasivo from './pages/EmailMasivo';
 
 
 // Componente para rutas privadas
@@ -86,6 +87,7 @@ function App() {
                   <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
                   <Route path="/admin/curso/nuevo" element={<AdminRoute><CursoForm /></AdminRoute>} />
                   <Route path="/admin/curso/:id/editar" element={<AdminRoute><CursoForm /></AdminRoute>} />
+                  <Route path="/admin/email-masivo" element={<AdminRoute><EmailMasivo /></AdminRoute>} />
                 </Routes>
               </main>
               
