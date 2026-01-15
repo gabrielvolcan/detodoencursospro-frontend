@@ -57,7 +57,7 @@ const Certificado = () => {
         scale: 3,
         logging: false,
         useCORS: true,
-        backgroundColor: null,
+        backgroundColor: '#1a1a1a',
         width: 1920,
         height: 1080
       });
@@ -80,7 +80,7 @@ const Certificado = () => {
   };
 
   const compartir = async () => {
-    const texto = `¡Acabo de completar el curso "${certificado.nombreCurso}" en Detodo en Cursos! 🎓`;
+    const texto = `¡Acabo de completar el curso "${certificado.nombreCurso}" en Detodo Cursos! 🎓`;
     const url = window.location.href;
 
     if (navigator.share) {
@@ -103,7 +103,7 @@ const Certificado = () => {
     if (!fecha) return 'Fecha no disponible';
     return new Date(fecha).toLocaleDateString('es-ES', {
       day: '2-digit',
-      month: '2-digit',
+      month: 'long',
       year: 'numeric'
     });
   };
@@ -156,38 +156,72 @@ const Certificado = () => {
         </div>
       </div>
 
-      {/* Certificado con imagen de fondo */}
+      {/* Certificado generado con CSS */}
       <div className="certificado-container">
-        <div className="certificado-wrapper" ref={certificadoRef}>
-          {/* Imagen de fondo */}
-          <img 
-            src="/images/certificado.png" 
-            alt="Certificado Template" 
-            className="certificado-background"
-          />
+        <div className="certificado-canvas" ref={certificadoRef}>
+          {/* Patrón de fondo decorativo */}
+          <div className="pattern-bg"></div>
           
-          {/* Campos dinámicos superpuestos */}
-          <div className="certificado-overlay">
-            {/* Código de verificación - Superior derecha */}
-            <div className="campo-codigo">
-              {certificado.codigoCertificado}
+          {/* Borde decorativo */}
+          <div className="certificado-border"></div>
+
+          {/* Header con logo */}
+          <div className="certificado-header-logo">
+            <img src="/images/dtcisotipo.webp" alt="DTC Logo" className="logo-isotipo" />
+            <img src="/images/letras_y_eslogan.webp" alt="Detodo Cursos" className="logo-letras" />
+          </div>
+
+          {/* Código de verificación */}
+          <div className="codigo-verificacion">
+            <span className="codigo-label">CÓDIGO DE VERIFICACIÓN</span>
+            <span className="codigo-valor">{certificado.codigoCertificado}</span>
+          </div>
+
+          {/* Contenido principal */}
+          <div className="certificado-content">
+            <h1 className="certificado-titulo">CERTIFICADO</h1>
+            <p className="certificado-subtitulo">DE CURSO COMPLETADO</p>
+
+            <div className="certificado-otorgado">
+              <p className="otorgado-texto">Este certificado se otorga a:</p>
             </div>
 
-            {/* Nombre del estudiante - Centro */}
-            <div className="campo-nombre">
-              {certificado.nombreEstudiante}
+            {/* Nombre del estudiante con fuente Blacksword */}
+            <h2 className="estudiante-nombre">{certificado.nombreEstudiante}</h2>
+
+            <div className="curso-info">
+              <p className="curso-descripcion">
+                Por haber completado satisfactoriamente el curso
+              </p>
+              <h3 className="curso-nombre">{certificado.nombreCurso}</h3>
             </div>
 
-            {/* Nombre del curso - Debajo del nombre */}
-            <div className="campo-curso">
-              {certificado.nombreCurso}
+            {/* Línea decorativa */}
+            <div className="linea-decorativa">
+              <div className="linea-punto"></div>
+              <div className="linea-central"></div>
+              <div className="linea-punto"></div>
             </div>
 
-            {/* Fecha - Inferior izquierda */}
-            <div className="campo-fecha">
-              {formatearFecha(certificado.fechaCompletado)}
+            {/* Footer con fecha */}
+            <div className="certificado-footer-content">
+              <div className="fecha-container">
+                <span className="fecha-label">FECHA DE FINALIZACIÓN</span>
+                <span className="fecha-valor">{formatearFecha(certificado.fechaCompletado)}</span>
+              </div>
+
+              <div className="logo-footer">
+                <img src="/images/dtcisotipo.webp" alt="DTC" className="logo-footer-img" />
+                <span className="plataforma-nombre">Detodo Cursos</span>
+              </div>
             </div>
           </div>
+
+          {/* Decoraciones geométricas */}
+          <div className="deco deco-1"></div>
+          <div className="deco deco-2"></div>
+          <div className="deco deco-3"></div>
+          <div className="deco deco-4"></div>
         </div>
       </div>
 

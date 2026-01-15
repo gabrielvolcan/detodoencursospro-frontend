@@ -1,11 +1,15 @@
 /* ========================================
-   IMPORTAR MONTSERRAT
+   IMPORTAR FUENTES
 ======================================== */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
+@import url('https://fonts.cdnfonts.com/css/blacksword');
+
+/* Si Blacksword no carga, usa esta alternativa elegante */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700;900&display=swap');
 
 .certificado-page {
   min-height: 100vh;
-  background: var(--negro-claro);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
   padding: 20px;
 }
 
@@ -27,9 +31,9 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: var(--gris-oscuro);
-  color: var(--blanco);
-  border: 1px solid var(--gris-medio);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(0, 255, 136, 0.3);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -37,7 +41,8 @@
 }
 
 .btn-back:hover {
-  background: var(--gris-medio);
+  background: rgba(0, 255, 136, 0.1);
+  border-color: #00ff88;
   transform: translateX(-4px);
 }
 
@@ -60,24 +65,25 @@
 
 .btn-compartir {
   background: transparent;
-  border: 2px solid var(--acento);
-  color: var(--acento);
+  border: 2px solid #00ff88;
+  color: #00ff88;
 }
 
 .btn-compartir:hover {
-  background: var(--acento);
-  color: var(--negro);
+  background: #00ff88;
+  color: #000000;
 }
 
 .btn-descargar {
-  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
-  color: var(--negro);
+  background: linear-gradient(135deg, #00ff88 0%, #00cc6e 100%);
+  color: #000000;
   border: none;
+  font-weight: 700;
 }
 
 .btn-descargar:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
 }
 
 .btn-descargar:disabled {
@@ -86,114 +92,341 @@
 }
 
 /* ========================================
-   CERTIFICADO CON IMAGEN DE FONDO - POSICIONAMIENTO FIJO
+   CONTENEDOR DEL CERTIFICADO
 ======================================== */
 .certificado-container {
   max-width: 1400px;
   margin: 0 auto;
-  background: var(--negro);
-  border-radius: 16px;
-  padding: 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 20px;
 }
 
-.certificado-wrapper {
+.certificado-canvas {
   position: relative;
   width: 100%;
+  aspect-ratio: 16 / 9;
   max-width: 1920px;
   margin: 0 auto;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-radius: 16px;
   overflow: hidden;
-  /* CRÍTICO: Mantener aspect ratio 16:9 exacto */
-  aspect-ratio: 16 / 9;
-}
-
-.certificado-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Cambio de contain a cover para llenar todo */
-  display: block;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 /* ========================================
-   OVERLAY CON CAMPOS DINÁMICOS
+   PATRÓN DE FONDO DECORATIVO
 ======================================== */
-.certificado-overlay {
+.pattern-bg {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 35px,
+      rgba(0, 255, 136, 0.02) 35px,
+      rgba(0, 255, 136, 0.02) 70px
+    );
   pointer-events: none;
+}
+
+/* ========================================
+   BORDE DECORATIVO
+======================================== */
+.certificado-border {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  right: 30px;
+  bottom: 30px;
+  border: 3px solid rgba(0, 255, 136, 0.3);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ========================================
+   HEADER CON LOGOS
+======================================== */
+.certificado-header-logo {
+  position: absolute;
+  top: 50px;
+  left: 60px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
   z-index: 10;
 }
 
+.logo-isotipo {
+  height: 80px;
+  width: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 255, 136, 0.3));
+}
+
+.logo-letras {
+  height: 50px;
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
 /* ========================================
-   ✅ CAMPOS DINÁMICOS - POSICIONAMIENTO EXACTO SEGÚN TU DISEÑO
+   CÓDIGO DE VERIFICACIÓN
 ======================================== */
-
-/* 1️⃣ Código de verificación - RECTÁNGULO VERDE SUPERIOR DERECHA */
-.campo-codigo {
+.codigo-verificacion {
   position: absolute;
-  top: 5.5%;
-  right: 6%;
-  font-size: 17px; /* Tamaño fijo para desktop */
-  font-weight: 800;
-  color: #000000;
-  font-family: 'Montserrat', sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  line-height: 1;
+  top: 50px;
+  right: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  background: linear-gradient(135deg, #00ff88 0%, #00cc6e 100%);
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+  z-index: 10;
 }
 
-/* 2️⃣ Nombre del estudiante - CENTRADO DONDE DICE "ADMINISTRADOR" */
-.campo-nombre {
-  position: absolute;
-  top: 42%; /* Ajustado para centrar donde está "ADMINISTRADOR" */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 62px; /* Tamaño fijo para desktop */
-  font-weight: 900;
-  color: #FFFFFF;
-  text-align: center;
-  width: 80%;
+.codigo-label {
   font-family: 'Montserrat', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 6px;
-  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9);
-  line-height: 1.1;
-}
-
-/* 3️⃣ Nombre del curso - DEBAJO DEL NOMBRE (donde dice "Curso de Inteligencia Artificial") */
-.campo-curso {
-  position: absolute;
-  top: 54%; /* Ajustado para posicionar donde está el curso */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 36px; /* Tamaño fijo para desktop */
-  font-weight: 600;
-  color: #FFFFFF;
-  text-align: center;
-  width: 80%;
-  font-family: 'Montserrat', sans-serif;
-  line-height: 1.3;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
-}
-
-/* 4️⃣ Fecha - INFERIOR IZQUIERDA (donde dice "14/01/2026") */
-.campo-fecha {
-  position: absolute;
-  bottom: 9%; /* Cambiado a bottom para mejor control */
-  left: 13%;
-  font-size: 26px; /* Tamaño fijo para desktop */
+  font-size: 11px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #000000;
+  letter-spacing: 1.5px;
+  opacity: 0.8;
+}
+
+.codigo-valor {
   font-family: 'Montserrat', sans-serif;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-  line-height: 1;
+  font-size: 16px;
+  font-weight: 900;
+  color: #000000;
+  letter-spacing: 1px;
+}
+
+/* ========================================
+   CONTENIDO PRINCIPAL
+======================================== */
+.certificado-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 140px 100px 100px;
+  z-index: 5;
+}
+
+.certificado-titulo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 72px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  text-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.certificado-subtitulo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #00ff88;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin: 0 0 50px 0;
+}
+
+.certificado-otorgado {
+  margin-bottom: 20px;
+}
+
+.otorgado-texto {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-style: italic;
+}
+
+/* ========================================
+   NOMBRE DEL ESTUDIANTE - FUENTE BLACKSWORD
+======================================== */
+.estudiante-nombre {
+  font-family: 'Blacksword', 'Great Vibes', 'Playfair Display', cursive;
+  font-size: 86px;
+  font-weight: 400;
+  color: #00ff88;
+  margin: 0 0 40px 0;
+  text-align: center;
+  line-height: 1.1;
+  text-shadow: 0 6px 16px rgba(0, 255, 136, 0.4);
+  letter-spacing: 2px;
+}
+
+/* ========================================
+   INFORMACIÓN DEL CURSO
+======================================== */
+.curso-info {
+  margin-bottom: 40px;
+  text-align: center;
+  max-width: 900px;
+}
+
+.curso-descripcion {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 16px 0;
+}
+
+.curso-nombre {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* ========================================
+   LÍNEA DECORATIVA
+======================================== */
+.linea-decorativa {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 40px 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+.linea-punto {
+  width: 12px;
+  height: 12px;
+  background: #00ff88;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.6);
+}
+
+.linea-central {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(0, 255, 136, 0.6) 20%,
+    rgba(0, 255, 136, 0.6) 80%,
+    transparent
+  );
+}
+
+/* ========================================
+   FOOTER CON FECHA Y LOGO
+======================================== */
+.certificado-footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: auto;
+}
+
+.fecha-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fecha-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.fecha-valor {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.logo-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.logo-footer-img {
+  height: 50px;
+  width: auto;
+  opacity: 0.8;
+  filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
+}
+
+.plataforma-nombre {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1px;
+}
+
+/* ========================================
+   DECORACIONES GEOMÉTRICAS
+======================================== */
+.deco {
+  position: absolute;
+  background: rgba(0, 255, 136, 0.05);
+  border: 2px solid rgba(0, 255, 136, 0.15);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.deco-1 {
+  top: 15%;
+  left: 5%;
+  width: 120px;
+  height: 120px;
+  transform: rotate(45deg);
+  border-radius: 12px;
+}
+
+.deco-2 {
+  top: 60%;
+  right: 8%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.deco-3 {
+  bottom: 15%;
+  left: 10%;
+  width: 80px;
+  height: 80px;
+  transform: rotate(30deg);
+  border-radius: 8px;
+}
+
+.deco-4 {
+  top: 25%;
+  right: 15%;
+  width: 60px;
+  height: 60px;
+  transform: rotate(15deg);
+  border-radius: 6px;
 }
 
 /* ========================================
@@ -205,8 +438,8 @@
 }
 
 .info-card {
-  background: var(--negro);
-  border: 1px solid var(--gris-oscuro);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 255, 136, 0.2);
   border-radius: 12px;
   padding: 32px;
 }
@@ -214,7 +447,7 @@
 .info-card h3 {
   font-size: 1.5rem;
   margin-bottom: 20px;
-  color: var(--blanco);
+  color: #ffffff;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -227,16 +460,18 @@
 
 .info-card li {
   font-size: 1.1rem;
-  color: var(--gris-claro);
+  color: rgba(255, 255, 255, 0.8);
   padding: 12px;
-  background: var(--negro-claro);
+  background: rgba(0, 255, 136, 0.05);
   border-radius: 8px;
+  border: 1px solid rgba(0, 255, 136, 0.1);
   transition: all 0.3s ease;
   font-family: 'Montserrat', sans-serif;
 }
 
 .info-card li:hover {
-  background: var(--gris-oscuro);
+  background: rgba(0, 255, 136, 0.1);
+  border-color: rgba(0, 255, 136, 0.3);
   transform: translateX(4px);
 }
 
@@ -254,7 +489,7 @@
 
 .certificado-loading p {
   font-size: 1.2rem;
-  color: var(--gris-claro);
+  color: rgba(255, 255, 255, 0.7);
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -271,23 +506,23 @@
 
 .certificado-error h2 {
   font-size: 2rem;
-  color: var(--blanco);
+  color: #ffffff;
   font-family: 'Montserrat', sans-serif;
 }
 
 .certificado-error p {
   font-size: 1.1rem;
-  color: var(--gris-claro);
+  color: rgba(255, 255, 255, 0.7);
   font-family: 'Montserrat', sans-serif;
 }
 
 .btn-volver {
   padding: 16px 32px;
-  background: var(--acento);
-  color: var(--negro);
+  background: #00ff88;
+  color: #000000;
   border: none;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Montserrat', sans-serif;
@@ -295,56 +530,78 @@
 
 .btn-volver:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
 }
 
 /* ========================================
-   RESPONSIVE - AJUSTES PROPORCIONALES
+   SPINNER DE CARGA
+======================================== */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #00ff88;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   RESPONSIVE
 ======================================== */
 @media (max-width: 1400px) {
-  .campo-codigo {
-    font-size: 15px;
+  .certificado-titulo {
+    font-size: 60px;
+    letter-spacing: 8px;
   }
-  
-  .campo-nombre {
-    font-size: 52px;
-    letter-spacing: 4px;
+
+  .estudiante-nombre {
+    font-size: 72px;
   }
-  
-  .campo-curso {
-    font-size: 30px;
-  }
-  
-  .campo-fecha {
-    font-size: 22px;
+
+  .curso-nombre {
+    font-size: 32px;
   }
 }
 
 @media (max-width: 1024px) {
-  .certificado-container {
-    padding: 20px;
+  .certificado-canvas {
+    padding: 80px 60px 60px;
   }
 
-  .campo-codigo {
-    font-size: 13px;
-    top: 5%;
-    right: 5%;
+  .certificado-header-logo {
+    top: 30px;
+    left: 40px;
   }
 
-  .campo-nombre {
-    font-size: 42px;
-    letter-spacing: 3px;
-    width: 85%;
+  .logo-isotipo {
+    height: 60px;
   }
 
-  .campo-curso {
-    font-size: 24px;
-    width: 85%;
+  .logo-letras {
+    height: 40px;
   }
 
-  .campo-fecha {
-    font-size: 18px;
-    left: 12%;
+  .codigo-verificacion {
+    top: 30px;
+    right: 40px;
+    padding: 12px 20px;
+  }
+
+  .certificado-titulo {
+    font-size: 48px;
+    letter-spacing: 6px;
+  }
+
+  .estudiante-nombre {
+    font-size: 60px;
+  }
+
+  .curso-nombre {
+    font-size: 28px;
   }
 }
 
@@ -358,72 +615,100 @@
     flex-direction: column;
   }
 
-  .certificado-container {
-    padding: 16px;
+  .certificado-canvas {
+    padding: 60px 40px 40px;
   }
 
-  .campo-codigo {
-    font-size: 10px;
-    top: 4%;
-    right: 4%;
-    letter-spacing: 0.5px;
+  .certificado-header-logo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 
-  .campo-nombre {
-    font-size: 32px;
-    letter-spacing: 2px;
-    width: 90%;
-    top: 43%;
+  .certificado-titulo {
+    font-size: 36px;
+    letter-spacing: 4px;
   }
 
-  .campo-curso {
-    font-size: 18px;
-    width: 90%;
-    top: 55%;
-  }
-
-  .campo-fecha {
+  .certificado-subtitulo {
     font-size: 14px;
-    bottom: 8%;
-    left: 10%;
+    letter-spacing: 2px;
   }
 
-  .info-card ul {
-    grid-template-columns: 1fr;
+  .estudiante-nombre {
+    font-size: 48px;
+  }
+
+  .curso-nombre {
+    font-size: 22px;
+  }
+
+  .certificado-footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .logo-footer {
+    align-items: center;
+  }
+
+  .deco {
+    display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .campo-codigo {
+  .certificado-canvas {
+    padding: 40px 24px 24px;
+  }
+
+  .certificado-header-logo {
+    top: 20px;
+    left: 24px;
+  }
+
+  .logo-isotipo {
+    height: 40px;
+  }
+
+  .logo-letras {
+    height: 28px;
+  }
+
+  .codigo-verificacion {
+    top: 20px;
+    right: 24px;
+    padding: 8px 12px;
+  }
+
+  .codigo-label {
     font-size: 8px;
   }
 
-  .campo-nombre {
-    font-size: 24px;
-    letter-spacing: 1px;
+  .codigo-valor {
+    font-size: 11px;
   }
 
-  .campo-curso {
-    font-size: 14px;
+  .certificado-titulo {
+    font-size: 28px;
+    letter-spacing: 3px;
   }
 
-  .campo-fecha {
-    font-size: 12px;
+  .certificado-subtitulo {
+    font-size: 11px;
   }
-}
 
-/* ========================================
-   SPINNER DE CARGA
-======================================== */
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid var(--gris-oscuro);
-  border-top-color: var(--acento);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
+  .estudiante-nombre {
+    font-size: 36px;
+  }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+  .curso-nombre {
+    font-size: 18px;
+  }
+
+  .fecha-valor {
+    font-size: 16px;
+  }
 }
