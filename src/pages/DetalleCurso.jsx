@@ -203,10 +203,6 @@ const DetalleCurso = () => {
                 )}
               </div>
 
-              <div className="garantia-30dias">
-                <strong>🛡️ Garantía de 30 días</strong>
-                <p>Si no estás satisfecho, te devolvemos tu dinero</p>
-              </div>
             </div>
           </div>
         </div>
