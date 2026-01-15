@@ -1271,6 +1271,59 @@
   font-size: 1.1rem;
 }
 
+/* 🆕 HEADER DEL DASHBOARD CON BOTÓN */
+.dashboard-header-con-boton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-header-con-boton h1 {
+  margin: 0;
+  color: var(--blanco);
+  font-size: 2.5rem;
+}
+
+/* BOTÓN EMAIL MASIVO */
+.btn-email-masivo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: var(--negro);
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.btn-email-masivo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.5);
+}
+
+.btn-email-masivo:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .dashboard-header-con-boton {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .btn-email-masivo {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* ========================================
    RESPONSIVE
 ======================================== */

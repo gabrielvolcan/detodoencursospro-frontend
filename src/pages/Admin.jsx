@@ -418,27 +418,12 @@ const Admin = () => {
       </div>
 
       <div className="admin-content">
-        {/* 🔔 Toast de nuevas notificaciones */}
-        {mostrarToast && (
-          <div className="toast-notificacion">
-            <Bell size={20} />
-            <span>¡Tienes {contador} pago(s) pendiente(s) por revisar!</span>
-            <button onClick={() => {
-              setVista('pagos');
-              marcarComoVistas();
-              setMostrarToast(false);
-            }}>
-              Ver ahora
-            </button>
-          </div>
-        )}
-
         {/* ========================================
-            VISTA: DASHBOARD ✅ CORREGIDO
+            🆕 DASHBOARD MEJORADO
         ======================================== */}
-        {vista === 'dashboard' && estadisticas && (
-          <div className="admin-dashboard">
-            <div className="dashboard-header">
+        {vista === 'dashboard' && (
+          <div className="dashboard">
+            <div className="dashboard-header-con-boton">
               <h1>Dashboard</h1>
               
               {/* 🆕 BOTÓN EMAIL MASIVO */}
@@ -450,257 +435,275 @@ const Admin = () => {
                 Email Masivo
               </button>
             </div>
-
-            {/* Estadísticas principales - CON VALIDACIÓN ✅ */}
+            
+            {/* MÉTRICAS PRINCIPALES */}
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #00ff88 0%, #00cc6e 100%)' }}>
-                  <DollarSign size={24} />
+                <div className="stat-icon" style={{background: 'linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%)'}}>
+                  <DollarSign size={32} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Ingresos Totales</span>
-                  <span className="stat-value">
-                    ${(estadisticas?.estadisticas?.ingresosCompletados || 0).toLocaleString()}
-                  </span>
-                  <span className="stat-meta">
-                    <TrendingUp size={14} />
-                    +{estadisticas?.estadisticas?.ventasCompletadas || 0} ventas
-                  </span>
+                  <span className="stat-value">${estadisticas?.estadisticas?.ingresosTotal?.toFixed(2) || 0}</span>
                 </div>
               </div>
 
               <div className="stat-card">
-                <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-                  <Users size={24} />
+                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+                  <Users size={32} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Total Usuarios</span>
                   <span className="stat-value">{estadisticas?.estadisticas?.totalUsuarios || 0}</span>
-                  <span className="stat-meta">
-                    <Activity size={14} />
-                    {calcularTasaConversion()}% conversión
-                  </span>
                 </div>
               </div>
 
               <div className="stat-card">
-                <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
-                  <BookOpen size={24} />
+                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'}}>
+                  <BookOpen size={32} />
                 </div>
                 <div className="stat-info">
-                  <span className="stat-label">Cursos Activos</span>
+                  <span className="stat-label">Total Cursos</span>
                   <span className="stat-value">{estadisticas?.estadisticas?.totalCursos || 0}</span>
-                  <span className="stat-meta">
-                    <Globe size={14} />
-                    Plataforma activa
-                  </span>
                 </div>
               </div>
 
               <div className="stat-card">
-                <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)' }}>
-                  <CreditCard size={24} />
+                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'}}>
+                  <TrendingUp size={32} />
+                </div>
+                <div className="stat-info">
+                  <span className="stat-label">Ventas Completadas</span>
+                  <span className="stat-value">{estadisticas?.estadisticas?.ventasCompletadas || 0}</span>
+                </div>
+              </div>
+
+              {/* 🆕 MÉTRICAS ADICIONALES */}
+              <div className="stat-card">
+                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'}}>
+                  <Activity size={32} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Ticket Promedio</span>
                   <span className="stat-value">${calcularTicketPromedio()}</span>
-                  <span className="stat-meta">
-                    <BarChart3 size={14} />
-                    Por transacción
-                  </span>
+                </div>
+              </div>
+
+              <div className="stat-card">
+                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'}}>
+                  <BarChart3 size={32} />
+                </div>
+                <div className="stat-info">
+                  <span className="stat-label">Tasa de Conversión</span>
+                  <span className="stat-value">{calcularTasaConversion()}%</span>
                 </div>
               </div>
             </div>
 
-            {/* Gráfico de ventas últimos 7 días */}
-            {ventasUltimos7Dias.length > 0 && (
-              <div className="ventas-chart">
-                <h3>📈 Ventas Últimos 7 Días</h3>
-                <div className="chart-bars">
-                  {ventasUltimos7Dias.map((dia, idx) => {
-                    const maxTotal = Math.max(...ventasUltimos7Dias.map(d => d.total), 1);
-                    return (
-                      <div key={idx} className="chart-bar-container">
-                        <div 
-                          className="chart-bar" 
-                          style={{ 
-                            height: `${(dia.total / maxTotal) * 100}%`,
-                            minHeight: dia.total > 0 ? '20px' : '5px'
-                          }}
-                        >
-                          <span className="bar-value">${dia.total}</span>
+            {/* 🆕 GRID DE 3 COLUMNAS */}
+            <div className="dashboard-grid-mejorado">
+              
+              {/* 🌎 VENTAS POR PAÍS */}
+              <div className="dashboard-card">
+                <h2>
+                  <Globe size={24} />
+                  Ventas por País
+                </h2>
+                <div className="ventas-pais-lista">
+                  {ventasPorPais.length > 0 ? (
+                    ventasPorPais.map((item, index) => (
+                      <div key={index} className="venta-pais-item">
+                        <div className="pais-info">
+                          <span className="bandera">{item.bandera}</span>
+                          <span className="pais-nombre">{item.pais}</span>
                         </div>
-                        <span className="bar-label">{dia.fecha}</span>
+                        <div className="pais-stats">
+                          <span className="pais-total">${item.total.toFixed(2)}</span>
+                          <span className="pais-porcentaje">{item.porcentaje}%</span>
+                        </div>
+                        <div className="pais-barra">
+                          <div 
+                            className="pais-barra-fill" 
+                            style={{width: `${item.porcentaje}%`}}
+                          ></div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="sin-datos">No hay ventas registradas aún</p>
+                  )}
+                </div>
+              </div>
+
+              {/* 📈 VENTAS ÚLTIMOS 7 DÍAS */}
+              <div className="dashboard-card">
+                <h2>
+                  <TrendingUp size={24} />
+                  Ventas Últimos 7 Días
+                </h2>
+                <div className="grafico-ventas">
+                  {ventasUltimos7Dias.map((dia, index) => {
+                    const maxTotal = Math.max(...ventasUltimos7Dias.map(d => d.total), 1);
+                    const altura = (dia.total / maxTotal) * 100;
+                    return (
+                      <div key={index} className="dia-barra">
+                        <div className="barra-container">
+                          <div 
+                            className="barra-fill" 
+                            style={{height: `${altura}%`}}
+                            title={`$${dia.total.toFixed(2)} (${dia.cantidad} ventas)`}
+                          >
+                            <span className="barra-valor">${dia.total.toFixed(0)}</span>
+                          </div>
+                        </div>
+                        <span className="dia-label">{dia.fecha}</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
-            )}
 
-            {/* Ventas por país */}
-            {ventasPorPais.length > 0 && (
-              <div className="section-grid">
-                <div className="paises-section">
-                  <h3>🌍 Ventas por País</h3>
-                  <div className="paises-list">
-                    {ventasPorPais.map((item, idx) => (
-                      <div key={idx} className="pais-item">
-                        <span className="pais-bandera">{item.bandera}</span>
-                        <div className="pais-info">
-                          <span className="pais-nombre">{item.pais}</span>
-                          <div className="pais-barra">
-                            <div 
-                              className="pais-progreso" 
-                              style={{ width: `${item.porcentaje}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                        <span className="pais-total">${item.total.toLocaleString()}</span>
+              {/* 💳 MÉTODOS DE PAGO */}
+              <div className="dashboard-card">
+                <h2>
+                  <CreditCard size={24} />
+                  Métodos de Pago
+                </h2>
+                <div className="metodos-pago-lista">
+                  {metodosPago.length > 0 ? (
+                    metodosPago.map((item, index) => (
+                      <div key={index} className="metodo-item">
+                        <span className="metodo-nombre">{item.metodo}</span>
+                        <span className="metodo-cantidad">{item.cantidad} ventas</span>
                       </div>
-                    ))}
-                  </div>
+                    ))
+                  ) : (
+                    <p className="sin-datos">No hay datos de métodos de pago</p>
+                  )}
                 </div>
-
-                {/* Métodos de pago */}
-                {metodosPago.length > 0 && (
-                  <div className="metodos-section">
-                    <h3>💳 Métodos de Pago</h3>
-                    <div className="metodos-list">
-                      {metodosPago.map((item, idx) => (
-                        <div key={idx} className="metodo-item">
-                          <span className="metodo-nombre">{item.metodo}</span>
-                          <span className="metodo-cantidad">{item.cantidad} ventas</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
-            )}
+            </div>
 
-            {/* Top cursos por ingresos */}
-            {cursosIngresos.length > 0 && (
-              <div className="top-cursos-section">
-                <h3>🏆 Top Cursos por Ingresos</h3>
-                <div className="top-cursos-list">
-                  {cursosIngresos.filter(c => c.ingresos > 0).slice(0, 5).map((curso, idx) => (
-                    <div key={curso._id} className="top-curso-item">
-                      <span className="curso-ranking">#{idx + 1}</span>
-                      <div className="curso-info-top">
-                        <span className="curso-titulo-top">{curso.titulo}</span>
-                        <span className="curso-categoria">{curso.categoria}</span>
+            {/* SECCIONES INFERIORES */}
+            <div className="dashboard-sections">
+              
+              {/* 💰 TOP CURSOS POR INGRESOS */}
+              <div className="section">
+                <h2>Top Cursos por Ingresos</h2>
+                <div className="cursos-populares">
+                  {cursosIngresos.length > 0 ? (
+                    cursosIngresos.map(curso => (
+                      <div key={curso._id} className="curso-popular-item">
+                        <img src={curso.imagen} alt={curso.titulo} />
+                        <div>
+                          <h4>{curso.titulo}</h4>
+                          <p>{curso.estudiantes || 0} estudiantes • <strong>${curso.ingresos.toFixed(2)} ingresos</strong></p>
+                        </div>
                       </div>
-                      <span className="curso-ingresos">${curso.ingresos.toLocaleString()}</span>
+                    ))
+                  ) : (
+                    <p className="sin-datos">No hay cursos con ventas aún</p>
+                  )}
+                </div>
+              </div>
+
+              {/* ÚLTIMAS VENTAS */}
+              <div className="section">
+                <h2>Últimas Ventas</h2>
+                <div className="ultimas-ventas">
+                  {estadisticas?.ultimasVentas?.slice(0, 5).map(venta => (
+                    <div key={venta._id} className="venta-item">
+                      <div>
+                        <strong>{venta.usuario?.nombre}</strong>
+                        <p>{new Date(venta.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <span className="venta-total">${venta.total.toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
               </div>
-            )}
+            </div>
           </div>
         )}
 
-        {/* ========================================
-            VISTA: GESTIÓN DE CURSOS
-        ======================================== */}
+        {/* RESTO DEL CÓDIGO SIN CAMBIOS... */}
+        {/* (GESTIÓN DE CURSOS, USUARIOS, PAGOS, VENTAS) */}
+        
+        {/* GESTIÓN DE CURSOS */}
         {vista === 'cursos' && (
-          <div className="admin-cursos">
+          <div className="gestion-cursos">
             <div className="cursos-header">
               <h1>Gestión de Cursos</h1>
-              <button onClick={() => navigate('/admin/curso/nuevo')} className="btn-nuevo">
+              <button 
+                className="btn-crear"
+                onClick={() => navigate('/admin/curso/nuevo')}
+              >
                 <Plus size={20} />
-                Nuevo Curso
+                Crear Curso
               </button>
             </div>
 
-            <div className="cursos-grid">
-              {cursos.map(curso => (
-                <div key={curso._id} className="curso-card-admin">
-                  {curso.imagenPortada && (
-                    <img 
-                      src={`${BASE_URL}${curso.imagenPortada}`} 
-                      alt={curso.titulo}
-                      className="curso-img-admin"
-                    />
-                  )}
-                  <div className="curso-info-admin">
-                    <h3>{curso.titulo}</h3>
-                    <p className="curso-categoria">{curso.categoria} • {curso.nivel}</p>
-                    <p className="curso-precio">${curso.precioUSD}</p>
-                    <div className="curso-acciones">
-                      <button onClick={() => navigate(`/curso/${curso._id}`)} className="btn-ver">
-                        <Eye size={18} />
-                        Ver
-                      </button>
-                      <button onClick={() => navigate(`/admin/curso/${curso._id}/editar`)} className="btn-editar">
-                        <Edit2 size={18} />
-                        Editar
-                      </button>
-                      <button onClick={() => setModalEditarPrecios(curso)} className="btn-precios">
-                        <DollarSign size={18} />
-                        Precios
-                      </button>
-                      <button onClick={() => eliminarCurso(curso._id)} className="btn-eliminar">
-                        <Trash2 size={18} />
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ========================================
-            VISTA: USUARIOS
-        ======================================== */}
-        {vista === 'usuarios' && (
-          <div className="admin-usuarios">
-            <h1>Gestión de Usuarios ({usuarios.length})</h1>
-            
-            <div className="usuarios-tabla-container">
-              <table className="usuarios-tabla">
+            <div className="cursos-tabla">
+              <table>
                 <thead>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th>País</th>
-                    <th>Cursos</th>
+                    <th>Curso</th>
+                    <th>Categoría</th>
+                    <th>Precio (USD)</th>
+                    <th>Estudiantes</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {usuarios.map(usuario => (
-                    <tr key={usuario._id}>
-                      <td>{usuario.nombre}</td>
-                      <td>{usuario.email}</td>
+                  {cursos.map(curso => (
+                    <tr key={curso._id}>
                       <td>
-                        <select 
-                          value={usuario.rol} 
-                          onChange={(e) => cambiarRol(usuario._id, e.target.value)}
-                          className="select-rol"
-                        >
-                          <option value="usuario">Usuario</option>
-                          <option value="admin">Admin</option>
-                        </select>
+                        <div className="curso-tabla-info">
+                          <img src={curso.imagen} alt={curso.titulo} />
+                          <div>
+                            <strong>{curso.titulo}</strong>
+                            <span>{curso.nivel}</span>
+                          </div>
+                        </div>
                       </td>
-                      <td>{usuario.pais || 'N/A'}</td>
-                      <td>{usuario.cursosComprados?.length || 0}</td>
+                      <td>{curso.categoria}</td>
+                      <td>${curso.precioUSD || curso.precio || 0}</td>
+                      <td>{curso.estudiantes || 0}</td>
                       <td>
-                        <div className="acciones-usuario">
+                        <span className={`estado-badge ${curso.activo ? 'activo' : 'inactivo'}`}>
+                          {curso.activo ? 'Activo' : 'Inactivo'}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="acciones">
                           <button 
-                            onClick={() => setModalEditarUsuario(usuario)} 
-                            className="btn-editar-small"
+                            className="btn-icon"
+                            onClick={() => navigate(`/curso/${curso._id}`)}
+                            title="Ver"
                           >
-                            <Edit2 size={16} />
+                            <Eye size={18} />
                           </button>
                           <button 
-                            onClick={() => eliminarUsuario(usuario._id)} 
-                            className="btn-eliminar-small"
+                            className="btn-icon"
+                            onClick={() => setModalEditarPrecios(curso)}
+                            title="Editar Precios"
                           >
-                            <Trash2 size={16} />
+                            <DollarSign size={18} />
+                          </button>
+                          <button 
+                            className="btn-icon"
+                            onClick={() => navigate(`/admin/curso/${curso._id}/editar`)}
+                            title="Editar"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                          <button 
+                            className="btn-icon eliminar"
+                            onClick={() => eliminarCurso(curso._id)}
+                            title="Eliminar"
+                          >
+                            <Trash2 size={18} />
                           </button>
                         </div>
                       </td>
@@ -712,62 +715,160 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ========================================
-            VISTA: PAGOS PENDIENTES
-        ======================================== */}
+        {/* GESTIÓN DE USUARIOS */}
+        {vista === 'usuarios' && (
+          <div className="gestion-usuarios">
+            <h1>Gestión de Usuarios</h1>
+
+            <div className="usuarios-stats">
+              <div className="stat-mini">
+                <h3>{usuarios.length}</h3>
+                <p>Total Usuarios</p>
+              </div>
+              <div className="stat-mini">
+                <h3>{usuarios.filter(u => u.rol === 'admin').length}</h3>
+                <p>Administradores</p>
+              </div>
+              <div className="stat-mini">
+                <h3>{usuarios.filter(u => u.cursosComprados.length > 0).length}</h3>
+                <p>Con Cursos</p>
+              </div>
+            </div>
+
+            <div className="usuarios-tabla">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Cursos Comprados</th>
+                    <th>Rol</th>
+                    <th>Registro</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {usuarios.map(usuario => (
+                    <tr key={usuario._id}>
+                      <td>
+                        <div className="usuario-info">
+                          <strong>{usuario.nombre}</strong>
+                        </div>
+                      </td>
+                      <td>{usuario.email}</td>
+                      <td>{usuario.telefono || '-'}</td>
+                      <td>
+                        <span className="badge-cursos">
+                          {usuario.cursosComprados.length} cursos
+                        </span>
+                      </td>
+                      <td>
+                        <select 
+                          value={usuario.rol}
+                          onChange={(e) => cambiarRol(usuario._id, e.target.value)}
+                          className="select-rol"
+                        >
+                          <option value="usuario">Usuario</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </td>
+                      <td>{new Date(usuario.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <span className={`estado-badge ${usuario.activo ? 'activo' : 'inactivo'}`}>
+                          {usuario.activo ? 'Activo' : 'Inactivo'}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="acciones">
+                          <button 
+                            className="btn-icon"
+                            onClick={() => setModalEditarUsuario(usuario)}
+                            title="Editar"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                          <button 
+                            className="btn-icon eliminar"
+                            onClick={() => eliminarUsuario(usuario._id)}
+                            title="Eliminar"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* PAGOS PENDIENTES */}
         {vista === 'pagos' && (
-          <div className="admin-pagos">
-            <h1>Pagos Pendientes ({comprasPendientes.length})</h1>
-            
+          <div className="gestion-pagos">
+            <h1>Pagos Pendientes de Aprobación</h1>
+
             {comprasPendientes.length === 0 ? (
               <div className="sin-pendientes">
-                <p>✅ No hay pagos pendientes</p>
+                <p>✅ No hay pagos pendientes por revisar</p>
               </div>
             ) : (
-              <div className="compras-grid">
+              <div className="pagos-lista">
                 {comprasPendientes.map(compra => (
-                  <div key={compra._id} className="compra-card">
-                    <div className="compra-header">
-                      <span className="compra-id">#{compra._id.slice(-6)}</span>
-                      <span className="compra-fecha">
-                        {new Date(compra.createdAt).toLocaleDateString('es-ES')}
-                      </span>
+                  <div key={compra._id} className="pago-card">
+                    <div className="pago-header">
+                      <div>
+                        <h3>{compra.usuario?.nombre}</h3>
+                        <p>{compra.usuario?.email}</p>
+                      </div>
+                      <span className="pago-total">${compra.total.toFixed(2)} {compra.moneda}</span>
                     </div>
 
-                    <div className="compra-usuario">
-                      <strong>{compra.usuario?.nombre}</strong>
-                      <span>{compra.usuario?.email}</span>
-                    </div>
-
-                    <div className="compra-detalles">
-                      <p><strong>Total:</strong> ${compra.total}</p>
+                    <div className="pago-detalles">
                       <p><strong>Método:</strong> {compra.metodoPago?.nombre}</p>
-                      <p><strong>Cursos:</strong> {compra.cursos.length}</p>
+                      <p><strong>País:</strong> {compra.metodoPago?.pais}</p>
+                      <p><strong>Fecha:</strong> {new Date(compra.createdAt).toLocaleString()}</p>
+                      <p><strong>Estado:</strong> <span className="badge-estado">{compra.estadoPago}</span></p>
                     </div>
 
-                    {compra.comprobante && (
-                      <a 
-                        href={`${BASE_URL}${compra.comprobante}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="btn-ver-comprobante"
-                      >
-                        Ver Comprobante
-                      </a>
+                    <div className="pago-cursos">
+                      <strong>Cursos:</strong>
+                      {compra.cursos.map(item => (
+                        <div key={item._id} className="curso-mini">
+                          • {item.curso?.titulo} - ${item.precio}
+                        </div>
+                      ))}
+                    </div>
+
+                    {compra.comprobante?.url && (
+                      <div className="pago-comprobante">
+                        <strong>Comprobante:</strong>
+                        <a 
+                          href={`${BASE_URL}${compra.comprobante.url}`} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-ver-comprobante"
+                        >
+                          📸 Ver Comprobante
+                        </a>
+                      </div>
                     )}
 
-                    <div className="compra-acciones">
+                    <div className="pago-acciones">
                       <button 
-                        onClick={() => aprobarPago(compra._id)} 
                         className="btn-aprobar"
+                        onClick={() => aprobarPago(compra._id)}
                       >
-                        ✅ Aprobar
+                        ✓ Aprobar Pago
                       </button>
                       <button 
-                        onClick={() => rechazarPago(compra._id)} 
                         className="btn-rechazar"
+                        onClick={() => rechazarPago(compra._id)}
                       >
-                        ❌ Rechazar
+                        ✗ Rechazar
                       </button>
                     </div>
                   </div>
@@ -777,304 +878,402 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ========================================
-            VISTA: TODAS LAS VENTAS
-        ======================================== */}
+        {/* TODAS LAS VENTAS - MEJORADO */}
         {vista === 'ventas' && (
-          <div className="admin-ventas">
-            <div className="ventas-header">
-              <h1>Todas las Ventas ({todasCompras.length})</h1>
-              
-              <select 
-                value={filtroCompras} 
-                onChange={(e) => setFiltroCompras(e.target.value)}
-                className="filtro-ventas"
-              >
-                <option value="todas">Todas</option>
-                <option value="aprobado">Aprobadas</option>
-                <option value="pendiente">Pendientes</option>
-                <option value="rechazado">Rechazadas</option>
-              </select>
+          <div className="gestion-ventas">
+            <div className="ventas-header-mejorado">
+              <h1>Todas las Ventas</h1>
+              <div className="filtros-ventas">
+                <button 
+                  className={`filtro-btn ${filtroCompras === 'todas' ? 'activo' : ''}`}
+                  onClick={() => setFiltroCompras('todas')}
+                >
+                  Todas
+                </button>
+                <button 
+                  className={`filtro-btn ${filtroCompras === 'aprobado' ? 'activo' : ''}`}
+                  onClick={() => setFiltroCompras('aprobado')}
+                >
+                  ✓ Aprobadas
+                </button>
+                <button 
+                  className={`filtro-btn ${filtroCompras === 'pendiente' ? 'activo' : ''}`}
+                  onClick={() => setFiltroCompras('pendiente')}
+                >
+                  ⏱ Pendientes
+                </button>
+                <button 
+                  className={`filtro-btn ${filtroCompras === 'rechazado' ? 'activo' : ''}`}
+                  onClick={() => setFiltroCompras('rechazado')}
+                >
+                  ✗ Rechazadas
+                </button>
+              </div>
             </div>
 
-            <div className="ventas-tabla-container">
-              <table className="ventas-tabla">
+            {/* ESTADÍSTICAS DE VENTAS */}
+            <div className="ventas-stats-grid">
+              <div className="venta-stat-card">
+                <div className="stat-icono" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+                  <ShoppingCart size={24} />
+                </div>
+                <div className="stat-datos">
+                  <span className="stat-numero">{todasCompras.length}</span>
+                  <span className="stat-texto">Total Ventas</span>
+                </div>
+              </div>
+
+              <div className="venta-stat-card">
+                <div className="stat-icono" style={{background: 'linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%)'}}>
+                  <TrendingUp size={24} />
+                </div>
+                <div className="stat-datos">
+                  <span className="stat-numero">{todasCompras.filter(c => c.estadoPago === 'aprobado').length}</span>
+                  <span className="stat-texto">Aprobadas</span>
+                </div>
+              </div>
+
+              <div className="venta-stat-card">
+                <div className="stat-icono" style={{background: 'linear-gradient(135deg, #ffa500 0%, #ff8c00 100%)'}}>
+                  <Activity size={24} />
+                </div>
+                <div className="stat-datos">
+                  <span className="stat-numero">{todasCompras.filter(c => c.estadoPago === 'pendiente').length}</span>
+                  <span className="stat-texto">Pendientes</span>
+                </div>
+              </div>
+
+              <div className="venta-stat-card">
+                <div className="stat-icono" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'}}>
+                  <DollarSign size={24} />
+                </div>
+                <div className="stat-datos">
+                  <span className="stat-numero">
+                    ${todasCompras
+                      .filter(c => c.estadoPago === 'aprobado')
+                      .reduce((sum, c) => sum + c.total, 0)
+                      .toFixed(2)}
+                  </span>
+                  <span className="stat-texto">Total Recaudado</span>
+                </div>
+              </div>
+            </div>
+
+            {/* TABLA DE VENTAS */}
+            <div className="ventas-tabla-mejorada">
+              <table>
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Fecha</th>
                     <th>Usuario</th>
                     <th>Total</th>
                     <th>Método</th>
+                    <th>País</th>
+                    <th>Fecha</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {todasCompras.map(compra => (
-                    <tr key={compra._id}>
-                      <td>#{compra._id.slice(-6)}</td>
-                      <td>{new Date(compra.createdAt).toLocaleDateString('es-ES')}</td>
-                      <td>{compra.usuario?.nombre}</td>
-                      <td>${compra.total}</td>
-                      <td>{compra.metodoPago?.nombre}</td>
-                      <td>
-                        <span className={`estado-badge ${compra.estadoPago}`}>
-                          {compra.estadoPago}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="acciones-venta">
-                          <button 
-                            onClick={() => setModalDetalleVenta(compra)} 
-                            className="btn-ver-detalle"
-                          >
-                            <Eye size={16} />
-                          </button>
-                          {compra.estadoPago === 'pendiente' && (
-                            <>
+                  {todasCompras.length > 0 ? (
+                    todasCompras.map(compra => (
+                      <tr key={compra._id} className={`fila-venta ${compra.estadoPago}`}>
+                        <td>
+                          <span className="venta-id">#{compra._id.slice(-6)}</span>
+                        </td>
+                        <td>
+                          <div className="usuario-venta">
+                            <strong>{compra.usuario?.nombre}</strong>
+                            <span className="email-venta">{compra.usuario?.email}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span className="venta-monto">${compra.total.toFixed(2)} <span className="moneda">{compra.moneda}</span></span>
+                        </td>
+                        <td>
+                          <span className="metodo-badge">{compra.metodoPago?.nombre}</span>
+                        </td>
+                        <td>
+                          <span className="pais-badge">{obtenerBandera(compra.metodoPago?.pais || 'Internacional')} {compra.metodoPago?.pais || 'N/A'}</span>
+                        </td>
+                        <td>
+                          <span className="fecha-venta">{new Date(compra.createdAt).toLocaleDateString('es-ES', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                          })}</span>
+                        </td>
+                        <td>
+                          <span className={`estado-badge-mejorado ${compra.estadoPago}`}>
+                            {compra.estadoPago === 'aprobado' && '✓ Aprobado'}
+                            {compra.estadoPago === 'pendiente' && '⏱ Pendiente'}
+                            {compra.estadoPago === 'rechazado' && '✗ Rechazado'}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="acciones">
+                            <button 
+                              className="btn-icon"
+                              onClick={() => setModalDetalleVenta(compra)}
+                              title="Ver detalles"
+                            >
+                              <Eye size={18} />
+                            </button>
+                            {compra.estadoPago === 'pendiente' && (
                               <button 
-                                onClick={() => aprobarPago(compra._id)} 
-                                className="btn-aprobar-small"
+                                className="btn-icon aprobar"
+                                onClick={() => aprobarPago(compra._id)}
+                                title="Aprobar"
                               >
-                                ✅
+                                ✓
                               </button>
-                              <button 
-                                onClick={() => rechazarPago(compra._id)} 
-                                className="btn-rechazar-small"
-                              >
-                                ❌
-                              </button>
-                            </>
-                          )}
-                          <button 
-                            onClick={() => eliminarCompra(compra._id)} 
-                            className="btn-eliminar-small"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
+                            )}
+                            <button 
+                              className="btn-icon eliminar"
+                              onClick={() => eliminarCompra(compra._id)}
+                              title="Eliminar"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="8" className="sin-ventas">
+                        <ShoppingCart size={48} />
+                        <p>No hay ventas {filtroCompras !== 'todas' && `con estado "${filtroCompras}"`}</p>
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         )}
-
-        {/* ========================================
-            MODALES
-        ======================================== */}
-        
-        {/* Modal Editar Usuario */}
-        {modalEditarUsuario && (
-          <div className="modal-overlay" onClick={() => setModalEditarUsuario(null)}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h2>Editar Usuario</h2>
-                <button onClick={() => setModalEditarUsuario(null)} className="btn-cerrar-modal">
-                  <X size={24} />
-                </button>
-              </div>
-
-              <form onSubmit={guardarEdicionUsuario} className="form-editar-usuario">
-                <div className="form-group">
-                  <label>Nombre</label>
-                  <input 
-                    type="text" 
-                    name="nombre" 
-                    defaultValue={modalEditarUsuario.nombre} 
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Email</label>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    defaultValue={modalEditarUsuario.email} 
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Teléfono</label>
-                  <input 
-                    type="text" 
-                    name="telefono" 
-                    defaultValue={modalEditarUsuario.telefono || ''} 
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>País</label>
-                  <input 
-                    type="text" 
-                    name="pais" 
-                    defaultValue={modalEditarUsuario.pais || ''} 
-                  />
-                </div>
-
-                <div className="modal-acciones">
-                  <button type="button" onClick={() => setModalEditarUsuario(null)} className="btn-cancelar">
-                    Cancelar
-                  </button>
-                  <button type="submit" className="btn-guardar">
-                    Guardar Cambios
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Modal Detalle Venta */}
-        {modalDetalleVenta && (
-          <div className="modal-overlay" onClick={() => setModalDetalleVenta(null)}>
-            <div className="modal-content modal-detalle" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h2>Detalle de Venta #{modalDetalleVenta._id.slice(-6)}</h2>
-                <button onClick={() => setModalDetalleVenta(null)} className="btn-cerrar-modal">
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="detalle-venta-content">
-                <div className="detalle-seccion">
-                  <h3>Usuario</h3>
-                  <p><strong>Nombre:</strong> {modalDetalleVenta.usuario?.nombre}</p>
-                  <p><strong>Email:</strong> {modalDetalleVenta.usuario?.email}</p>
-                  <p><strong>País:</strong> {modalDetalleVenta.usuario?.pais || 'N/A'}</p>
-                </div>
-
-                <div className="detalle-seccion">
-                  <h3>Pago</h3>
-                  <p><strong>Total:</strong> ${modalDetalleVenta.total}</p>
-                  <p><strong>Método:</strong> {modalDetalleVenta.metodoPago?.nombre}</p>
-                  <p><strong>Estado:</strong> <span className={`estado-badge ${modalDetalleVenta.estadoPago}`}>{modalDetalleVenta.estadoPago}</span></p>
-                  <p><strong>Fecha:</strong> {new Date(modalDetalleVenta.createdAt).toLocaleString('es-ES')}</p>
-                </div>
-
-                <div className="detalle-seccion">
-                  <h3>Cursos ({modalDetalleVenta.cursos.length})</h3>
-                  <ul className="lista-cursos-detalle">
-                    {modalDetalleVenta.cursos.map((item, idx) => (
-                      <li key={idx}>
-                        <span>{item.curso?.titulo || 'Curso eliminado'}</span>
-                        <span>${item.precio}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {modalDetalleVenta.comprobante && (
-                  <div className="detalle-seccion">
-                    <h3>Comprobante</h3>
-                    <a 
-                      href={`${BASE_URL}${modalDetalleVenta.comprobante}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="btn-ver-comprobante-modal"
-                    >
-                      Ver Comprobante de Pago
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Modal Editar Precios */}
-        {modalEditarPrecios && (
-          <div className="modal-overlay" onClick={() => setModalEditarPrecios(null)}>
-            <div className="modal-content modal-precios" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h2>Editar Precios: {modalEditarPrecios.titulo}</h2>
-                <button onClick={() => setModalEditarPrecios(null)} className="btn-cerrar-modal">
-                  <X size={24} />
-                </button>
-              </div>
-
-              <form onSubmit={guardarPrecios} className="form-editar-precios">
-                <div className="precios-grid">
-                  <div className="form-group">
-                    <label>🌍 Internacional (USD)</label>
-                    <input 
-                      type="number" 
-                      name="precio_internacional" 
-                      defaultValue={modalEditarPrecios.precioUSD} 
-                      step="0.01"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>🇵🇪 Perú (PEN)</label>
-                    <input 
-                      type="number" 
-                      name="precio_peru" 
-                      defaultValue={modalEditarPrecios.precios?.peru?.monto || 0} 
-                      step="0.01"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>🇨🇱 Chile (CLP)</label>
-                    <input 
-                      type="number" 
-                      name="precio_chile" 
-                      defaultValue={modalEditarPrecios.precios?.chile?.monto || 0} 
-                      step="0.01"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>🇦🇷 Argentina (ARS)</label>
-                    <input 
-                      type="number" 
-                      name="precio_argentina" 
-                      defaultValue={modalEditarPrecios.precios?.argentina?.monto || 0} 
-                      step="0.01"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>🇺🇾 Uruguay (UYU)</label>
-                    <input 
-                      type="number" 
-                      name="precio_uruguay" 
-                      defaultValue={modalEditarPrecios.precios?.uruguay?.monto || 0} 
-                      step="0.01"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>🇻🇪 Venezuela (VES)</label>
-                    <input 
-                      type="number" 
-                      name="precio_venezuela" 
-                      defaultValue={modalEditarPrecios.precios?.venezuela?.monto || 0} 
-                      step="0.01"
-                    />
-                  </div>
-                </div>
-
-                <div className="modal-acciones">
-                  <button type="button" onClick={() => setModalEditarPrecios(null)} className="btn-cancelar">
-                    Cancelar
-                  </button>
-                  <button type="submit" className="btn-guardar">
-                    Guardar Precios
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* MODALES */}
+      {modalEditarUsuario && (
+        <div className="modal-overlay" onClick={() => setModalEditarUsuario(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Editar Usuario</h2>
+              <button onClick={() => setModalEditarUsuario(null)}>
+                <X size={24} />
+              </button>
+            </div>
+            <form onSubmit={guardarEdicionUsuario}>
+              <div className="form-group">
+                <label>Nombre</label>
+                <input 
+                  type="text" 
+                  name="nombre" 
+                  defaultValue={modalEditarUsuario.nombre} 
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label>Email</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  defaultValue={modalEditarUsuario.email} 
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label>Teléfono</label>
+                <input 
+                  type="text" 
+                  name="telefono" 
+                  defaultValue={modalEditarUsuario.telefono} 
+                />
+              </div>
+              <div className="form-group">
+                <label>País</label>
+                <input 
+                  type="text" 
+                  name="pais" 
+                  defaultValue={modalEditarUsuario.pais} 
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" onClick={() => setModalEditarUsuario(null)} className="btn-cancelar">
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-guardar">
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {modalDetalleVenta && (
+        <div className="modal-overlay" onClick={() => setModalDetalleVenta(null)}>
+          <div className="modal-content-large" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Detalle de Venta #{modalDetalleVenta._id.slice(-6)}</h2>
+              <button onClick={() => setModalDetalleVenta(null)}>
+                <X size={24} />
+              </button>
+            </div>
+            <div className="detalle-venta">
+              <div className="detalle-section">
+                <h3>Cliente</h3>
+                <p><strong>Nombre:</strong> {modalDetalleVenta.usuario?.nombre}</p>
+                <p><strong>Email:</strong> {modalDetalleVenta.usuario?.email}</p>
+                <p><strong>Teléfono:</strong> {modalDetalleVenta.usuario?.telefono}</p>
+              </div>
+              <div className="detalle-section">
+                <h3>Pago</h3>
+                <p><strong>Total:</strong> ${modalDetalleVenta.total.toFixed(2)} {modalDetalleVenta.moneda}</p>
+                <p><strong>Método:</strong> {modalDetalleVenta.metodoPago?.nombre}</p>
+                <p><strong>Estado:</strong> <span className={`estado-badge ${modalDetalleVenta.estadoPago}`}>{modalDetalleVenta.estadoPago}</span></p>
+                <p><strong>Fecha:</strong> {new Date(modalDetalleVenta.createdAt).toLocaleString()}</p>
+              </div>
+              <div className="detalle-section">
+                <h3>Cursos</h3>
+                {modalDetalleVenta.cursos.map(item => (
+                  <div key={item._id} className="curso-detalle">
+                    <p>{item.curso?.titulo} - ${item.precio}</p>
+                  </div>
+                ))}
+              </div>
+              {modalDetalleVenta.comprobante?.url && (
+                <div className="detalle-section">
+                  <h3>Comprobante</h3>
+                  <a 
+                    href={`${BASE_URL}${modalDetalleVenta.comprobante.url}`} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ver-comprobante"
+                  >
+                    📸 Ver Comprobante
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {modalEditarPrecios && (
+        <div className="modal-overlay" onClick={() => setModalEditarPrecios(null)}>
+          <div className="modal-content-large" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>💰 Editar Precios - {modalEditarPrecios.titulo}</h2>
+              <button onClick={() => setModalEditarPrecios(null)}>
+                <X size={24} />
+              </button>
+            </div>
+            <form onSubmit={guardarPrecios}>
+              <div className="precios-grid">
+                <div className="form-group">
+                  <label>🌍 Internacional (USD)</label>
+                  <input 
+                    type="number" 
+                    name="precio_internacional" 
+                    step="0.01"
+                    defaultValue={modalEditarPrecios.precioUSD || modalEditarPrecios.precios?.internacional?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇵🇪 Perú (PEN)</label>
+                  <input 
+                    type="number" 
+                    name="precio_peru" 
+                    step="0.01"
+                    defaultValue={modalEditarPrecios.precios?.peru?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇨🇱 Chile (CLP)</label>
+                  <input 
+                    type="number" 
+                    name="precio_chile" 
+                    step="1"
+                    defaultValue={modalEditarPrecios.precios?.chile?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇦🇷 Argentina (ARS)</label>
+                  <input 
+                    type="number" 
+                    name="precio_argentina" 
+                    step="1"
+                    defaultValue={modalEditarPrecios.precios?.argentina?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇺🇾 Uruguay (UYU)</label>
+                  <input 
+                    type="number" 
+                    name="precio_uruguay" 
+                    step="1"
+                    defaultValue={modalEditarPrecios.precios?.uruguay?.monto || 0}
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>🇻🇪 Venezuela (VES)</label>
+                  <input 
+                    type="number" 
+                    name="precio_venezuela" 
+                    step="1"
+                    defaultValue={modalEditarPrecios.precios?.venezuela?.monto || 0}
+                    required 
+                  />
+                </div>
+              </div>
+              <div className="precio-ayuda">
+                <strong>💡 Tip:</strong> El precio USD se usa como base. Los demás se ajustan según cada país.
+              </div>
+              <div className="modal-actions">
+                <button type="button" onClick={() => setModalEditarPrecios(null)} className="btn-cancelar">
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-guardar">
+                  💾 Guardar Precios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      
+      {mostrarToast && (
+        <div className="notification-toast">
+          <Bell size={20} />
+          <div className="toast-content">
+            <strong>Nueva compra pendiente</strong>
+            <p>Tienes {contador} {contador === 1 ? 'pago' : 'pagos'} pendiente{contador === 1 ? '' : 's'}</p>
+          </div>
+          <button 
+            className="toast-btn"
+            onClick={() => {
+              setVista('pagos');
+              setMostrarToast(false);
+              marcarComoVistas();
+            }}
+          >
+            Ver ahora
+          </button>
+          <button 
+            className="toast-close"
+            onClick={() => setMostrarToast(false)}
+          >
+            <X size={18} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
