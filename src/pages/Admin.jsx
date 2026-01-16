@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye, X, ShoppingCart, Bell,
-  Globe, CreditCard, BarChart3, TrendingDown, Activity, Mail
+  Globe, CreditCard, BarChart3, TrendingDown, Activity, Mail, Package  // ← AGREGADO Package
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, BASE_URL } from '../services/api';
@@ -379,28 +379,26 @@ const Admin = () => {
             Dashboard
           </button>
           <button 
-            className={vista === 'cursos' ? 'activo' : ''}
-            onClick={() => setVista('cursos')}
-          >
-            <BookOpen size={18} />
-            Gestión de Cursos
-          </button>
-          <button 
-            className={vista === 'usuarios' ? 'activo' : ''}
-            onClick={() => setVista('usuarios')}
-          >
-
-          <button 
-           className={vista === 'productos' ? 'activo' : ''}
-            onClick={() => setVista('productos')}
-            >
-           <Package size={18} />
-          Gestión de Productos
-            </button>
-
-            <Users size={18} />
-            Usuarios
-          </button>
+  className={vista === 'cursos' ? 'activo' : ''}
+  onClick={() => setVista('cursos')}
+>
+  <BookOpen size={18} />
+  Gestión de Cursos
+</button>
+<button 
+  className={vista === 'productos' ? 'activo' : ''}
+  onClick={() => setVista('productos')}
+>
+  <Package size={18} />
+  Gestión de Productos
+</button>
+<button 
+  className={vista === 'usuarios' ? 'activo' : ''}
+  onClick={() => setVista('usuarios')}
+>
+  <Users size={18} />
+  Usuarios
+</button>
           <button 
             className={vista === 'pagos' ? 'activo' : ''}
             onClick={() => {
@@ -744,8 +742,6 @@ const Admin = () => {
     </div>
   </div>
 )}
-
-              
 
         {/* GESTIÓN DE USUARIOS */}
         {vista === 'usuarios' && (
