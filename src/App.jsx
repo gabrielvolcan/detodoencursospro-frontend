@@ -23,6 +23,10 @@ import Certificado from './pages/Certificado';
 import VerificarCertificado from './pages/VerificarCertificado';
 import EmailMasivo from './pages/EmailMasivo';
 
+// ✅ COMPONENTES DE PRODUCTOS (ahora activos)
+import Productos from './pages/Productos';
+import ProductoDetalle from './pages/ProductoDetalle';
+import ProductoForm from './pages/ProductoForm';
 
 // Componente para rutas privadas
 const PrivateRoute = ({ children }) => {
@@ -47,9 +51,19 @@ function App() {
               <main>
                 <Routes>
                   {/* ========================================
-                      RUTAS PÚBLICAS
+                      RUTAS PÚBLICAS - HOME
                   ======================================== */}
                   <Route path="/" element={<Home />} />
+                  
+                  {/* ========================================
+                      ✅ PRODUCTOS DIGITALES (Sistema nuevo - ACTIVO)
+                  ======================================== */}
+                  <Route path="/productos" element={<Productos />} />
+                  <Route path="/producto/:id" element={<ProductoDetalle />} />
+                  
+                  {/* ========================================
+                      CURSOS (Sistema actual - mantener)
+                  ======================================== */}
                   <Route path="/cursos" element={<Cursos />} />
                   <Route path="/curso/:id" element={<DetalleCurso />} />
                   
@@ -82,12 +96,18 @@ function App() {
                   <Route path="/aprender/:cursoId" element={<PrivateRoute><AprendeCurso /></PrivateRoute>} />
                   
                   {/* ========================================
-                      RUTAS DE ADMIN
+                      RUTAS DE ADMIN - CURSOS (actual)
                   ======================================== */}
                   <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
                   <Route path="/admin/curso/nuevo" element={<AdminRoute><CursoForm /></AdminRoute>} />
                   <Route path="/admin/curso/:id/editar" element={<AdminRoute><CursoForm /></AdminRoute>} />
                   <Route path="/admin/email-masivo" element={<AdminRoute><EmailMasivo /></AdminRoute>} />
+                  
+                  {/* ========================================
+                      ✅ RUTAS DE ADMIN - PRODUCTOS (nuevo - ACTIVO)
+                  ======================================== */}
+                  <Route path="/admin/producto/nuevo" element={<AdminRoute><ProductoForm /></AdminRoute>} />
+                  <Route path="/admin/producto/:id/editar" element={<AdminRoute><ProductoForm /></AdminRoute>} />
                 </Routes>
               </main>
               

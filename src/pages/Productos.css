@@ -1,0 +1,327 @@
+/* ========================================
+   PRODUCTOS - HERO
+======================================== */
+.productos-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.productos-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.productos-hero p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* ========================================
+   CONTROLES Y FILTROS
+======================================== */
+.productos-controles {
+  background: #f8f9fa;
+  padding: 30px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.buscador {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.buscador input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+/* Filtros por tipo */
+.tipos-filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.tipo-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+.tipo-btn:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+}
+
+.tipo-btn.activo {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+/* Controles adicionales */
+.controles-adicionales {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-filtros {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-filtros:hover {
+  border-color: #667eea;
+}
+
+.select-orden {
+  padding: 10px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.vista-toggle {
+  display: flex;
+  gap: 5px;
+  background: white;
+  padding: 5px;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  margin-left: auto;
+}
+
+.vista-toggle button {
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.vista-toggle button.activo {
+  background: #667eea;
+  color: white;
+}
+
+/* Filtros avanzados */
+.filtros-avanzados {
+  margin-top: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filtro-grupo label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.filtro-grupo select {
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.btn-limpiar-filtros {
+  padding: 10px 20px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-limpiar-filtros:hover {
+  background: #d32f2f;
+}
+
+/* ========================================
+   RESULTADOS
+======================================== */
+.productos-resultados {
+  padding: 40px 20px;
+  min-height: 60vh;
+}
+
+.resultados-info {
+  margin-bottom: 30px;
+}
+
+.resultados-info p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Grid de productos */
+.productos-grid.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.productos-grid.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Sin resultados */
+.sin-resultados {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.sin-resultados svg {
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.sin-resultados h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.sin-resultados p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.sin-resultados button {
+  padding: 12px 30px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.sin-resultados button:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   ESTADOS DE CARGA Y ERROR
+======================================== */
+.productos-loading,
+.productos-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.productos-error button {
+  padding: 12px 30px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 768px) {
+  .productos-hero h1 {
+    font-size: 2rem;
+  }
+
+  .tipos-filtros {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .controles-adicionales {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vista-toggle {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .productos-grid.grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filtros-avanzados {
+    flex-direction: column;
+  }
+}

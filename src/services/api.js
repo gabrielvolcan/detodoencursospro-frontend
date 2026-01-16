@@ -32,7 +32,9 @@ axios.interceptors.response.use(
   }
 );
 
-// Auth
+// ========================================
+// AUTH
+// ========================================
 export const authAPI = {
   registro: (datos) => axios.post('/auth/registro', datos),
   login: (datos) => axios.post('/auth/login', datos),
@@ -43,7 +45,9 @@ export const authAPI = {
   restablecerContrasena: (token, password) => axios.post(`/auth/restablecer-contrasena/${token}`, { password })
 };
 
-// Cursos
+// ========================================
+// CURSOS (Sistema actual - mantener)
+// ========================================
 export const cursosAPI = {
   obtenerTodos: (params) => axios.get('/cursos', { params }),
   obtenerPorId: (id) => axios.get(`/cursos/${id}`),
@@ -63,7 +67,44 @@ export const cursosAPI = {
   desmarcarVideoVisto: (cursoId, temaId) => axios.post(`/cursos/${cursoId}/desmarcar-visto`, { temaId })
 };
 
-// Pagos Manuales
+// ========================================
+// ✅ PRODUCTOS DIGITALES (Sistema nuevo - COMPLETO)
+// ========================================
+export const productosAPI = {
+  // Obtener todos los productos (público)
+  obtenerTodos: (params) => axios.get('/productos', { params }),
+  
+  // Obtener un producto por ID (público)
+  obtenerPorId: (id) => axios.get(`/productos/${id}`),
+  
+  // Crear producto (admin + multipart/form-data para archivos)
+  crear: (formData) => axios.post('/productos', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  
+  // Actualizar producto (admin)
+  actualizar: (id, datos) => axios.put(`/productos/${id}`, datos),
+  
+  // Eliminar producto (admin)
+  eliminar: (id) => axios.delete(`/productos/${id}`),
+  
+  // Descargar archivo (requiere compra)
+  descargar: (productoId, archivoId) => axios.get(`/productos/${productoId}/descargar/${archivoId}`, {
+    responseType: 'blob' // ✅ Importante para descargas
+  }),
+  
+  // Agregar archivo adicional a producto existente
+  agregarArchivo: (productoId, formData) => axios.post(`/productos/${productoId}/agregar-archivo`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  
+  // Eliminar archivo específico
+  eliminarArchivo: (productoId, archivoId) => axios.delete(`/productos/${productoId}/archivo/${archivoId}`)
+};
+
+// ========================================
+// PAGOS MANUALES
+// ========================================
 export const pagosAPI = {
   crearOrdenManual: (datos) => axios.post('/pagos-manual/crear-orden-manual', datos),
   subirComprobante: (compraId, formData) => axios.post(`/pagos-manual/subir-comprobante/${compraId}`, formData, {
@@ -73,7 +114,9 @@ export const pagosAPI = {
   obtenerCompra: (id) => axios.get(`/pagos-manual/compra/${id}`)
 };
 
-// Admin
+// ========================================
+// ADMIN
+// ========================================
 export const adminAPI = {
   obtenerDashboard: () => axios.get('/admin/dashboard'),
   obtenerTodosCursos: () => axios.get('/admin/cursos'),
@@ -94,10 +137,21 @@ export const adminAPI = {
   eliminarCompra: (compraId) => axios.delete(`/admin/compra/${compraId}`),
   
   // 🔔 Notificaciones
-  obtenerContadorNotificaciones: () => axios.get('/admin/notificaciones/contador')
+  obtenerContadorNotificaciones: () => axios.get('/admin/notificaciones/contador'),
+  
+  // ✅ Gestión de productos (admin - COMPLETO)
+  obtenerTodosProductos: () => axios.get('/admin/productos'),
+  obtenerProducto: (id) => axios.get(`/admin/productos/${id}`),
+  crearProducto: (formData) => axios.post('/admin/productos', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  actualizarProducto: (id, datos) => axios.put(`/admin/productos/${id}`, datos),
+  eliminarProducto: (id) => axios.delete(`/admin/productos/${id}`)
 };
 
-// Email Masivo
+// ========================================
+// EMAIL MASIVO
+// ========================================
 export const emailMasivoAPI = {
   enviar: (datos) => axios.post('/email-masivo/enviar', datos),
   previsualizar: (datos) => axios.post('/email-masivo/previsualizar', datos)
