@@ -6,7 +6,6 @@ import {
   Image as ImageIcon, DollarSign, Package 
 } from 'lucide-react';
 import './ProductoForm.css';
-
 const ProductoForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
