@@ -1,3 +1,7 @@
+/* ========================================
+   CURSO CARD - SIN CONFLICTOS
+======================================== */
+
 .curso-card {
   background: var(--negro-claro);
   border: 1px solid var(--gris-oscuro);
@@ -5,7 +9,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
-  animation: fadeIn 0.5s ease-out;
+  animation: cursoFadeIn 0.5s ease-out;
 }
 
 .curso-card:hover {
@@ -14,6 +18,7 @@
   box-shadow: 0 12px 32px rgba(0, 255, 136, 0.15);
 }
 
+/* IMAGEN - SIN ZOOM RARO */
 .curso-imagen-container {
   position: relative;
   width: 100%;
@@ -29,32 +34,36 @@
   transition: transform 0.3s ease;
 }
 
-.curso-card:hover .curso-imagen {
+/* QUITAR ZOOM - COMENTAR ESTA LÍNEA */
+/* .curso-card:hover .curso-imagen {
   transform: scale(1.05);
-}
+} */
 
-.descuento-badge,
-.destacado-badge {
+/* Badges */
+.curso-descuento-badge,
+.curso-destacado-badge {
   position: absolute;
   top: 12px;
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 700;
+  z-index: 2;
 }
 
-.descuento-badge {
+.curso-descuento-badge {
   right: 12px;
   background: var(--rojo);
   color: var(--blanco);
 }
 
-.destacado-badge {
+.curso-destacado-badge {
   left: 12px;
   background: var(--acento);
   color: var(--negro);
 }
 
+/* Contenido */
 .curso-content {
   padding: 20px;
   display: flex;
@@ -106,7 +115,7 @@
   border-bottom: 1px solid var(--gris-oscuro);
 }
 
-.meta-item {
+.curso-meta-item {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -114,7 +123,7 @@
   font-size: 0.85rem;
 }
 
-.meta-item svg {
+.curso-meta-item svg {
   color: var(--acento);
 }
 
@@ -132,21 +141,21 @@
   gap: 4px;
 }
 
-.precio-anterior {
+.curso-precio-anterior {
   color: var(--gris-claro);
   font-size: 0.9rem;
   text-decoration: line-through;
 }
 
-.precio-actual {
+.curso-precio-actual {
   color: var(--acento);
   font-size: 1.5rem;
   font-weight: 700;
 }
 
-.btn-agregar,
-.btn-en-carrito,
-.btn-acceder {
+.curso-btn-agregar,
+.curso-btn-en-carrito,
+.curso-btn-acceder {
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 600;
@@ -156,32 +165,45 @@
   gap: 8px;
   transition: all 0.3s ease;
   white-space: nowrap;
+  border: none;
+  cursor: pointer;
 }
 
-.btn-agregar {
+.curso-btn-agregar {
   background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
 }
 
-.btn-agregar:hover {
+.curso-btn-agregar:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
 }
 
-.btn-en-carrito {
+.curso-btn-en-carrito {
   background: var(--gris);
   color: var(--blanco);
   cursor: default;
 }
 
-.btn-acceder {
+.curso-btn-acceder {
   background: var(--acento);
   color: var(--negro);
 }
 
-.btn-acceder:hover {
+.curso-btn-acceder:hover {
   background: var(--acento-hover);
   transform: translateY(-2px);
+}
+
+@keyframes cursoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {
@@ -190,9 +212,9 @@
     align-items: stretch;
   }
 
-  .btn-agregar,
-  .btn-en-carrito,
-  .btn-acceder {
+  .curso-btn-agregar,
+  .curso-btn-en-carrito,
+  .curso-btn-acceder {
     width: 100%;
     justify-content: center;
   }

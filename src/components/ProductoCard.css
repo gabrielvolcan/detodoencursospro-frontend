@@ -1,5 +1,5 @@
 /* ========================================
-   PRODUCTO CARD - ESTILO ADAPTADO
+   PRODUCTO CARD - SIN CONFLICTOS
 ======================================== */
 
 .producto-card {
@@ -9,7 +9,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
-  animation: fadeIn 0.5s ease-out;
+  animation: productoFadeIn 0.5s ease-out;
   display: flex;
   flex-direction: column;
   text-decoration: none;
@@ -23,10 +23,10 @@
 }
 
 /* ========================================
-   IMAGEN
+   IMAGEN - SIN ZOOM
 ======================================== */
 
-.card-imagen {
+.producto-card-imagen {
   position: relative;
   width: 100%;
   height: 200px;
@@ -34,19 +34,20 @@
   background: var(--gris-oscuro);
 }
 
-.card-imagen img {
+.producto-card-imagen img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.producto-card:hover .card-imagen img {
+/* SIN ZOOM */
+/* .producto-card:hover .producto-card-imagen img {
   transform: scale(1.05);
-}
+} */
 
 /* Badges */
-.card-badges {
+.producto-card-badges {
   position: absolute;
   top: 12px;
   left: 12px;
@@ -56,7 +57,7 @@
   z-index: 2;
 }
 
-.badge {
+.producto-badge {
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -64,23 +65,23 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.badge-nuevo {
+.producto-badge-nuevo {
   background: var(--acento);
   color: var(--negro);
 }
 
-.badge-oferta {
+.producto-badge-oferta {
   background: var(--rojo);
   color: var(--blanco);
 }
 
-.badge-destacado {
+.producto-badge-destacado {
   background: linear-gradient(135deg, #ffa726 0%, #ff6f00 100%);
   color: var(--blanco);
 }
 
 /* Tipo de producto */
-.card-tipo {
+.producto-card-tipo {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -97,7 +98,7 @@
   z-index: 2;
 }
 
-.card-tipo svg {
+.producto-card-tipo svg {
   color: var(--acento);
 }
 
@@ -105,7 +106,7 @@
    CONTENIDO
 ======================================== */
 
-.card-contenido {
+.producto-card-contenido {
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -114,7 +115,7 @@
 }
 
 /* Categoría */
-.card-categoria {
+.producto-card-categoria {
   display: inline-block;
   padding: 4px 12px;
   background: var(--gris-oscuro);
@@ -128,7 +129,7 @@
 }
 
 /* Título */
-.card-titulo {
+.producto-card-titulo {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--blanco);
@@ -142,7 +143,7 @@
 }
 
 /* Subtítulo */
-.card-subtitulo {
+.producto-card-subtitulo {
   color: var(--acento);
   font-size: 0.95rem;
   font-weight: 600;
@@ -155,7 +156,7 @@
 }
 
 /* Descripción */
-.card-descripcion {
+.producto-card-descripcion {
   color: var(--gris-claro);
   font-size: 0.9rem;
   line-height: 1.5;
@@ -168,7 +169,7 @@
 }
 
 /* Metadatos */
-.card-meta {
+.producto-card-meta {
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
@@ -178,26 +179,26 @@
   color: var(--gris-claro);
 }
 
-.card-meta span {
+.producto-card-meta span {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.card-meta svg {
+.producto-card-meta svg {
   color: var(--acento);
 }
 
 /* Stats (valoración y estudiantes) */
-.card-stats {
+.producto-card-stats {
   display: flex;
   gap: 15px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--gris-oscuro);
 }
 
-.valoracion,
-.estudiantes {
+.producto-valoracion,
+.producto-estudiantes {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -205,15 +206,15 @@
   font-size: 0.85rem;
 }
 
-.valoracion svg {
+.producto-valoracion svg {
   color: #ffa500;
 }
 
-.estudiantes svg {
+.producto-estudiantes svg {
   color: var(--acento);
 }
 
-.valoracion-total {
+.producto-valoracion-total {
   opacity: 0.7;
 }
 
@@ -221,7 +222,7 @@
    FOOTER / PRECIO
 ======================================== */
 
-.card-footer {
+.producto-card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -229,26 +230,26 @@
   margin-top: 8px;
 }
 
-.precio {
+.producto-precio {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.precio-antes {
+.producto-precio-antes {
   color: var(--gris-claro);
   font-size: 0.9rem;
   text-decoration: line-through;
 }
 
-.precio-actual {
+.producto-precio-actual {
   color: var(--acento);
   font-size: 1.5rem;
   font-weight: 700;
 }
 
 /* Botón */
-.btn-ver-mas {
+.producto-btn-ver-mas {
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 600;
@@ -264,7 +265,7 @@
   cursor: pointer;
 }
 
-.btn-ver-mas:hover {
+.producto-btn-ver-mas:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
 }
@@ -273,7 +274,7 @@
    ANIMACIÓN
 ======================================== */
 
-@keyframes fadeIn {
+@keyframes productoFadeIn {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -289,31 +290,31 @@
 ======================================== */
 
 @media (max-width: 768px) {
-  .card-footer {
+  .producto-card-footer {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .btn-ver-mas {
+  .producto-btn-ver-mas {
     width: 100%;
     justify-content: center;
   }
 
-  .card-meta {
+  .producto-card-meta {
     gap: 10px;
   }
 }
 
 @media (max-width: 480px) {
-  .card-contenido {
+  .producto-card-contenido {
     padding: 15px;
   }
 
-  .card-titulo {
+  .producto-card-titulo {
     font-size: 1.1rem;
   }
 
-  .precio-actual {
+  .producto-precio-actual {
     font-size: 1.3rem;
   }
 }

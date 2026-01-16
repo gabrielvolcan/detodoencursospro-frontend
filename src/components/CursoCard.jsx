@@ -86,7 +86,7 @@ const CursoCard = ({ curso }) => {
           className="curso-imagen"
         />
         {curso.destacado && (
-          <span className="destacado-badge">Destacado</span>
+          <span className="curso-destacado-badge">Destacado</span>
         )}
       </div>
 
@@ -98,15 +98,15 @@ const CursoCard = ({ curso }) => {
         <p className="curso-descripcion">{curso.descripcionCorta || 'Sin descripción'}</p>
 
         <div className="curso-meta">
-          <div className="meta-item">
+          <div className="curso-meta-item">
             <Clock size={16} />
             <span>{curso.duracion || 'Por definir'}</span>
           </div>
-          <div className="meta-item">
+          <div className="curso-meta-item">
             <Users size={16} />
             <span>{curso.estudiantes || 0} estudiantes</span>
           </div>
-          <div className="meta-item">
+          <div className="curso-meta-item">
             <Star size={16} fill="var(--amarillo)" color="var(--amarillo)" />
             <span>{curso.calificacion || 5}</span>
           </div>
@@ -114,24 +114,24 @@ const CursoCard = ({ curso }) => {
 
         <div className="curso-footer">
           <div className="curso-precio">
-            <span className="precio-actual">{precioInfo.formatted}</span>
+            <span className="curso-precio-actual">{precioInfo.formatted}</span>
           </div>
 
           {yaComprado ? (
             <button 
-              className="btn-acceder"
+              className="curso-btn-acceder"
               onClick={handleAccederCurso}
             >
               Acceder al Curso
             </button>
           ) : enCarrito ? (
-            <button className="btn-en-carrito" disabled>
+            <button className="curso-btn-en-carrito" disabled>
               <Check size={18} />
               En Carrito
             </button>
           ) : (
             <button 
-              className="btn-agregar"
+              className="curso-btn-agregar"
               onClick={handleAgregarCarrito}
             >
               <ShoppingCart size={18} />

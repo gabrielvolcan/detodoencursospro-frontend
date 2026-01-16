@@ -48,47 +48,47 @@ const ProductoCard = ({ producto }) => {
 
   return (
     <Link to={`/producto/${producto._id}`} className="producto-card">
-      <div className="card-imagen">
+      <div className="producto-card-imagen">
         <img src={producto.imagen} alt={producto.titulo} />
         
         {/* Badges */}
-        <div className="card-badges">
+        <div className="producto-card-badges">
           {producto.nuevo && (
-            <span className="badge badge-nuevo">Nuevo</span>
+            <span className="producto-badge producto-badge-nuevo">Nuevo</span>
           )}
           {producto.oferta?.activa && (
-            <span className="badge badge-oferta">
+            <span className="producto-badge producto-badge-oferta">
               -{producto.oferta.porcentajeDescuento}%
             </span>
           )}
           {producto.destacado && (
-            <span className="badge badge-destacado">⭐ Destacado</span>
+            <span className="producto-badge producto-badge-destacado">⭐ Destacado</span>
           )}
         </div>
         
         {/* Tipo de producto */}
-        <div className="card-tipo">
+        <div className="producto-card-tipo">
           {renderIconoTipo()}
           <span>{renderTipoBadge()}</span>
         </div>
       </div>
       
-      <div className="card-contenido">
-        <div className="card-categoria">{producto.categoria}</div>
+      <div className="producto-card-contenido">
+        <div className="producto-card-categoria">{producto.categoria}</div>
         
-        <h3 className="card-titulo">{producto.titulo}</h3>
+        <h3 className="producto-card-titulo">{producto.titulo}</h3>
         
         {producto.subtitulo && (
-          <p className="card-subtitulo">{producto.subtitulo}</p>
+          <p className="producto-card-subtitulo">{producto.subtitulo}</p>
         )}
         
-        <p className="card-descripcion">
+        <p className="producto-card-descripcion">
           {producto.descripcion.substring(0, 100)}
           {producto.descripcion.length > 100 && '...'}
         </p>
         
         {/* Metadatos según tipo */}
-        <div className="card-meta">
+        <div className="producto-card-meta">
           {/* Para cursos */}
           {producto.tipo === 'curso' && (
             <>
@@ -136,31 +136,31 @@ const ProductoCard = ({ producto }) => {
         </div>
         
         {/* Valoración y estudiantes */}
-        <div className="card-stats">
-          <div className="valoracion">
+        <div className="producto-card-stats">
+          <div className="producto-valoracion">
             <Star size={16} fill="#ffa500" color="#ffa500" />
             <span>{producto.valoracion.promedio.toFixed(1)}</span>
-            <span className="valoracion-total">
+            <span className="producto-valoracion-total">
               ({producto.valoracion.total})
             </span>
           </div>
           
-          <div className="estudiantes">
+          <div className="producto-estudiantes">
             <Users size={16} />
             <span>{producto.estudiantes}</span>
           </div>
         </div>
         
         {/* Precio */}
-        <div className="card-footer">
-          <div className="precio">
+        <div className="producto-card-footer">
+          <div className="producto-precio">
             {producto.oferta?.activa && (
-              <span className="precio-antes">${producto.precioUSD}</span>
+              <span className="producto-precio-antes">${producto.precioUSD}</span>
             )}
-            <span className="precio-actual">${precioFinal}</span>
+            <span className="producto-precio-actual">${precioFinal}</span>
           </div>
           
-          <button className="btn-ver-mas">Ver detalles</button>
+          <button className="producto-btn-ver-mas">Ver detalles</button>
         </div>
       </div>
     </Link>
