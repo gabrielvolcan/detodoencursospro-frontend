@@ -43,6 +43,9 @@ const Header = () => {
           <Link to="/cursos" className="nav-link">
             Cursos
           </Link>
+          <Link to="/productos" className="nav-link">
+            Productos
+          </Link>
         </nav>
 
         {/* Acciones del header (desktop) */}
@@ -163,6 +166,9 @@ const Header = () => {
               </Link>
               <Link to="/cursos" className="menu-mobile-link" onClick={cerrarMenu}>
                 Cursos
+              </Link>
+              <Link to="/productos" className="menu-mobile-link" onClick={cerrarMenu}>
+                Productos
               </Link>
             </div>
 
