@@ -389,6 +389,15 @@ const Admin = () => {
             className={vista === 'usuarios' ? 'activo' : ''}
             onClick={() => setVista('usuarios')}
           >
+
+          <button 
+           className={vista === 'productos' ? 'activo' : ''}
+            onClick={() => setVista('productos')}
+            >
+           <Package size={18} />
+          Gestión de Productos
+            </button>
+
             <Users size={18} />
             Usuarios
           </button>
@@ -626,7 +635,7 @@ const Admin = () => {
           </div>
         )}
 
-        {/* RESTO DEL CÓDIGO SIN CAMBIOS... */}
+      
         {/* (GESTIÓN DE CURSOS, USUARIOS, PAGOS, VENTAS) */}
         
         {/* GESTIÓN DE CURSOS */}
@@ -638,7 +647,7 @@ const Admin = () => {
                 className="btn-crear"
                 onClick={() => navigate('/admin/curso/nuevo')}
               >
-                <Plus size={20} />
+                  <Plus size={20} />
                 Crear Curso
               </button>
             </div>
@@ -714,6 +723,29 @@ const Admin = () => {
             </div>
           </div>
         )}
+
+        {/* GESTIÓN DE PRODUCTOS */}
+{vista === 'productos' && (
+  <div className="gestion-cursos">
+    <div className="cursos-header">
+      <h1>Gestión de Productos</h1>
+      <button 
+        className="btn-crear"
+        onClick={() => navigate('/admin/producto/nuevo')}
+      >
+        <Plus size={20} />
+        Crear Producto
+      </button>
+    </div>
+
+    <div className="admin-info-box">
+      <p>📦 Gestiona tus productos digitales: libros, ebooks, plantillas, software y más.</p>
+      <p>Aquí aparecerá la lista de productos cuando crees el primero.</p>
+    </div>
+  </div>
+)}
+
+              
 
         {/* GESTIÓN DE USUARIOS */}
         {vista === 'usuarios' && (
