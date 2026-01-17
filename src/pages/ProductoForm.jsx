@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { productosAPI, adminAPI } from '../services/api';
+import { productosAPI } from '../services/api';
 import { 
-  Save, ArrowLeft, Upload, X, Plus, FileText, 
-  Image as ImageIcon, DollarSign, Package 
+  Save, ArrowLeft, X, Plus, 
+  Image as ImageIcon
 } from 'lucide-react';
 import './ProductoForm.css';
+
 const ProductoForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -14,6 +15,16 @@ const ProductoForm = () => {
   const [cargando, setCargando] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
+
+  // TASAS DE CONVERSIÓN
+  const TASAS = {
+    internacional: { multiplicador: 1, moneda: 'USD' },
+    peru: { multiplicador: 3.36, moneda: 'PEN' },
+    chile: { multiplicador: 894, moneda: 'CLP' },
+    argentina: { multiplicador: 1505, moneda: 'ARS' },
+    uruguay: { multiplicador: 38.9, moneda: 'UYU' },
+    venezuela: { multiplicador: 50, moneda: 'VES' }
+  };
 
   // Estado del formulario
   const [producto, setProducto] = useState({
@@ -25,13 +36,12 @@ const ProductoForm = () => {
     categoria: '',
     tags: [],
     precioUSD: 0,
-    imagen: null,
-    imagenPreview: '',
+    imagen: '',
     activo: true,
     destacado: false,
     nuevo: false,
     
-    // Precios por país
+    // Precios por país (auto-calculados)
     precios: {
       internacional: { monto: 0, moneda: 'USD' },
       peru: { monto: 0, moneda: 'PEN' },
@@ -40,10 +50,6 @@ const ProductoForm = () => {
       uruguay: { monto: 0, moneda: 'UYU' },
       venezuela: { monto: 0, moneda: 'VES' }
     },
-    
-    // Archivos descargables
-    archivos: [],
-    archivosNuevos: [],
     
     // Videos (solo para cursos)
     videos: [],
@@ -54,10 +60,13 @@ const ProductoForm = () => {
       paginas: 0,
       isbn: '',
       editorial: '',
+      añoPublicacion: 0,
       idioma: 'Español',
       version: '',
       compatibilidad: [],
+      requisitos: '',
       software: '',
+      versionSoftware: '',
       capas: false,
       instructor: '',
       certificado: false,
@@ -73,6 +82,14 @@ const ProductoForm = () => {
       descargasMaximas: null,
       diasAcceso: null,
       dispositivosMaximos: null
+    },
+    
+    // Oferta
+    oferta: {
+      activa: false,
+      porcentajeDescuento: 0,
+      fechaInicio: '',
+      fechaFin: ''
     }
   });
 
@@ -101,11 +118,7 @@ const ProductoForm = () => {
     try {
       setCargando(true);
       const { data } = await productosAPI.obtenerPorId(id);
-      setProducto({
-        ...data,
-        imagenPreview: data.imagen,
-        archivosNuevos: []
-      });
+      setProducto(data);
     } catch (error) {
       console.error('Error cargando producto:', error);
       setError('Error al cargar producto');
@@ -114,12 +127,36 @@ const ProductoForm = () => {
     }
   };
 
+  // Calcular precios automáticamente
+  const calcularPreciosPorPais = (precioUSD) => {
+    const nuevosPrecios = {};
+    Object.keys(TASAS).forEach(pais => {
+      nuevosPrecios[pais] = {
+        monto: parseFloat((precioUSD * TASAS[pais].multiplicador).toFixed(2)),
+        moneda: TASAS[pais].moneda
+      };
+    });
+    return nuevosPrecios;
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setProducto(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    
+    // Si cambió el precio USD, recalcular todos los precios
+    if (name === 'precioUSD') {
+      const precioUSD = parseFloat(value) || 0;
+      const nuevosPrecios = calcularPreciosPorPais(precioUSD);
+      setProducto(prev => ({
+        ...prev,
+        precioUSD,
+        precios: nuevosPrecios
+      }));
+    } else {
+      setProducto(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      }));
+    }
   };
 
   const handleMetadatoChange = (campo, valor) => {
@@ -128,19 +165,6 @@ const ProductoForm = () => {
       metadatos: {
         ...prev.metadatos,
         [campo]: valor
-      }
-    }));
-  };
-
-  const handlePrecioChange = (pais, valor) => {
-    setProducto(prev => ({
-      ...prev,
-      precios: {
-        ...prev.precios,
-        [pais]: {
-          ...prev.precios[pais],
-          monto: parseFloat(valor) || 0
-        }
       }
     }));
   };
@@ -155,49 +179,13 @@ const ProductoForm = () => {
     }));
   };
 
-  // Manejo de imagen
-  const handleImagenChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProducto(prev => ({
-        ...prev,
-        imagen: file,
-        imagenPreview: URL.createObjectURL(file)
-      }));
-    }
-  };
-
-  // Manejo de archivos descargables
-  const handleArchivosChange = (e) => {
-    const files = Array.from(e.target.files);
-    const nuevosArchivos = files.map(file => ({
-      file,
-      nombre: file.name,
-      descripcion: '',
-      tipo: file.name.split('.').pop(),
-      tamaño: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
-      esVistPrevia: false
-    }));
-    
+  const handleOfertaChange = (campo, valor) => {
     setProducto(prev => ({
       ...prev,
-      archivosNuevos: [...prev.archivosNuevos, ...nuevosArchivos]
-    }));
-  };
-
-  const eliminarArchivoNuevo = (index) => {
-    setProducto(prev => ({
-      ...prev,
-      archivosNuevos: prev.archivosNuevos.filter((_, i) => i !== index)
-    }));
-  };
-
-  const actualizarArchivoNuevo = (index, campo, valor) => {
-    setProducto(prev => ({
-      ...prev,
-      archivosNuevos: prev.archivosNuevos.map((archivo, i) => 
-        i === index ? { ...archivo, [campo]: valor } : archivo
-      )
+      oferta: {
+        ...prev.oferta,
+        [campo]: valor
+      }
     }));
   };
 
@@ -245,55 +233,39 @@ const ProductoForm = () => {
       setGuardando(true);
       setError('');
 
-      // Crear FormData para enviar archivos
-      const formData = new FormData();
-      
-      // Datos básicos
-      formData.append('titulo', producto.titulo);
-      formData.append('subtitulo', producto.subtitulo || '');
-      formData.append('descripcion', producto.descripcion);
-      formData.append('descripcionLarga', producto.descripcionLarga || '');
-      formData.append('tipo', producto.tipo);
-      formData.append('categoria', producto.categoria);
-      formData.append('precioUSD', producto.precioUSD);
-      formData.append('activo', producto.activo);
-      formData.append('destacado', producto.destacado);
-      formData.append('nuevo', producto.nuevo);
-      
-      // Arrays
-      formData.append('tags', JSON.stringify(producto.tags));
-      formData.append('incluye', JSON.stringify(producto.incluye));
-      formData.append('precios', JSON.stringify(producto.precios));
-      formData.append('metadatos', JSON.stringify(producto.metadatos));
-      formData.append('limites', JSON.stringify(producto.limites));
-      
-      // Imagen de portada
-      if (producto.imagen instanceof File) {
-        formData.append('imagen', producto.imagen);
-      }
-      
-      // Archivos descargables
-      if (producto.archivosNuevos.length > 0) {
-        producto.archivosNuevos.forEach((archivo, index) => {
-          formData.append('archivos', archivo.file);
-          formData.append(`archivosMeta[${index}][nombre]`, archivo.nombre);
-          formData.append(`archivosMeta[${index}][descripcion]`, archivo.descripcion || '');
-          formData.append(`archivosMeta[${index}][esVistPrevia]`, archivo.esVistPrevia);
-        });
-      }
+      // Preparar datos para enviar
+      const datos = {
+        titulo: producto.titulo,
+        subtitulo: producto.subtitulo,
+        descripcion: producto.descripcion,
+        descripcionLarga: producto.descripcionLarga,
+        tipo: producto.tipo,
+        categoria: producto.categoria,
+        precioUSD: producto.precioUSD,
+        precios: producto.precios,
+        tags: producto.tags,
+        incluye: producto.incluye,
+        metadatos: producto.metadatos,
+        limites: producto.limites,
+        oferta: producto.oferta,
+        activo: producto.activo,
+        destacado: producto.destacado,
+        nuevo: producto.nuevo,
+        imagen: producto.imagen || 'https://via.placeholder.com/400x300?text=Producto'
+      };
 
       // Crear o actualizar
       if (esEdicion) {
-        await productosAPI.actualizar(id, formData);
+        await productosAPI.actualizar(id, datos);
       } else {
-        await productosAPI.crear(formData);
+        await productosAPI.crear(datos);
       }
 
-      alert(esEdicion ? 'Producto actualizado' : 'Producto creado');
+      alert(esEdicion ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente');
       navigate('/admin');
     } catch (error) {
       console.error('Error guardando producto:', error);
-      setError(error.response?.data?.error || 'Error al guardar producto');
+      setError(error.response?.data?.error || error.response?.data?.mensaje || 'Error al guardar producto');
     } finally {
       setGuardando(false);
     }
@@ -317,6 +289,7 @@ const ProductoForm = () => {
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="producto-form">
+          
           {/* ========================================
               INFORMACIÓN BÁSICA
           ======================================== */}
@@ -325,16 +298,9 @@ const ProductoForm = () => {
             
             <div className="form-group">
               <label>Tipo de Producto *</label>
-              <select
-                name="tipo"
-                value={producto.tipo}
-                onChange={handleChange}
-                required
-              >
+              <select name="tipo" value={producto.tipo} onChange={handleChange} required>
                 {tiposProducto.map(tipo => (
-                  <option key={tipo.valor} value={tipo.valor}>
-                    {tipo.label}
-                  </option>
+                  <option key={tipo.valor} value={tipo.valor}>{tipo.label}</option>
                 ))}
               </select>
             </div>
@@ -381,22 +347,20 @@ const ProductoForm = () => {
                 value={producto.descripcionLarga}
                 onChange={handleChange}
                 rows={6}
-                placeholder="Descripción detallada del producto (soporta HTML)"
+                placeholder="Descripción detallada del producto"
               />
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label>Categoría *</label>
-                <input
-                  type="text"
-                  name="categoria"
-                  value={producto.categoria}
-                  onChange={handleChange}
-                  required
-                  placeholder="Ej: Seguridad, CCTV, Diseño"
-                />
-              </div>
+            <div className="form-group">
+              <label>Categoría *</label>
+              <input
+                type="text"
+                name="categoria"
+                value={producto.categoria}
+                onChange={handleChange}
+                required
+                placeholder="Ej: Seguridad, CCTV, Diseño"
+              />
             </div>
 
             {/* Tags */}
@@ -432,95 +396,26 @@ const ProductoForm = () => {
           ======================================== */}
           <section className="form-section">
             <h2>Imagen de Portada</h2>
-            <div className="imagen-upload">
+            <div className="form-group">
+              <label>URL de la Imagen</label>
               <input
-                type="file"
-                accept="image/*"
-                onChange={handleImagenChange}
-                id="imagen-input"
-                hidden
+                type="text"
+                name="imagen"
+                value={producto.imagen}
+                onChange={handleChange}
+                placeholder="https://ejemplo.com/imagen.jpg"
               />
-              <label htmlFor="imagen-input" className="upload-btn">
-                <ImageIcon size={24} />
-                Seleccionar Imagen
-              </label>
-              {producto.imagenPreview && (
-                <div className="imagen-preview">
-                  <img src={producto.imagenPreview} alt="Preview" />
-                </div>
-              )}
+              <small>Por ahora, pega la URL de una imagen. Upload de archivos próximamente.</small>
             </div>
+            {producto.imagen && (
+              <div className="imagen-preview">
+                <img src={producto.imagen} alt="Preview" />
+              </div>
+            )}
           </section>
 
           {/* ========================================
-              ARCHIVOS DESCARGABLES (si no es curso)
-          ======================================== */}
-          {producto.tipo !== 'curso' && (
-            <section className="form-section">
-              <h2>Archivos Descargables</h2>
-              <div className="archivos-upload">
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleArchivosChange}
-                  id="archivos-input"
-                  hidden
-                />
-                <label htmlFor="archivos-input" className="upload-btn">
-                  <Upload size={24} />
-                  Agregar Archivos
-                </label>
-                <p className="help-text">
-                  Formatos: PDF, ZIP, RAR, PSD, AI, EPUB, EXE, DMG, etc.
-                </p>
-              </div>
-
-              {producto.archivosNuevos.length > 0 && (
-                <div className="archivos-lista">
-                  {producto.archivosNuevos.map((archivo, index) => (
-                    <div key={index} className="archivo-item">
-                      <div className="archivo-info">
-                        <FileText size={24} />
-                        <div>
-                          <input
-                            type="text"
-                            value={archivo.nombre}
-                            onChange={(e) => actualizarArchivoNuevo(index, 'nombre', e.target.value)}
-                            placeholder="Nombre del archivo"
-                          />
-                          <input
-                            type="text"
-                            value={archivo.descripcion}
-                            onChange={(e) => actualizarArchivoNuevo(index, 'descripcion', e.target.value)}
-                            placeholder="Descripción (opcional)"
-                          />
-                          <span className="archivo-meta">{archivo.tamaño}</span>
-                        </div>
-                      </div>
-                      <label className="checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={archivo.esVistPrevia}
-                          onChange={(e) => actualizarArchivoNuevo(index, 'esVistPrevia', e.target.checked)}
-                        />
-                        Vista previa gratuita
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => eliminarArchivoNuevo(index)}
-                        className="btn-eliminar"
-                      >
-                        <X size={18} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
-
-          {/* ========================================
-              PRECIOS
+              PRECIOS (AUTO-CALCULADOS)
           ======================================== */}
           <section className="form-section">
             <h2>Precios</h2>
@@ -535,18 +430,20 @@ const ProductoForm = () => {
                 min="0"
                 step="0.01"
               />
+              <small>💡 Los precios en otras monedas se calculan automáticamente</small>
             </div>
 
             <div className="precios-grid">
               {Object.keys(producto.precios).map(pais => (
                 <div key={pais} className="form-group">
-                  <label>{pais.charAt(0).toUpperCase() + pais.slice(1)} ({producto.precios[pais].moneda})</label>
+                  <label>
+                    {pais.charAt(0).toUpperCase() + pais.slice(1)} ({producto.precios[pais].moneda})
+                  </label>
                   <input
                     type="number"
                     value={producto.precios[pais].monto}
-                    onChange={(e) => handlePrecioChange(pais, e.target.value)}
-                    min="0"
-                    step="0.01"
+                    readOnly
+                    style={{ background: 'var(--gris-oscuro)', cursor: 'not-allowed', opacity: 0.7 }}
                   />
                 </div>
               ))}
@@ -576,7 +473,7 @@ const ProductoForm = () => {
                     <input
                       type="number"
                       value={producto.metadatos.paginas}
-                      onChange={(e) => handleMetadatoChange('paginas', parseInt(e.target.value))}
+                      onChange={(e) => handleMetadatoChange('paginas', parseInt(e.target.value) || 0)}
                     />
                   </div>
                 </div>
@@ -603,18 +500,24 @@ const ProductoForm = () => {
 
             {/* Para software */}
             {producto.tipo === 'software' && (
-              <>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Versión</label>
-                    <input
-                      type="text"
-                      value={producto.metadatos.version}
-                      onChange={(e) => handleMetadatoChange('version', e.target.value)}
-                    />
-                  </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Versión</label>
+                  <input
+                    type="text"
+                    value={producto.metadatos.version}
+                    onChange={(e) => handleMetadatoChange('version', e.target.value)}
+                  />
                 </div>
-              </>
+                <div className="form-group">
+                  <label>Requisitos</label>
+                  <input
+                    type="text"
+                    value={producto.metadatos.requisitos}
+                    onChange={(e) => handleMetadatoChange('requisitos', e.target.value)}
+                  />
+                </div>
+              </div>
             )}
 
             {/* Para plantillas */}
@@ -733,6 +636,52 @@ const ProductoForm = () => {
                 <small>Dejar vacío para permanente</small>
               </div>
             </div>
+          </section>
+
+          {/* ========================================
+              OFERTA (OPCIONAL)
+          ======================================== */}
+          <section className="form-section">
+            <h2>Oferta (opcional)</h2>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={producto.oferta.activa}
+                onChange={(e) => handleOfertaChange('activa', e.target.checked)}
+              />
+              Activar oferta
+            </label>
+
+            {producto.oferta.activa && (
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Porcentaje de Descuento</label>
+                  <input
+                    type="number"
+                    value={producto.oferta.porcentajeDescuento}
+                    onChange={(e) => handleOfertaChange('porcentajeDescuento', parseInt(e.target.value) || 0)}
+                    min="0"
+                    max="100"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Fecha Inicio</label>
+                  <input
+                    type="date"
+                    value={producto.oferta.fechaInicio}
+                    onChange={(e) => handleOfertaChange('fechaInicio', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Fecha Fin</label>
+                  <input
+                    type="date"
+                    value={producto.oferta.fechaFin}
+                    onChange={(e) => handleOfertaChange('fechaFin', e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
           </section>
 
           {/* ========================================
