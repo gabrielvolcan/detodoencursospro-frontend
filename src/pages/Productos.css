@@ -1,40 +1,42 @@
 /* ========================================
-   PRODUCTOS - HERO
+   PRODUCTOS - HERO (TEMA OSCURO)
 ======================================== */
 .productos-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--negro);
+  color: var(--blanco);
   padding: 60px 20px;
   text-align: center;
+  border-bottom: 1px solid var(--gris-oscuro);
 }
 
 .productos-hero h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
+  color: var(--blanco);
 }
 
 .productos-hero p {
   font-size: 1.1rem;
-  opacity: 0.9;
+  color: var(--gris-claro);
 }
 
 /* ========================================
    CONTROLES Y FILTROS
 ======================================== */
 .productos-controles {
-  background: #f8f9fa;
+  background: var(--negro);
   padding: 30px 20px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--gris-oscuro);
 }
 
 .buscador {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: white;
+  background: var(--negro-claro);
   padding: 12px 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid var(--gris-oscuro);
   margin-bottom: 20px;
   max-width: 600px;
   margin-left: auto;
@@ -46,6 +48,16 @@
   border: none;
   outline: none;
   font-size: 1rem;
+  background: transparent;
+  color: var(--blanco);
+}
+
+.buscador input::placeholder {
+  color: var(--gris-claro);
+}
+
+.buscador svg {
+  color: var(--gris-claro);
 }
 
 /* Filtros por tipo */
@@ -62,24 +74,25 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: white;
-  border: 2px solid #e0e0e0;
+  background: var(--negro-claro);
+  border: 2px solid var(--gris-oscuro);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
   font-size: 0.95rem;
+  color: var(--blanco);
 }
 
 .tipo-btn:hover {
-  border-color: #667eea;
+  border-color: var(--acento);
   transform: translateY(-2px);
 }
 
 .tipo-btn.activo {
-  background: #667eea;
-  color: white;
-  border-color: #667eea;
+  background: var(--acento);
+  color: var(--negro);
+  border-color: var(--acento);
 }
 
 /* Controles adicionales */
@@ -95,33 +108,35 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: white;
-  border: 2px solid #e0e0e0;
+  background: var(--negro-claro);
+  border: 2px solid var(--gris-oscuro);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
+  color: var(--blanco);
 }
 
 .btn-filtros:hover {
-  border-color: #667eea;
+  border-color: var(--acento);
 }
 
 .select-orden {
   padding: 10px 15px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--gris-oscuro);
   border-radius: 8px;
-  background: white;
+  background: var(--negro-claro);
   cursor: pointer;
   font-size: 0.95rem;
+  color: var(--blanco);
 }
 
 .vista-toggle {
   display: flex;
   gap: 5px;
-  background: white;
+  background: var(--negro-claro);
   padding: 5px;
   border-radius: 8px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--gris-oscuro);
   margin-left: auto;
 }
 
@@ -132,20 +147,21 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.2s;
+  color: var(--gris-claro);
 }
 
 .vista-toggle button.activo {
-  background: #667eea;
-  color: white;
+  background: var(--acento);
+  color: var(--negro);
 }
 
 /* Filtros avanzados */
 .filtros-avanzados {
   margin-top: 20px;
   padding: 20px;
-  background: white;
+  background: var(--negro-claro);
   border-radius: 8px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--gris-oscuro);
   display: flex;
   gap: 20px;
   align-items: flex-end;
@@ -163,20 +179,22 @@
 .filtro-grupo label {
   font-weight: 600;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--gris-claro);
 }
 
 .filtro-grupo select {
   padding: 10px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--gris-oscuro);
   border-radius: 6px;
   font-size: 0.95rem;
+  background: var(--gris-oscuro);
+  color: var(--blanco);
 }
 
 .btn-limpiar-filtros {
   padding: 10px 20px;
-  background: #f44336;
-  color: white;
+  background: var(--rojo);
+  color: var(--blanco);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -184,7 +202,7 @@
 }
 
 .btn-limpiar-filtros:hover {
-  background: #d32f2f;
+  background: #cc0000;
 }
 
 /* ========================================
@@ -193,6 +211,7 @@
 .productos-resultados {
   padding: 40px 20px;
   min-height: 60vh;
+  background: var(--negro);
 }
 
 .resultados-info {
@@ -200,7 +219,7 @@
 }
 
 .resultados-info p {
-  color: #666;
+  color: var(--gris-claro);
   font-size: 0.95rem;
 }
 
@@ -226,25 +245,25 @@
 }
 
 .sin-resultados svg {
-  color: #ccc;
+  color: var(--gris-oscuro);
   margin-bottom: 20px;
 }
 
 .sin-resultados h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color: #333;
+  color: var(--blanco);
 }
 
 .sin-resultados p {
-  color: #666;
+  color: var(--gris-claro);
   margin-bottom: 20px;
 }
 
 .sin-resultados button {
   padding: 12px 30px;
-  background: #667eea;
-  color: white;
+  background: var(--acento);
+  color: var(--negro);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -253,8 +272,8 @@
 }
 
 .sin-resultados button:hover {
-  background: #5568d3;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 230, 118, 0.4);
 }
 
 /* ========================================
@@ -268,13 +287,20 @@
   justify-content: center;
   min-height: 60vh;
   gap: 20px;
+  background: var(--negro);
+}
+
+.productos-loading p,
+.productos-error p {
+  color: var(--gris-claro);
+  font-size: 1.1rem;
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
+  border: 4px solid var(--gris-oscuro);
+  border-top: 4px solid var(--acento);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -286,8 +312,8 @@
 
 .productos-error button {
   padding: 12px 30px;
-  background: #667eea;
-  color: white;
+  background: var(--acento);
+  color: var(--negro);
   border: none;
   border-radius: 8px;
   cursor: pointer;
