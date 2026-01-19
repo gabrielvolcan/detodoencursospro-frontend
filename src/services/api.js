@@ -78,9 +78,7 @@ export const productosAPI = {
   obtenerPorId: (id) => axios.get(`/productos/${id}`),
   
   // Crear producto (admin + multipart/form-data para archivos)
-  crear: (formData) => axios.post('/productos', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
+  crear: (datos) => axios.post('/productos', datos),
   
   // Actualizar producto (admin)
   actualizar: (id, datos) => axios.put(`/productos/${id}`, datos),
