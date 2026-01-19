@@ -47,14 +47,12 @@ Concepto: Pago Curso + Tu Nombre`
       {
         tipo: 'mercadopago',
         nombre: 'Mercado Pago',
-        instrucciones: `👤 Juan Pablo Colasurdo Peniche
-Juampi — 19:53
-🏦📲 Mercado Pago🤝🏻
-CVU: 0000003100030001336978
-Alias: ⤵️
+        instrucciones: `👤 Gabriel Volcan
+¡Hola! 😀 Te comparto mis datos para que puedas enviarme pesos a través de Mercado Pago👇 
 
-Jp.market
-Concepto: Pago Curso + Tu Nombre`
+Alias: gabriel.040.dejar.mp
+CVU: 0000003100074314194223
+Nombre: Gabriel Humberto Volcan Altuve`
       }
     ]
   },
