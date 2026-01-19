@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { productosAPI } from '../services/api';
-import { 
-  Save, ArrowLeft, X, Plus, 
-  Image as ImageIcon
-} from 'lucide-react';
+import { Save, ArrowLeft } from 'lucide-react';
 import './ProductoForm.css';
 
 const ProductoForm = () => {
@@ -16,96 +13,26 @@ const ProductoForm = () => {
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
 
-  // TASAS DE CONVERSIÓN
-  const TASAS = {
-    internacional: { multiplicador: 1, moneda: 'USD' },
-    peru: { multiplicador: 3.36, moneda: 'PEN' },
-    chile: { multiplicador: 894, moneda: 'CLP' },
-    argentina: { multiplicador: 1505, moneda: 'ARS' },
-    uruguay: { multiplicador: 38.9, moneda: 'UYU' },
-    venezuela: { multiplicador: 50, moneda: 'VES' }
-  };
-
-  // Estado del formulario
+  // Estado SIMPLE del formulario - solo 6 campos básicos
   const [producto, setProducto] = useState({
     titulo: '',
-    subtitulo: '',
     descripcion: '',
-    descripcionLarga: '',
     tipo: 'libro',
     categoria: '',
-    tags: [],
-    precioUSD: 0,
     imagen: '',
-    activo: true,
-    destacado: false,
-    nuevo: false,
-    
-    // Precios por país (auto-calculados)
-    precios: {
-      internacional: { monto: 0, moneda: 'USD' },
-      peru: { monto: 0, moneda: 'PEN' },
-      chile: { monto: 0, moneda: 'CLP' },
-      argentina: { monto: 0, moneda: 'ARS' },
-      uruguay: { monto: 0, moneda: 'UYU' },
-      venezuela: { monto: 0, moneda: 'VES' }
-    },
-    
-    // Videos (solo para cursos)
-    videos: [],
-    
-    // Metadatos según tipo
-    metadatos: {
-      autor: '',
-      paginas: 0,
-      isbn: '',
-      editorial: '',
-      añoPublicacion: 0,
-      idioma: 'Español',
-      version: '',
-      compatibilidad: [],
-      requisitos: '',
-      software: '',
-      versionSoftware: '',
-      capas: false,
-      instructor: '',
-      certificado: false,
-      actualizaciones: false,
-      soporte: ''
-    },
-    
-    // Lo que incluye
-    incluye: [],
-    
-    // Límites
-    limites: {
-      descargasMaximas: null,
-      diasAcceso: null,
-      dispositivosMaximos: null
-    },
-    
-    // Oferta
-    oferta: {
-      activa: false,
-      porcentajeDescuento: 0,
-      fechaInicio: '',
-      fechaFin: ''
-    }
+    precioUSD: 0
   });
-
-  const [nuevoTag, setNuevoTag] = useState('');
-  const [nuevoIncluye, setNuevoIncluye] = useState('');
 
   // Tipos de producto
   const tiposProducto = [
-    { valor: 'curso', label: 'Curso con Videos' },
     { valor: 'libro', label: 'Libro PDF' },
     { valor: 'ebook', label: 'Ebook Digital' },
+    { valor: 'curso', label: 'Curso' },
     { valor: 'plantilla', label: 'Plantilla' },
-    { valor: 'guia', label: 'Guía Descargable' },
+    { valor: 'guia', label: 'Guía' },
     { valor: 'software', label: 'Software' },
-    { valor: 'recurso', label: 'Recurso Gráfico' },
-    { valor: 'bundle', label: 'Bundle/Paquete' }
+    { valor: 'recurso', label: 'Recurso' },
+    { valor: 'bundle', label: 'Bundle' }
   ];
 
   useEffect(() => {
@@ -118,7 +45,14 @@ const ProductoForm = () => {
     try {
       setCargando(true);
       const { data } = await productosAPI.obtenerPorId(id);
-      setProducto(data);
+      setProducto({
+        titulo: data.titulo || '',
+        descripcion: data.descripcion || '',
+        tipo: data.tipo || 'libro',
+        categoria: data.categoria || '',
+        imagen: data.imagen || '',
+        precioUSD: data.precioUSD || 0
+      });
     } catch (error) {
       console.error('Error cargando producto:', error);
       setError('Error al cargar producto');
@@ -127,105 +61,14 @@ const ProductoForm = () => {
     }
   };
 
-  // Calcular precios automáticamente
-  const calcularPreciosPorPais = (precioUSD) => {
-    const nuevosPrecios = {};
-    Object.keys(TASAS).forEach(pais => {
-      nuevosPrecios[pais] = {
-        monto: parseFloat((precioUSD * TASAS[pais].multiplicador).toFixed(2)),
-        moneda: TASAS[pais].moneda
-      };
-    });
-    return nuevosPrecios;
-  };
-
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    
-    // Si cambió el precio USD, recalcular todos los precios
-    if (name === 'precioUSD') {
-      const precioUSD = parseFloat(value) || 0;
-      const nuevosPrecios = calcularPreciosPorPais(precioUSD);
-      setProducto(prev => ({
-        ...prev,
-        precioUSD,
-        precios: nuevosPrecios
-      }));
-    } else {
-      setProducto(prev => ({
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value
-      }));
-    }
-  };
-
-  const handleMetadatoChange = (campo, valor) => {
+    const { name, value } = e.target;
     setProducto(prev => ({
       ...prev,
-      metadatos: {
-        ...prev.metadatos,
-        [campo]: valor
-      }
+      [name]: value
     }));
   };
 
-  const handleLimiteChange = (campo, valor) => {
-    setProducto(prev => ({
-      ...prev,
-      limites: {
-        ...prev.limites,
-        [campo]: valor === '' ? null : parseInt(valor)
-      }
-    }));
-  };
-
-  const handleOfertaChange = (campo, valor) => {
-    setProducto(prev => ({
-      ...prev,
-      oferta: {
-        ...prev.oferta,
-        [campo]: valor
-      }
-    }));
-  };
-
-  // Tags
-  const agregarTag = () => {
-    if (nuevoTag.trim() && !producto.tags.includes(nuevoTag.trim())) {
-      setProducto(prev => ({
-        ...prev,
-        tags: [...prev.tags, nuevoTag.trim()]
-      }));
-      setNuevoTag('');
-    }
-  };
-
-  const eliminarTag = (tag) => {
-    setProducto(prev => ({
-      ...prev,
-      tags: prev.tags.filter(t => t !== tag)
-    }));
-  };
-
-  // Incluye
-  const agregarIncluye = () => {
-    if (nuevoIncluye.trim()) {
-      setProducto(prev => ({
-        ...prev,
-        incluye: [...prev.incluye, { texto: nuevoIncluye.trim(), icono: 'CheckCircle' }]
-      }));
-      setNuevoIncluye('');
-    }
-  };
-
-  const eliminarIncluye = (index) => {
-    setProducto(prev => ({
-      ...prev,
-      incluye: prev.incluye.filter((_, i) => i !== index)
-    }));
-  };
-
-  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -233,26 +76,31 @@ const ProductoForm = () => {
       setGuardando(true);
       setError('');
 
-      // Preparar datos para enviar
+      // Validación simple
+      if (!producto.titulo.trim()) {
+        setError('El título es obligatorio');
+        return;
+      }
+      if (!producto.descripcion.trim()) {
+        setError('La descripción es obligatoria');
+        return;
+      }
+      if (!producto.categoria.trim()) {
+        setError('La categoría es obligatoria');
+        return;
+      }
+
+      // Preparar datos - SOLO los campos básicos
       const datos = {
-        titulo: producto.titulo,
-        subtitulo: producto.subtitulo,
-        descripcion: producto.descripcion,
-        descripcionLarga: producto.descripcionLarga,
+        titulo: producto.titulo.trim(),
+        descripcion: producto.descripcion.trim(),
         tipo: producto.tipo,
-        categoria: producto.categoria,
-        precioUSD: producto.precioUSD,
-        precios: producto.precios,
-        tags: producto.tags,
-        incluye: producto.incluye,
-        metadatos: producto.metadatos,
-        limites: producto.limites,
-        oferta: producto.oferta,
-        activo: producto.activo,
-        destacado: producto.destacado,
-        nuevo: producto.nuevo,
-        imagen: producto.imagen || 'https://via.placeholder.com/400x300?text=Producto'
+        categoria: producto.categoria.trim(),
+        imagen: producto.imagen.trim() || 'https://via.placeholder.com/400x300?text=Producto',
+        precioUSD: parseFloat(producto.precioUSD) || 0
       };
+
+      console.log('📤 Enviando datos:', datos);
 
       // Crear o actualizar
       if (esEdicion) {
@@ -261,11 +109,11 @@ const ProductoForm = () => {
         await productosAPI.crear(datos);
       }
 
-      alert(esEdicion ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente');
+      alert(esEdicion ? 'Producto actualizado' : 'Producto creado exitosamente');
       navigate('/admin');
     } catch (error) {
       console.error('Error guardando producto:', error);
-      setError(error.response?.data?.error || error.response?.data?.mensaje || 'Error al guardar producto');
+      setError(error.response?.data?.mensaje || 'Error al guardar producto');
     } finally {
       setGuardando(false);
     }
@@ -290,21 +138,27 @@ const ProductoForm = () => {
 
         <form onSubmit={handleSubmit} className="producto-form">
           
-          {/* ========================================
-              INFORMACIÓN BÁSICA
-          ======================================== */}
+          {/* TIPO */}
           <section className="form-section">
             <h2>Información Básica</h2>
             
             <div className="form-group">
               <label>Tipo de Producto *</label>
-              <select name="tipo" value={producto.tipo} onChange={handleChange} required>
+              <select 
+                name="tipo" 
+                value={producto.tipo} 
+                onChange={handleChange} 
+                required
+              >
                 {tiposProducto.map(tipo => (
-                  <option key={tipo.valor} value={tipo.valor}>{tipo.label}</option>
+                  <option key={tipo.valor} value={tipo.valor}>
+                    {tipo.label}
+                  </option>
                 ))}
               </select>
             </div>
 
+            {/* TÍTULO */}
             <div className="form-group">
               <label>Título *</label>
               <input
@@ -313,44 +167,24 @@ const ProductoForm = () => {
                 value={producto.titulo}
                 onChange={handleChange}
                 required
-                placeholder="Ej: Curso Completo de CCTV"
+                placeholder="Ej: Curso Completo de React"
               />
             </div>
 
+            {/* DESCRIPCIÓN */}
             <div className="form-group">
-              <label>Subtítulo</label>
-              <input
-                type="text"
-                name="subtitulo"
-                value={producto.subtitulo}
-                onChange={handleChange}
-                placeholder="Ej: Aprende instalación profesional"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Descripción Corta *</label>
+              <label>Descripción *</label>
               <textarea
                 name="descripcion"
                 value={producto.descripcion}
                 onChange={handleChange}
                 required
-                rows={3}
-                placeholder="Descripción breve que aparecerá en las tarjetas"
+                rows={4}
+                placeholder="Describe tu producto..."
               />
             </div>
 
-            <div className="form-group">
-              <label>Descripción Larga</label>
-              <textarea
-                name="descripcionLarga"
-                value={producto.descripcionLarga}
-                onChange={handleChange}
-                rows={6}
-                placeholder="Descripción detallada del producto"
-              />
-            </div>
-
+            {/* CATEGORÍA */}
             <div className="form-group">
               <label>Categoría *</label>
               <input
@@ -359,45 +193,13 @@ const ProductoForm = () => {
                 value={producto.categoria}
                 onChange={handleChange}
                 required
-                placeholder="Ej: Seguridad, CCTV, Diseño"
+                placeholder="Ej: Programación, Diseño, Marketing"
               />
             </div>
 
-            {/* Tags */}
+            {/* IMAGEN */}
             <div className="form-group">
-              <label>Tags/Etiquetas</label>
-              <div className="tags-input">
-                <input
-                  type="text"
-                  value={nuevoTag}
-                  onChange={(e) => setNuevoTag(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), agregarTag())}
-                  placeholder="Agregar tag y presiona Enter"
-                />
-                <button type="button" onClick={agregarTag}>
-                  <Plus size={18} />
-                </button>
-              </div>
-              <div className="tags-list">
-                {producto.tags.map(tag => (
-                  <span key={tag} className="tag">
-                    {tag}
-                    <button type="button" onClick={() => eliminarTag(tag)}>
-                      <X size={14} />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* ========================================
-              IMAGEN DE PORTADA
-          ======================================== */}
-          <section className="form-section">
-            <h2>Imagen de Portada</h2>
-            <div className="form-group">
-              <label>URL de la Imagen</label>
+              <label>URL de Imagen</label>
               <input
                 type="text"
                 name="imagen"
@@ -405,22 +207,18 @@ const ProductoForm = () => {
                 onChange={handleChange}
                 placeholder="https://ejemplo.com/imagen.jpg"
               />
-              <small>Por ahora, pega la URL de una imagen. Upload de archivos próximamente.</small>
+              <small>Opcional - se usará imagen por defecto si se deja vacío</small>
             </div>
+            
             {producto.imagen && (
               <div className="imagen-preview">
                 <img src={producto.imagen} alt="Preview" />
               </div>
             )}
-          </section>
 
-          {/* ========================================
-              PRECIOS (AUTO-CALCULADOS)
-          ======================================== */}
-          <section className="form-section">
-            <h2>Precios</h2>
+            {/* PRECIO */}
             <div className="form-group">
-              <label>Precio Base (USD) *</label>
+              <label>Precio (USD) *</label>
               <input
                 type="number"
                 name="precioUSD"
@@ -429,300 +227,12 @@ const ProductoForm = () => {
                 required
                 min="0"
                 step="0.01"
-              />
-              <small>💡 Los precios en otras monedas se calculan automáticamente</small>
-            </div>
-
-            <div className="precios-grid">
-              {Object.keys(producto.precios).map(pais => (
-                <div key={pais} className="form-group">
-                  <label>
-                    {pais.charAt(0).toUpperCase() + pais.slice(1)} ({producto.precios[pais].moneda})
-                  </label>
-                  <input
-                    type="number"
-                    value={producto.precios[pais].monto}
-                    readOnly
-                    style={{ background: 'var(--gris-oscuro)', cursor: 'not-allowed', opacity: 0.7 }}
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* ========================================
-              METADATOS SEGÚN TIPO
-          ======================================== */}
-          <section className="form-section">
-            <h2>Información Adicional</h2>
-            
-            {/* Para libros/ebooks */}
-            {['libro', 'ebook'].includes(producto.tipo) && (
-              <>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Autor</label>
-                    <input
-                      type="text"
-                      value={producto.metadatos.autor}
-                      onChange={(e) => handleMetadatoChange('autor', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Páginas</label>
-                    <input
-                      type="number"
-                      value={producto.metadatos.paginas}
-                      onChange={(e) => handleMetadatoChange('paginas', parseInt(e.target.value) || 0)}
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>ISBN</label>
-                    <input
-                      type="text"
-                      value={producto.metadatos.isbn}
-                      onChange={(e) => handleMetadatoChange('isbn', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Editorial</label>
-                    <input
-                      type="text"
-                      value={producto.metadatos.editorial}
-                      onChange={(e) => handleMetadatoChange('editorial', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Para software */}
-            {producto.tipo === 'software' && (
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Versión</label>
-                  <input
-                    type="text"
-                    value={producto.metadatos.version}
-                    onChange={(e) => handleMetadatoChange('version', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Requisitos</label>
-                  <input
-                    type="text"
-                    value={producto.metadatos.requisitos}
-                    onChange={(e) => handleMetadatoChange('requisitos', e.target.value)}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Para plantillas */}
-            {producto.tipo === 'plantilla' && (
-              <>
-                <div className="form-group">
-                  <label>Software Requerido</label>
-                  <input
-                    type="text"
-                    value={producto.metadatos.software}
-                    onChange={(e) => handleMetadatoChange('software', e.target.value)}
-                    placeholder="Ej: Photoshop, Figma, Illustrator"
-                  />
-                </div>
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={producto.metadatos.capas}
-                    onChange={(e) => handleMetadatoChange('capas', e.target.checked)}
-                  />
-                  Capas editables
-                </label>
-              </>
-            )}
-
-            {/* Campos comunes */}
-            <div className="form-group">
-              <label>Idioma</label>
-              <select
-                value={producto.metadatos.idioma}
-                onChange={(e) => handleMetadatoChange('idioma', e.target.value)}
-              >
-                <option value="Español">Español</option>
-                <option value="Inglés">Inglés</option>
-                <option value="Portugués">Portugués</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Soporte</label>
-              <input
-                type="text"
-                value={producto.metadatos.soporte}
-                onChange={(e) => handleMetadatoChange('soporte', e.target.value)}
-                placeholder="Ej: 6 meses, Ilimitado"
+                placeholder="0.00"
               />
             </div>
-
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={producto.metadatos.actualizaciones}
-                onChange={(e) => handleMetadatoChange('actualizaciones', e.target.checked)}
-              />
-              Incluye actualizaciones gratuitas
-            </label>
           </section>
 
-          {/* ========================================
-              LO QUE INCLUYE
-          ======================================== */}
-          <section className="form-section">
-            <h2>Lo que Incluye</h2>
-            <div className="form-group">
-              <div className="tags-input">
-                <input
-                  type="text"
-                  value={nuevoIncluye}
-                  onChange={(e) => setNuevoIncluye(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), agregarIncluye())}
-                  placeholder="Ej: Acceso de por vida"
-                />
-                <button type="button" onClick={agregarIncluye}>
-                  <Plus size={18} />
-                </button>
-              </div>
-              <div className="incluye-lista">
-                {producto.incluye.map((item, index) => (
-                  <div key={index} className="incluye-item">
-                    <span>{item.texto}</span>
-                    <button type="button" onClick={() => eliminarIncluye(index)}>
-                      <X size={14} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* ========================================
-              LÍMITES Y RESTRICCIONES
-          ======================================== */}
-          <section className="form-section">
-            <h2>Límites y Restricciones (opcional)</h2>
-            <div className="form-row">
-              <div className="form-group">
-                <label>Descargas Máximas</label>
-                <input
-                  type="number"
-                  value={producto.limites.descargasMaximas || ''}
-                  onChange={(e) => handleLimiteChange('descargasMaximas', e.target.value)}
-                  placeholder="Ilimitadas"
-                  min="1"
-                />
-                <small>Dejar vacío para ilimitadas</small>
-              </div>
-              <div className="form-group">
-                <label>Días de Acceso</label>
-                <input
-                  type="number"
-                  value={producto.limites.diasAcceso || ''}
-                  onChange={(e) => handleLimiteChange('diasAcceso', e.target.value)}
-                  placeholder="Permanente"
-                  min="1"
-                />
-                <small>Dejar vacío para permanente</small>
-              </div>
-            </div>
-          </section>
-
-          {/* ========================================
-              OFERTA (OPCIONAL)
-          ======================================== */}
-          <section className="form-section">
-            <h2>Oferta (opcional)</h2>
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={producto.oferta.activa}
-                onChange={(e) => handleOfertaChange('activa', e.target.checked)}
-              />
-              Activar oferta
-            </label>
-
-            {producto.oferta.activa && (
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Porcentaje de Descuento</label>
-                  <input
-                    type="number"
-                    value={producto.oferta.porcentajeDescuento}
-                    onChange={(e) => handleOfertaChange('porcentajeDescuento', parseInt(e.target.value) || 0)}
-                    min="0"
-                    max="100"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Fecha Inicio</label>
-                  <input
-                    type="date"
-                    value={producto.oferta.fechaInicio}
-                    onChange={(e) => handleOfertaChange('fechaInicio', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Fecha Fin</label>
-                  <input
-                    type="date"
-                    value={producto.oferta.fechaFin}
-                    onChange={(e) => handleOfertaChange('fechaFin', e.target.value)}
-                  />
-                </div>
-              </div>
-            )}
-          </section>
-
-          {/* ========================================
-              CONFIGURACIONES
-          ======================================== */}
-          <section className="form-section">
-            <h2>Configuraciones</h2>
-            <div className="checkboxes-group">
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  name="activo"
-                  checked={producto.activo}
-                  onChange={handleChange}
-                />
-                Producto activo (visible para usuarios)
-              </label>
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  name="destacado"
-                  checked={producto.destacado}
-                  onChange={handleChange}
-                />
-                Producto destacado
-              </label>
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  name="nuevo"
-                  checked={producto.nuevo}
-                  onChange={handleChange}
-                />
-                Marcar como "Nuevo"
-              </label>
-            </div>
-          </section>
-
-          {/* ========================================
-              BOTONES
-          ======================================== */}
+          {/* BOTONES */}
           <div className="form-actions">
             <button
               type="button"
