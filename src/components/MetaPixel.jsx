@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 const MetaPixel = () => {
   useEffect(() => {
-    // Cargar el script del pixel
+    // Cargar el script del Meta Pixel
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -12,21 +12,14 @@ const MetaPixel = () => {
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     
+    // Inicializar con tu Pixel ID
     window.fbq('init', '1521742272217152');
     window.fbq('track', 'PageView');
+    
+    console.log('✅ Meta Pixel cargado correctamente');
   }, []);
 
-  return (
-    <noscript>
-      <img 
-        height="1" 
-        width="1" 
-        style={{ display: 'none' }}
-        src="https://www.facebook.com/tr?id=1521742272217152&ev=PageView&noscript=1"
-        alt=""
-      />
-    </noscript>
-  );
+  return null;
 };
 
 export default MetaPixel;
