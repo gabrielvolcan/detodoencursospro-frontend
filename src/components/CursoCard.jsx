@@ -68,8 +68,14 @@ const CursoCard = ({ curso }) => {
   // ========================================
   
   const obtenerPrecio = () => {
-    // 🆕 SI ES GRATUITO, MOSTRAR "GRATIS"
-    if (curso.esGratuito) {
+    // 🆕 DEBUG: Ver qué valores tiene el curso
+    console.log('DEBUG - Curso:', curso.titulo);
+    console.log('DEBUG - esGratuito:', curso.esGratuito);
+    console.log('DEBUG - precioUSD:', curso.precioUSD);
+
+    // 🆕 SI ES GRATUITO (por campo o por precio 0), MOSTRAR "GRATIS"
+    if (curso.esGratuito === true || curso.precioUSD === 0) {
+      console.log('✅ Detectado como GRATUITO');
       return {
         precio: 0,
         moneda: 'USD',
@@ -95,6 +101,7 @@ const CursoCard = ({ curso }) => {
     }
     
     // Error: no hay precio válido
+    console.warn('⚠️ Precio no disponible para:', curso.titulo);
     return {
       precio: 0,
       moneda: 'USD',
@@ -116,8 +123,8 @@ const CursoCard = ({ curso }) => {
         {curso.destacado && (
           <span className="curso-destacado-badge">Destacado</span>
         )}
-        {/* 🆕 BADGE DE CURSO GRATUITO */}
-        {curso.esGratuito && (
+        {/* 🆕 BADGE DE CURSO GRATUITO - DETECTA POR CAMPO O POR PRECIO */}
+        {(curso.esGratuito === true || curso.precioUSD === 0) && (
           <span className="curso-gratuito-badge">GRATIS</span>
         )}
       </div>
@@ -147,7 +154,7 @@ const CursoCard = ({ curso }) => {
         <div className="curso-footer">
           <div className="curso-precio">
             {/* 🆕 MOSTRAR "GRATIS" EN VERDE */}
-            <span className={`curso-precio-actual ${curso.esGratuito ? 'precio-gratis' : ''}`}>
+            <span className={`curso-precio-actual ${(curso.esGratuito === true || curso.precioUSD === 0) ? 'precio-gratis' : ''}`}>
               {precioInfo.formatted}
             </span>
           </div>
@@ -159,7 +166,7 @@ const CursoCard = ({ curso }) => {
             >
               Acceder al Curso
             </button>
-          ) : curso.esGratuito ? (
+          ) : (curso.esGratuito === true || curso.precioUSD === 0) ? (
             // 🆕 BOTÓN ESPECIAL PARA CURSOS GRATUITOS
             <button 
               className="curso-btn-gratuito"
