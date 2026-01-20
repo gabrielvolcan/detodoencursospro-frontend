@@ -73,11 +73,12 @@ const DetalleCurso = () => {
     }
   };
 
-  // 🆕 INSCRIPCIÓN GRATUITA
+  // 🆕 INSCRIPCIÓN GRATUITA - REDIRIGE A REGISTRO
   const handleInscripcionGratuita = async () => {
     if (!usuario) {
-      alert('Debes iniciar sesión para inscribirte');
-      navigate('/login');
+      // Guardar el ID del curso para poder redirigir después del registro
+      localStorage.setItem('cursoGratuitoId', id);
+      navigate('/registro');
       return;
     }
 
