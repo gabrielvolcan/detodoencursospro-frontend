@@ -21,25 +21,51 @@ const CursoCard = ({ curso }) => {
   const navigate = useNavigate();
 
   // ========================================
-  // 🛡️ VALIDACIÓN SEGURA DE CURSOS COMPRADOS - CORREGIDA
+  // 🛡️ VALIDACIÓN SUPER ROBUSTA CON TRY-CATCH
   // ========================================
-  const yaComprado = usuario?.cursosComprados?.some(c => {
-    // Validación estricta: verificar que c y c.curso existan
-    if (!c || !c.curso) return false;
-    
-    // Extraer ID de forma segura
-    let cursoId;
-    if (typeof c.curso === 'object' && c.curso !== null && c.curso._id) {
-      cursoId = c.curso._id;
-    } else if (typeof c.curso === 'string') {
-      cursoId = c.curso;
-    } else {
-      // Si no es ni objeto válido ni string, ignorar esta entrada
+  const yaComprado = (() => {
+    try {
+      // Verificación 1: Usuario existe y tiene cursosComprados
+      if (!usuario || !usuario.cursosComprados || !Array.isArray(usuario.cursosComprados)) {
+        return false;
+      }
+
+      // Verificación 2: Revisar cada curso comprado
+      return usuario.cursosComprados.some(c => {
+        try {
+          // Validación estricta: verificar que c y c.curso existan
+          if (!c || !c.curso) return false;
+          
+          // Extraer ID de forma segura con validaciones adicionales
+          let cursoId = null;
+          
+          if (typeof c.curso === 'object' && c.curso !== null) {
+            // Si es objeto, debe tener _id
+            if (c.curso._id) {
+              cursoId = c.curso._id;
+            } else {
+              return false;
+            }
+          } else if (typeof c.curso === 'string' && c.curso.length > 0) {
+            // Si es string, debe tener contenido
+            cursoId = c.curso;
+          } else {
+            // Si no es ni objeto válido ni string, ignorar
+            return false;
+          }
+          
+          // Comparar con el curso actual
+          return cursoId === curso._id;
+        } catch (innerError) {
+          console.error('Error procesando curso individual:', innerError);
+          return false;
+        }
+      });
+    } catch (error) {
+      console.error('Error verificando cursos comprados:', error);
       return false;
     }
-    
-    return cursoId === curso._id;
-  }) || false;
+  })();
 
   const enCarrito = estaEnCarrito(curso._id);
 
