@@ -163,9 +163,40 @@ const DetalleCurso = () => {
 
   if (!curso) return null;
 
-  const yaComprado = usuario?.cursosComprados?.some(
-    c => c.curso._id === curso._id || c.curso === curso._id
-  );
+  // ========================================
+  // 🛡️ VALIDACIÓN SUPER ROBUSTA CON TRY-CATCH
+  // ========================================
+  const yaComprado = (() => {
+    try {
+      if (!usuario || !usuario.cursosComprados || !Array.isArray(usuario.cursosComprados)) {
+        return false;
+      }
+
+      return usuario.cursosComprados.some(c => {
+        try {
+          if (!c || !c.curso) return false;
+          
+          let cursoId;
+          if (typeof c.curso === 'object' && c.curso !== null && c.curso._id) {
+            cursoId = c.curso._id;
+          } else if (typeof c.curso === 'string' && c.curso.length > 0) {
+            cursoId = c.curso;
+          } else {
+            return false;
+          }
+          
+          return cursoId === curso._id;
+        } catch (innerError) {
+          console.error('Error procesando curso individual:', innerError);
+          return false;
+        }
+      });
+    } catch (error) {
+      console.error('Error verificando yaComprado:', error);
+      return false;
+    }
+  })();
+  
   const enCarrito = estaEnCarrito(curso._id);
   const precioInfo = obtenerPrecio();
 
