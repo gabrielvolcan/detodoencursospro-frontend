@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
 import { useNavigate } from 'react-router-dom';
 import './CursoCard.css';
+import './cursosGratuitos.css';
 
 const CursoCard = ({ curso }) => {
   // ========================================
@@ -47,10 +48,37 @@ const CursoCard = ({ curso }) => {
   };
 
   // ========================================
+  // 🆕 LÓGICA PARA CURSOS GRATUITOS
+  // ========================================
+  const handleInscripcionGratuita = async (e) => {
+    e.stopPropagation();
+    
+    if (!usuario) {
+      alert('Debes iniciar sesión para inscribirte');
+      navigate('/login');
+      return;
+    }
+
+    // Redirigir a la página del curso para que se inscriban
+    navigate(`/curso/${curso._id}`);
+  };
+
+  // ========================================
   // 💰 OBTENER PRECIO USANDO PAISCONTEXT (UNIFICADO)
   // ========================================
   
   const obtenerPrecio = () => {
+    // 🆕 SI ES GRATUITO, MOSTRAR "GRATIS"
+    if (curso.esGratuito) {
+      return {
+        precio: 0,
+        moneda: 'USD',
+        simbolo: '',
+        formatted: 'GRATIS',
+        esGratuito: true
+      };
+    }
+
     // Si el curso tiene precioUSD, usamos convertirPrecio del contexto
     if (curso.precioUSD && !isNaN(curso.precioUSD)) {
       return convertirPrecio(parseFloat(curso.precioUSD));
@@ -88,6 +116,10 @@ const CursoCard = ({ curso }) => {
         {curso.destacado && (
           <span className="curso-destacado-badge">Destacado</span>
         )}
+        {/* 🆕 BADGE DE CURSO GRATUITO */}
+        {curso.esGratuito && (
+          <span className="curso-gratuito-badge">GRATIS</span>
+        )}
       </div>
 
       <div className="curso-content">
@@ -114,7 +146,10 @@ const CursoCard = ({ curso }) => {
 
         <div className="curso-footer">
           <div className="curso-precio">
-            <span className="curso-precio-actual">{precioInfo.formatted}</span>
+            {/* 🆕 MOSTRAR "GRATIS" EN VERDE */}
+            <span className={`curso-precio-actual ${curso.esGratuito ? 'precio-gratis' : ''}`}>
+              {precioInfo.formatted}
+            </span>
           </div>
 
           {yaComprado ? (
@@ -123,6 +158,14 @@ const CursoCard = ({ curso }) => {
               onClick={handleAccederCurso}
             >
               Acceder al Curso
+            </button>
+          ) : curso.esGratuito ? (
+            // 🆕 BOTÓN ESPECIAL PARA CURSOS GRATUITOS
+            <button 
+              className="curso-btn-gratuito"
+              onClick={handleInscripcionGratuita}
+            >
+              Inscribirme Gratis
             </button>
           ) : enCarrito ? (
             <button className="curso-btn-en-carrito" disabled>

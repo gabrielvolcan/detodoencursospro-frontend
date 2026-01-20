@@ -22,6 +22,7 @@ const CursoForm = () => {
     imagen: '',
     destacado: false,
     activo: true,
+    esGratuito: false, // 🆕 NUEVO CAMPO
     temario: []
   });
 
@@ -50,6 +51,7 @@ const CursoForm = () => {
         imagen: data.imagen || '',
         destacado: data.destacado || false,
         activo: data.activo !== undefined ? data.activo : true,
+        esGratuito: data.esGratuito || false, // 🆕 CARGAR CAMPO
         temario: data.temario || []
       });
     } catch (error) {
@@ -62,6 +64,17 @@ const CursoForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    // 🆕 LÓGICA ESPECIAL: Si marca "Curso Gratuito", precio = 0
+    if (name === 'esGratuito' && checked) {
+      setFormData(prev => ({
+        ...prev,
+        esGratuito: true,
+        precioUSD: '0'
+      }));
+      return;
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
@@ -132,8 +145,14 @@ const CursoForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.titulo || !formData.precioUSD || !formData.categoria) {
-      alert('Por favor completa: Título, Precio y Categoría');
+    if (!formData.titulo || !formData.categoria) {
+      alert('Por favor completa: Título y Categoría');
+      return;
+    }
+
+    // 🆕 VALIDACIÓN: Si es gratuito, precio debe ser 0
+    if (formData.esGratuito && parseFloat(formData.precioUSD) !== 0) {
+      alert('❌ Los cursos gratuitos deben tener precio $0');
       return;
     }
 
@@ -142,7 +161,7 @@ const CursoForm = () => {
       
       const cursoData = {
         ...formData,
-        precioUSD: parseFloat(formData.precioUSD)
+        precioUSD: parseFloat(formData.precioUSD) || 0
       };
 
       if (id) {
@@ -258,9 +277,14 @@ const CursoForm = () => {
                   placeholder="50"
                   step="0.01"
                   min="0"
+                  disabled={formData.esGratuito} // 🆕 DESHABILITADO SI ES GRATUITO
                   required
                 />
-                <small>Los precios en otras monedas se calcularán automáticamente</small>
+                <small>
+                  {formData.esGratuito 
+                    ? '🎁 Curso marcado como GRATUITO' 
+                    : 'Los precios en otras monedas se calcularán automáticamente'}
+                </small>
               </div>
 
               <div className="form-group">
@@ -290,6 +314,17 @@ const CursoForm = () => {
             </div>
 
             <div className="form-checks">
+              {/* 🆕 NUEVO CHECKBOX: CURSO GRATUITO */}
+              <label className="checkbox-label checkbox-gratuito">
+                <input
+                  type="checkbox"
+                  name="esGratuito"
+                  checked={formData.esGratuito}
+                  onChange={handleChange}
+                />
+                <span>🎁 Curso GRATUITO (Lead Magnet)</span>
+              </label>
+
               <label className="checkbox-label">
                 <input
                   type="checkbox"

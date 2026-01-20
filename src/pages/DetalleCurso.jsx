@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Clock, Users, Star, ShoppingCart, Check, BookOpen, Award, Video, 
-  ChevronDown, ChevronUp, Zap, Target, Sparkles, Rocket
+  ChevronDown, ChevronUp, Zap, Target, Sparkles, Rocket, Gift
 } from 'lucide-react';
 import { cursosAPI } from '../services/api';
 import { useCarrito } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
 import './DetalleCurso.css';
+import './cursosGratuitos.css';
 
 const DetalleCurso = () => {
   const { id } = useParams();
@@ -72,6 +73,38 @@ const DetalleCurso = () => {
     }
   };
 
+  // 🆕 INSCRIPCIÓN GRATUITA
+  const handleInscripcionGratuita = async () => {
+    if (!usuario) {
+      alert('Debes iniciar sesión para inscribirte');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      // Llamar al endpoint de inscripción gratuita
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cursos/${id}/inscripcion-gratuita`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('🎉 ¡Inscripción exitosa! Ya puedes acceder al curso');
+        navigate(`/aprender/${id}`);
+      } else {
+        alert(data.error || 'Error en la inscripción');
+      }
+    } catch (error) {
+      console.error('Error en inscripción:', error);
+      alert('Error al inscribirte. Intenta nuevamente.');
+    }
+  };
+
   const toggleModulo = (index) => {
     setModuloExpandido(moduloExpandido === index ? null : index);
   };
@@ -82,6 +115,17 @@ const DetalleCurso = () => {
   
   const obtenerPrecio = () => {
     if (!curso) return { formatted: '$0', simbolo: '$', precio: 0 };
+
+    // 🆕 SI ES GRATUITO, MOSTRAR "TOTALMENTE GRATIS"
+    if (curso.esGratuito) {
+      return {
+        precio: 0,
+        moneda: 'USD',
+        simbolo: '',
+        formatted: 'TOTALMENTE GRATIS',
+        esGratuito: true
+      };
+    }
 
     // Usamos convertirPrecio del contexto
     if (curso.precioUSD && !isNaN(curso.precioUSD)) {
@@ -129,6 +173,13 @@ const DetalleCurso = () => {
               <div className="badge-categoria">
                 <Sparkles size={16} />
                 {curso.categoria}
+                {/* 🆕 BADGE GRATIS */}
+                {curso.esGratuito && (
+                  <span className="badge-gratis-hero">
+                    <Gift size={14} />
+                    GRATIS
+                  </span>
+                )}
               </div>
               
               <h1 className="hero-titulo">{curso.titulo}</h1>
@@ -164,9 +215,11 @@ const DetalleCurso = () => {
             <div className="hero-card-compra">
               <div className="card-imagen">
                 <img src={curso.imagen} alt={curso.titulo} />
-                <div className="precio-overlay">
-                  <span className="precio-principal">{precioInfo.formatted}</span>
-                  {curso.precioAnterior && (
+                <div className={`precio-overlay ${curso.esGratuito ? 'precio-overlay-gratis' : ''}`}>
+                  <span className={`precio-principal ${curso.esGratuito ? 'precio-gratis-detalle' : ''}`}>
+                    {precioInfo.formatted}
+                  </span>
+                  {curso.precioAnterior && !curso.esGratuito && (
                     <span className="precio-anterior">{precioInfo.simbolo}{curso.precioAnterior}</span>
                   )}
                 </div>
@@ -180,6 +233,15 @@ const DetalleCurso = () => {
                   >
                     <Rocket size={20} />
                     Acceder al Curso
+                  </button>
+                ) : curso.esGratuito ? (
+                  // 🆕 BOTÓN DE INSCRIPCIÓN GRATUITA
+                  <button 
+                    className="btn-inscripcion-gratuita"
+                    onClick={handleInscripcionGratuita}
+                  >
+                    <Gift size={20} />
+                    Inscribirme GRATIS
                   </button>
                 ) : (
                   <>
@@ -209,39 +271,65 @@ const DetalleCurso = () => {
       </div>
 
       {/* CTA PRINCIPAL - ARRIBA */}
-      <div className="cta-principal">
-        <div className="container">
-          <div className="cta-content">
-            <h2>¿Listo para transformar tu carrera?</h2>
-            <p>Únete a {estudiantesAnimados}+ estudiantes que ya están generando resultados</p>
-            
-            {!yaComprado && (
-              <button 
-                className="btn-cta-principal"
-                onClick={handleComprarAhora}
-              >
-                <Zap size={24} />
-                {enCarrito ? 'Finalizar Compra' : `Comenzar Ahora por ${precioInfo.formatted}`}
-              </button>
-            )}
+      {!curso.esGratuito && (
+        <div className="cta-principal">
+          <div className="container">
+            <div className="cta-content">
+              <h2>¿Listo para transformar tu carrera?</h2>
+              <p>Únete a {estudiantesAnimados}+ estudiantes que ya están generando resultados</p>
+              
+              {!yaComprado && (
+                <button 
+                  className="btn-cta-principal"
+                  onClick={handleComprarAhora}
+                >
+                  <Zap size={24} />
+                  {enCarrito ? 'Finalizar Compra' : `Comenzar Ahora por ${precioInfo.formatted}`}
+                </button>
+              )}
 
-            <div className="garantias-cta">
-              <div className="garantia-item">
-                <Check size={20} />
-                <span>Acceso de por vida</span>
-              </div>
-              <div className="garantia-item">
-                <Check size={20} />
-                <span>Actualizaciones gratis</span>
-              </div>
-              <div className="garantia-item">
-                <Check size={20} />
-                <span>Certificado incluido</span>
+              <div className="garantias-cta">
+                <div className="garantia-item">
+                  <Check size={20} />
+                  <span>Acceso de por vida</span>
+                </div>
+                <div className="garantia-item">
+                  <Check size={20} />
+                  <span>Actualizaciones gratis</span>
+                </div>
+                <div className="garantia-item">
+                  <Check size={20} />
+                  <span>Certificado incluido</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* 🆕 CTA ESPECIAL PARA CURSOS GRATUITOS */}
+      {curso.esGratuito && !yaComprado && (
+        <div className="cta-gratuito-especial">
+          <div className="container">
+            <div className="cta-gratuito-content">
+              <Gift size={48} />
+              <h2>🎉 Curso Completamente GRATUITO</h2>
+              <p>Regístrate y accede inmediatamente a todo el contenido</p>
+              <button 
+                className="btn-cta-gratuito-grande"
+                onClick={handleInscripcionGratuita}
+              >
+                Comenzar Ahora Gratis
+              </button>
+              <div className="beneficios-gratuito">
+                <span>✨ Acceso inmediato</span>
+                <span>📚 Contenido completo</span>
+                <span>🎓 Certificado incluido</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* LO QUE APRENDERÁS */}
       <div className="aprenderas-section-mejorada">
@@ -336,24 +424,46 @@ const DetalleCurso = () => {
       </div>
 
       {/* CTA FINAL - RECORDATORIO */}
-      <div className="cta-final-recordatorio">
-        <div className="container">
-          <div className="cta-content-small">
-            <h3>¿Tienes dudas? Es tu momento</h3>
-            <p>Únete a {estudiantesAnimados}+ estudiantes</p>
-            
-            {!yaComprado && !enCarrito && (
-              <button 
-                className="btn-cta-small"
-                onClick={handleComprarAhora}
-              >
-                <Zap size={20} />
-                Inscribirme por {precioInfo.formatted}
-              </button>
-            )}
+      {!curso.esGratuito && (
+        <div className="cta-final-recordatorio">
+          <div className="container">
+            <div className="cta-content-small">
+              <h3>¿Tienes dudas? Es tu momento</h3>
+              <p>Únete a {estudiantesAnimados}+ estudiantes</p>
+              
+              {!yaComprado && !enCarrito && (
+                <button 
+                  className="btn-cta-small"
+                  onClick={handleComprarAhora}
+                >
+                  <Zap size={20} />
+                  Inscribirme por {precioInfo.formatted}
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* 🆕 CTA FINAL PARA CURSOS GRATUITOS */}
+      {curso.esGratuito && !yaComprado && (
+        <div className="cta-final-gratuito">
+          <div className="container">
+            <div className="cta-content-small">
+              <h3>No pierdas esta oportunidad</h3>
+              <p>Inscríbete GRATIS y empieza a aprender hoy</p>
+              
+              <button 
+                className="btn-cta-gratuito-small"
+                onClick={handleInscripcionGratuita}
+              >
+                <Gift size={20} />
+                Comenzar Gratis Ahora
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
