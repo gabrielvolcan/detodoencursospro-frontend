@@ -21,11 +21,23 @@ const CursoCard = ({ curso }) => {
   const navigate = useNavigate();
 
   // ========================================
-  // 🛡️ VALIDACIÓN SEGURA DE CURSOS COMPRADOS
+  // 🛡️ VALIDACIÓN SEGURA DE CURSOS COMPRADOS - CORREGIDA
   // ========================================
   const yaComprado = usuario?.cursosComprados?.some(c => {
-    if (!c || !c.curso) return false; // Protección contra null
-    const cursoId = typeof c.curso === 'object' ? c.curso._id : c.curso;
+    // Validación estricta: verificar que c y c.curso existan
+    if (!c || !c.curso) return false;
+    
+    // Extraer ID de forma segura
+    let cursoId;
+    if (typeof c.curso === 'object' && c.curso !== null && c.curso._id) {
+      cursoId = c.curso._id;
+    } else if (typeof c.curso === 'string') {
+      cursoId = c.curso;
+    } else {
+      // Si no es ni objeto válido ni string, ignorar esta entrada
+      return false;
+    }
+    
     return cursoId === curso._id;
   }) || false;
 
@@ -54,8 +66,9 @@ const CursoCard = ({ curso }) => {
     e.stopPropagation();
     
     if (!usuario) {
-      alert('Debes iniciar sesión para inscribirte');
-      navigate('/login');
+      // Guardar el ID del curso para redirigir después del registro
+      localStorage.setItem('cursoGratuitoId', curso._id);
+      navigate('/registro');
       return;
     }
 
