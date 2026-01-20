@@ -116,8 +116,14 @@ const DetalleCurso = () => {
   const obtenerPrecio = () => {
     if (!curso) return { formatted: '$0', simbolo: '$', precio: 0 };
 
-    // 🆕 SI ES GRATUITO, MOSTRAR "TOTALMENTE GRATIS"
-    if (curso.esGratuito) {
+    // 🆕 DEBUG: Ver qué valores tiene el curso
+    console.log('DEBUG DETALLE - Curso:', curso.titulo);
+    console.log('DEBUG DETALLE - esGratuito:', curso.esGratuito);
+    console.log('DEBUG DETALLE - precioUSD:', curso.precioUSD);
+
+    // 🆕 SI ES GRATUITO (por campo o por precio 0), MOSTRAR "TOTALMENTE GRATIS"
+    if (curso.esGratuito === true || curso.precioUSD === 0) {
+      console.log('✅ DETALLE - Detectado como GRATUITO');
       return {
         precio: 0,
         moneda: 'USD',
@@ -174,7 +180,7 @@ const DetalleCurso = () => {
                 <Sparkles size={16} />
                 {curso.categoria}
                 {/* 🆕 BADGE GRATIS */}
-                {curso.esGratuito && (
+                {(curso.esGratuito === true || curso.precioUSD === 0) && (
                   <span className="badge-gratis-hero">
                     <Gift size={14} />
                     GRATIS
@@ -215,11 +221,11 @@ const DetalleCurso = () => {
             <div className="hero-card-compra">
               <div className="card-imagen">
                 <img src={curso.imagen} alt={curso.titulo} />
-                <div className={`precio-overlay ${curso.esGratuito ? 'precio-overlay-gratis' : ''}`}>
-                  <span className={`precio-principal ${curso.esGratuito ? 'precio-gratis-detalle' : ''}`}>
+                <div className={`precio-overlay ${(curso.esGratuito === true || curso.precioUSD === 0) ? 'precio-overlay-gratis' : ''}`}>
+                  <span className={`precio-principal ${(curso.esGratuito === true || curso.precioUSD === 0) ? 'precio-gratis-detalle' : ''}`}>
                     {precioInfo.formatted}
                   </span>
-                  {curso.precioAnterior && !curso.esGratuito && (
+                  {curso.precioAnterior && !(curso.esGratuito === true || curso.precioUSD === 0) && (
                     <span className="precio-anterior">{precioInfo.simbolo}{curso.precioAnterior}</span>
                   )}
                 </div>
@@ -234,7 +240,7 @@ const DetalleCurso = () => {
                     <Rocket size={20} />
                     Acceder al Curso
                   </button>
-                ) : curso.esGratuito ? (
+                ) : (curso.esGratuito === true || curso.precioUSD === 0) ? (
                   // 🆕 BOTÓN DE INSCRIPCIÓN GRATUITA
                   <button 
                     className="btn-inscripcion-gratuita"
@@ -271,7 +277,7 @@ const DetalleCurso = () => {
       </div>
 
       {/* CTA PRINCIPAL - ARRIBA */}
-      {!curso.esGratuito && (
+      {!(curso.esGratuito === true || curso.precioUSD === 0) && (
         <div className="cta-principal">
           <div className="container">
             <div className="cta-content">
@@ -308,7 +314,7 @@ const DetalleCurso = () => {
       )}
 
       {/* 🆕 CTA ESPECIAL PARA CURSOS GRATUITOS */}
-      {curso.esGratuito && !yaComprado && (
+      {(curso.esGratuito === true || curso.precioUSD === 0) && !yaComprado && (
         <div className="cta-gratuito-especial">
           <div className="container">
             <div className="cta-gratuito-content">
@@ -424,7 +430,7 @@ const DetalleCurso = () => {
       </div>
 
       {/* CTA FINAL - RECORDATORIO */}
-      {!curso.esGratuito && (
+      {!(curso.esGratuito === true || curso.precioUSD === 0) && (
         <div className="cta-final-recordatorio">
           <div className="container">
             <div className="cta-content-small">
@@ -446,7 +452,7 @@ const DetalleCurso = () => {
       )}
 
       {/* 🆕 CTA FINAL PARA CURSOS GRATUITOS */}
-      {curso.esGratuito && !yaComprado && (
+      {(curso.esGratuito === true || curso.precioUSD === 0) && !yaComprado && (
         <div className="cta-final-gratuito">
           <div className="container">
             <div className="cta-content-small">
