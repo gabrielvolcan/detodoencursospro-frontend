@@ -84,7 +84,7 @@ const DetalleCurso = () => {
 
     try {
       // Llamar al endpoint de inscripción gratuita
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cursos/${id}/inscripcion-gratuita`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/cursos/${id}/inscripcion-gratuita`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
