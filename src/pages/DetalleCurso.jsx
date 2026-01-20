@@ -9,7 +9,7 @@ import { useCarrito } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
 import './DetalleCurso.css';
-import './cursosGratuitos.css';
+import '../components/cursosGratuitos.css';
 
 const DetalleCurso = () => {
   const { id } = useParams();

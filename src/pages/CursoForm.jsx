@@ -4,6 +4,7 @@ import { Plus, Trash2, Save, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { cursosAPI } from '../services/api';
 import './CursoForm.css';
+import '../components/cursosGratuitos.css';
 
 const CursoForm = () => {
   const { id } = useParams();
