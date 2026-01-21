@@ -105,12 +105,31 @@ const Registro = () => {
 
     setCargando(true);
 
+    // 🆕 OBTENER CURSO GRATUITO SI EXISTE
+    const cursoGratuitoId = localStorage.getItem('cursoGratuitoId');
+    console.log('🔍 Curso gratuito en localStorage:', cursoGratuitoId);
+
     const { confirmarPassword, ...datosRegistro } = formData;
-    const resultado = await registrarse(datosRegistro);
+    
+    // 🆕 AGREGAR cursoGratuitoId AL PAYLOAD
+    const datosConCurso = {
+      ...datosRegistro,
+      cursoGratuitoId: cursoGratuitoId || undefined
+    };
+
+    const resultado = await registrarse(datosConCurso);
 
     if (resultado.exito) {
-      // Mostrar mensaje de verificación de email
-      alert('¡Registro exitoso! Por favor verifica tu email para activar tu cuenta.');
+      // 🆕 LIMPIAR LOCALSTORAGE
+      localStorage.removeItem('cursoGratuitoId');
+      
+      // Mostrar mensaje personalizado si se inscribió a curso gratuito
+      if (cursoGratuitoId) {
+        alert('🎉 ¡Registro exitoso! El curso gratuito se agregó a tu cuenta. Por favor verifica tu email para activarla.');
+      } else {
+        alert('¡Registro exitoso! Por favor verifica tu email para activar tu cuenta.');
+      }
+      
       navigate('/login');
     } else {
       setError(resultado.error);

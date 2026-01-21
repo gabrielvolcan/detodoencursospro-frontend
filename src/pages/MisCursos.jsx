@@ -21,22 +21,13 @@ const MisCursos = () => {
 
   const cargarCursos = async () => {
     try {
-      // ✅ Obtener compras del usuario
-      const { data } = await axios.get('/pagos-manual/mis-compras');
+      // ✅ USAR EL ENDPOINT CORRECTO QUE TRAE TODOS LOS CURSOS
+      const { data } = await axios.get('/auth/usuarios/mis-cursos');
       
-      // Filtrar solo las compras aprobadas/completadas con cursos
-      const cursosAprobados = data
-        .filter(compra => compra.estadoPago === 'aprobado' || compra.estadoPago === 'completado')
-        .flatMap(compra => compra.cursos.map(c => ({
-          curso: c.curso,
-          completado: false,
-          progresoVideos: [],
-          certificado: { generado: false }
-        })));
-      
-      setCursos(cursosAprobados);
+      console.log('✅ Cursos cargados:', data);
+      setCursos(data);
     } catch (error) {
-      console.error('Error cargando cursos:', error);
+      console.error('❌ Error cargando cursos:', error);
       setCursos([]);
     } finally {
       setCargando(false);
@@ -94,12 +85,9 @@ const MisCursos = () => {
           <div className="sin-cursos">
             <BookOpen size={64} />
             <h2>No tienes cursos aún</h2>
-            <p>Tus compras pendientes de aprobación aparecerán aquí una vez aprobadas</p>
+            <p>Explora nuestro catálogo y comienza tu aprendizaje</p>
             <button className="btn-primary" onClick={() => navigate('/cursos')}>
               Explorar Cursos
-            </button>
-            <button className="btn-secondary mt-2" onClick={() => navigate('/mis-compras')}>
-              Ver Mis Compras
             </button>
           </div>
         ) : (

@@ -73,17 +73,17 @@ const DetalleCurso = () => {
     }
   };
 
-  // 🆕 INSCRIPCIÓN GRATUITA - REDIRIGE A REGISTRO
+  // 🆕 INSCRIPCIÓN GRATUITA - CORREGIDA
   const handleInscripcionGratuita = async () => {
     if (!usuario) {
-      // Guardar el ID del curso para poder redirigir después del registro
+      // 🆕 Guardar el ID del curso para inscripción automática después del registro
       localStorage.setItem('cursoGratuitoId', id);
+      console.log('✅ Curso gratuito guardado para registro:', id);
       navigate('/registro');
       return;
     }
 
     try {
-      // Llamar al endpoint de inscripción gratuita
       const response = await fetch(`${import.meta.env.VITE_API_URL}/cursos/${id}/inscripcion-gratuita`, {
         method: 'POST',
         headers: {
@@ -95,13 +95,16 @@ const DetalleCurso = () => {
       const data = await response.json();
 
       if (response.ok) {
+        // 🆕 Limpiar localStorage después de inscripción exitosa
+        localStorage.removeItem('cursoGratuitoId');
+        
         alert('🎉 ¡Inscripción exitosa! Ya puedes acceder al curso');
         navigate(`/aprender/${id}`);
       } else {
         alert(data.error || 'Error en la inscripción');
       }
     } catch (error) {
-      console.error('Error en inscripción:', error);
+      console.error('❌ Error en inscripción:', error);
       alert('Error al inscribirte. Intenta nuevamente.');
     }
   };
