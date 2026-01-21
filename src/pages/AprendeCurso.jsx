@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { PlayCircle, CheckCircle, Circle, ArrowLeft, Award, Clock } from 'lucide-react';
+import { PlayCircle, CheckCircle, Circle, ArrowLeft, Award, Clock, FileText, Copy, Check } from 'lucide-react';
 import { cursosAPI } from '../services/api';
 import './AprendeCurso.css';
 
@@ -13,6 +13,7 @@ const AprendeCurso = () => {
   const [videoActual, setVideoActual] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
+  const [copiado, setCopiado] = useState(false); // 🆕 Para el botón de copiar
 
   useEffect(() => {
     cargarCurso();
@@ -69,6 +70,16 @@ const AprendeCurso = () => {
       moduloTitulo,
       temaId
     });
+    setCopiado(false); // 🆕 Resetear estado de copiado
+  };
+
+  // 🆕 FUNCIÓN PARA COPIAR TEXTO
+  const copiarTexto = () => {
+    if (videoActual?.descripcion) {
+      navigator.clipboard.writeText(videoActual.descripcion);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    }
   };
 
   // ========================================
@@ -99,6 +110,11 @@ const AprendeCurso = () => {
     return { tipo: null, id: null };
   };
 
+  // 🆕 DETECTAR SI ES CONTENIDO DE SOLO TEXTO
+  const esContenidoTexto = (tema) => {
+    return !tema?.videoUrl || tema.videoUrl.trim() === '';
+  };
+
   if (cargando) {
     return (
       <div className="aprender-loading">
@@ -120,6 +136,7 @@ const AprendeCurso = () => {
   if (!curso) return null;
 
   const videoInfo = videoActual?.videoUrl ? extraerVideoInfo(videoActual.videoUrl) : { tipo: null, id: null };
+  const mostrarVistaTexto = esContenidoTexto(videoActual); // 🆕 Determinar qué vista mostrar
 
   return (
     <div className="aprender-curso">
@@ -154,7 +171,7 @@ const AprendeCurso = () => {
         <aside className="aprender-sidebar">
           <div className="sidebar-header">
             <h3>Contenido del Curso</h3>
-            <p>{progreso.videosVistos.length} / {contarTotalTemas(curso)} videos</p>
+            <p>{progreso.videosVistos.length} / {contarTotalTemas(curso)} lecciones</p>
           </div>
           
           <div className="modulos-lista">
@@ -200,9 +217,58 @@ const AprendeCurso = () => {
           </div>
         </aside>
 
-        {/* Reproductor */}
+        {/* 🆕 VISTA CONDICIONAL: TEXTO O VIDEO */}
         <main className="aprender-reproductor">
-          {videoInfo.id ? (
+          {!videoActual ? (
+            <div className="no-video">
+              <PlayCircle size={64} />
+              <p>Selecciona una lección para comenzar</p>
+            </div>
+          ) : mostrarVistaTexto ? (
+            /* 🆕 VISTA DE TEXTO PARA PROMPTS */
+            <div className="vista-texto">
+              <div className="texto-container">
+                <div className="texto-header">
+                  <div>
+                    <p className="texto-modulo">{videoActual.moduloTitulo}</p>
+                    <h2 className="texto-titulo">{videoActual.titulo}</h2>
+                  </div>
+                  <div className="texto-acciones">
+                    <button 
+                      className="btn-copiar"
+                      onClick={copiarTexto}
+                      title="Copiar contenido"
+                    >
+                      {copiado ? <Check size={20} /> : <Copy size={20} />}
+                      {copiado ? 'Copiado' : 'Copiar'}
+                    </button>
+                    <label className="checkbox-visto">
+                      <input
+                        type="checkbox"
+                        checked={progreso.videosVistos.includes(videoActual.temaId)}
+                        onChange={(e) => marcarComoVisto(videoActual.temaId, e.target.checked)}
+                      />
+                      <span>Marcar como leído</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="texto-contenido">
+                  <div className="texto-icono">
+                    <FileText size={48} />
+                  </div>
+                  <div className="texto-body">
+                    {videoActual.descripcion ? (
+                      <pre className="texto-pre">{videoActual.descripcion}</pre>
+                    ) : (
+                      <p className="texto-placeholder">No hay contenido disponible para esta lección.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : videoInfo.id ? (
+            /* VISTA DE VIDEO ORIGINAL */
             <>
               <div className="video-container">
                 {videoInfo.tipo === 'youtube' && (

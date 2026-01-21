@@ -468,3 +468,172 @@
     font-size: 1.2rem;
   }
 }
+/* 🆕 VISTA DE TEXTO PARA PROMPTS */
+.vista-texto {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.texto-container {
+  max-width: 900px;
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.texto-header {
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.texto-modulo {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.texto-titulo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.texto-acciones {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.btn-copiar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.btn-copiar:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-copiar:active {
+  transform: translateY(0);
+}
+
+.texto-contenido {
+  padding: 3rem;
+  min-height: 400px;
+  max-height: calc(100vh - 350px);
+  overflow-y: auto;
+}
+
+.texto-icono {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #667eea;
+}
+
+.texto-body {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #2d3748;
+}
+
+.texto-pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #2d3748;
+  margin: 0;
+  padding: 1.5rem;
+  background: #f7fafc;
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+}
+
+.texto-placeholder {
+  text-align: center;
+  color: #a0aec0;
+  font-style: italic;
+  padding: 3rem;
+}
+
+/* Scrollbar personalizado para el contenido de texto */
+.texto-contenido::-webkit-scrollbar {
+  width: 8px;
+}
+
+.texto-contenido::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.texto-contenido::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 10px;
+}
+
+.texto-contenido::-webkit-scrollbar-thumb:hover {
+  background: #764ba2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vista-texto {
+    padding: 1rem;
+  }
+
+  .texto-header {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .texto-titulo {
+    font-size: 1.4rem;
+  }
+
+  .texto-acciones {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn-copiar {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .texto-contenido {
+    padding: 1.5rem;
+  }
+
+  .texto-pre {
+    font-size: 0.95rem;
+    padding: 1rem;
+  }
+}
