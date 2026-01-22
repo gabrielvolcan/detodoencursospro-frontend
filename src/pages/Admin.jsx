@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, BASE_URL } from '../services/api';
 import { useNotificaciones } from '../hooks/useNotificaciones';
 import './Admin.css';
-import GestionProductos from './Admin/GestionProductos';
+import GestionProductos from './admin/GestionProductos';
 
 const Admin = () => {
   const { esAdmin } = useAuth();
