@@ -155,6 +155,13 @@
   line-height: 1;
 }
 
+.precio-gratis {
+  background: linear-gradient(135deg, #ff9500 0%, #ffb800 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .precio-antes {
   font-size: 1.5rem;
   color: var(--texto-secundario);
@@ -163,8 +170,15 @@
 }
 
 /* ========================================
-   ESTADO DE COMPRA
+   ESTADO DE COMPRA Y BOTONES
 ======================================== */
+
+.acciones-box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: fadeInUp 0.8s ease-out 0.8s both;
+}
 
 .ya-comprado {
   display: flex;
@@ -174,7 +188,6 @@
   background: rgba(0, 230, 118, 0.1);
   border: 2px solid var(--acento);
   border-radius: 16px;
-  animation: fadeInUp 0.8s ease-out 0.8s both;
 }
 
 .ya-comprado svg {
@@ -206,27 +219,100 @@
   box-shadow: 0 8px 25px rgba(0, 230, 118, 0.5);
 }
 
-.btn-comprar {
+/* Botones de compra */
+.btn-comprar-ahora,
+.btn-agregar-carrito,
+.btn-descarga-gratuita {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 20px;
-  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
-  color: white;
+  padding: 18px 32px;
   border: none;
   border-radius: 12px;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0, 230, 118, 0.4);
-  animation: fadeInUp 0.8s ease-out 0.8s both;
+  width: 100%;
 }
 
-.btn-comprar:hover {
-  transform: translateY(-5px);
+.btn-comprar-ahora {
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(0, 230, 118, 0.4);
+}
+
+.btn-comprar-ahora:hover {
+  transform: translateY(-3px);
   box-shadow: 0 10px 30px rgba(0, 230, 118, 0.6);
+}
+
+.btn-agregar-carrito {
+  background: transparent;
+  color: var(--acento);
+  border: 2px solid var(--acento);
+}
+
+.btn-agregar-carrito:hover {
+  background: rgba(0, 230, 118, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-descarga-gratuita {
+  background: linear-gradient(135deg, #ff9500 0%, #ffb800 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(255, 149, 0, 0.4);
+}
+
+.btn-descarga-gratuita:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(255, 149, 0, 0.6);
+}
+
+/* Badges */
+.badge-gratis {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #ff9500 0%, #ffb800 100%);
+  color: white;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(255, 149, 0, 0.4);
+  animation: pulse 2s infinite;
+}
+
+.badge-nuevo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: white;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(0, 230, 118, 0.4);
+  animation: pulse 2s infinite;
+}
+
+.badge-destacado {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #000;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
 }
 
 /* ========================================
@@ -260,25 +346,6 @@
 
 .hero-imagen img:hover {
   transform: scale(1.02);
-}
-
-.badge-nuevo,
-.badge-oferta {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #ff4444 0%, #ff6666 100%);
-  color: white;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
-  animation: pulse 2s infinite;
-}
-
-.badge-nuevo {
-  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
 }
 
 /* ========================================
@@ -683,6 +750,80 @@
 }
 
 /* ========================================
+   CTA FINAL
+======================================== */
+
+.cta-final,
+.cta-final-gratuito {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
+  text-align: center;
+}
+
+.cta-final .container,
+.cta-final-gratuito .container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cta-final-gratuito svg {
+  color: #ff9500;
+  margin-bottom: 20px;
+}
+
+.cta-final h2,
+.cta-final-gratuito h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.cta-final p,
+.cta-final-gratuito p {
+  font-size: 1.2rem;
+  color: var(--texto-secundario);
+  margin-bottom: 30px;
+}
+
+.btn-cta-final,
+.btn-cta-gratuito {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 40px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cta-final {
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 230, 118, 0.4);
+}
+
+.btn-cta-final:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(0, 230, 118, 0.6);
+}
+
+.btn-cta-gratuito {
+  background: linear-gradient(135deg, #ff9500 0%, #ffb800 100%);
+  color: white;
+  box-shadow: 0 8px 25px rgba(255, 149, 0, 0.4);
+}
+
+.btn-cta-gratuito:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255, 149, 0, 0.6);
+}
+
+/* ========================================
    ESTADOS DE CARGA Y ERROR
 ======================================== */
 
@@ -775,7 +916,9 @@
     font-size: 2rem;
   }
 
-  .btn-comprar {
+  .btn-comprar-ahora,
+  .btn-agregar-carrito,
+  .btn-descarga-gratuita {
     font-size: 1rem;
     padding: 16px;
   }

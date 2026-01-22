@@ -25,16 +25,16 @@ const CheckoutManual = () => {
   const monedaPais = obtenerMoneda(paisSeleccionado);
 
   // ========================================
-  // 💰 FUNCIÓN PARA OBTENER PRECIO DE CURSO
+  // 💰 FUNCIÓN PARA OBTENER PRECIO (CURSOS Y PRODUCTOS)
   // ========================================
-  const obtenerPrecioCurso = (curso) => {
+  const obtenerPrecio = (item) => {
     // Si tiene precios por país
-    if (curso.precios && curso.precios[paisSeleccionado]) {
-      return curso.precios[paisSeleccionado].monto;
+    if (item.precios && item.precios[paisSeleccionado]) {
+      return item.precios[paisSeleccionado].monto;
     }
     
     // Si tiene precioUSD, convertir
-    if (curso.precioUSD) {
+    if (item.precioUSD) {
       const tasas = {
         USD: 1,
         PEN: 3.36,
@@ -43,12 +43,12 @@ const CheckoutManual = () => {
         UYU: 39,
         VES: 1
       };
-      return curso.precioUSD * (tasas[monedaPais] || 1);
+      return item.precioUSD * (tasas[monedaPais] || 1);
     }
     
     // Fallback precio viejo
-    if (curso.precio) {
-      return curso.precio;
+    if (item.precio) {
+      return item.precio;
     }
     
     return 0;
@@ -56,7 +56,7 @@ const CheckoutManual = () => {
 
   // Calcular total según el país
   const calcularTotal = () => {
-    return items.reduce((total, curso) => total + obtenerPrecioCurso(curso), 0);
+    return items.reduce((total, item) => total + obtenerPrecio(item), 0);
   };
 
   const totalPais = calcularTotal();
@@ -97,10 +97,15 @@ const CheckoutManual = () => {
     try {
       setSubiendo(true);
       
+      // ✅ Separar cursos y productos
+      const cursosIds = items.filter(item => item.tipo === undefined || item.tipo === 'curso').map(c => c._id);
+      const productosIds = items.filter(item => item.tipo && item.tipo !== 'curso').map(p => p._id);
+      
       const { data } = await pagosAPI.crearOrdenManual({
-        cursosIds: items.map(c => c._id),
+        cursosIds,
+        productosIds, // ✅ Agregar productos
         metodoPago: {
-          tipo: 'transferencia', // Tipo genérico para el backend
+          tipo: 'transferencia',
           nombre: metodoSeleccionado.nombre,
           pais: paisSeleccionado
         },
@@ -164,9 +169,9 @@ const CheckoutManual = () => {
     }
   };
 
-  // Formatear precio individual de curso
-  const formatearPrecioCurso = (curso) => {
-    const precio = obtenerPrecioCurso(curso);
+  // Formatear precio individual
+  const formatearPrecioItem = (item) => {
+    const precio = obtenerPrecio(item);
     return formatearPrecio(precio);
   };
 
@@ -204,12 +209,15 @@ const CheckoutManual = () => {
           {/* Resumen */}
           <div className="resumen-compra">
             <h2>Resumen de tu Pedido</h2>
-            {items.map(curso => (
-              <div key={curso._id} className="item-resumen">
-                <img src={curso.imagen} alt={curso.titulo} />
+            {items.map(item => (
+              <div key={item._id} className="item-resumen">
+                <img src={item.imagen} alt={item.titulo} />
                 <div>
-                  <h4>{curso.titulo}</h4>
-                  <span>{formatearPrecioCurso(curso)}</span>
+                  <h4>{item.titulo}</h4>
+                  {item.tipo && item.tipo !== 'curso' && (
+                    <span className="tipo-badge-mini">📦 {item.tipo}</span>
+                  )}
+                  <span className="precio-item">{formatearPrecioItem(item)}</span>
                 </div>
               </div>
             ))}
