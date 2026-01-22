@@ -20,7 +20,10 @@ const ProductoDetalle = () => {
   const navigate = useNavigate();
   const { usuario, estaAutenticado } = useAuth();
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
-  const { convertirPrecio } = usePais();
+  
+  // ✅ VALIDACIÓN ROBUSTA DEL CONTEXTO
+  const paisContext = usePais();
+  const convertirPrecio = paisContext?.convertirPrecio || null;
   
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -74,12 +77,34 @@ const ProductoDetalle = () => {
       };
     }
 
-    // Usamos convertirPrecio del contexto (igual que cursos)
+    // ✅ VALIDAR QUE convertirPrecio EXISTA Y SEA UNA FUNCIÓN
     if (producto.precioUSD && !isNaN(producto.precioUSD)) {
-      return convertirPrecio(parseFloat(producto.precioUSD));
+      if (convertirPrecio && typeof convertirPrecio === 'function') {
+        try {
+          return convertirPrecio(parseFloat(producto.precioUSD));
+        } catch (error) {
+          console.error('Error al convertir precio:', error);
+          // Fallback a USD
+          return {
+            precio: producto.precioUSD,
+            moneda: 'USD',
+            simbolo: '$',
+            formatted: `$${parseFloat(producto.precioUSD).toFixed(2)}`
+          };
+        }
+      } else {
+        // Si no hay convertirPrecio, usar USD directamente
+        console.warn('convertirPrecio no disponible, usando USD');
+        return {
+          precio: producto.precioUSD,
+          moneda: 'USD',
+          simbolo: '$',
+          formatted: `$${parseFloat(producto.precioUSD).toFixed(2)}`
+        };
+      }
     }
 
-    // Fallback
+    // Fallback final
     return { formatted: 'Consultar precio', simbolo: '$', precio: 0 };
   };
 
@@ -87,23 +112,41 @@ const ProductoDetalle = () => {
   // 🛒 MANEJO DE COMPRA (IGUAL QUE CURSOS)
   // ========================================
   const handleAgregarCarrito = () => {
+    console.log('🛒 Botón Agregar al Carrito clickeado');
+    
     if (!estaAutenticado()) {
+      console.log('Usuario no autenticado');
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;
     }
     
-    if (agregarAlCarrito(producto)) {
+    console.log('Agregando producto al carrito:', producto);
+    const resultado = agregarAlCarrito(producto);
+    console.log('Resultado:', resultado);
+    
+    if (resultado) {
       navigate('/carrito');
     }
   };
 
   const handleComprarAhora = () => {
+    console.log('💳 Botón Comprar Ahora clickeado');
+    
     if (!estaAutenticado()) {
+      console.log('Usuario no autenticado');
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;
     }
     
-    if (agregarAlCarrito(producto)) {
+    console.log('Agregando producto al carrito:', producto);
+    const resultado = agregarAlCarrito(producto);
+    console.log('Resultado:', resultado);
+    
+    if (resultado) {
+      console.log('Navegando a checkout');
+      navigate('/checkout');
+    } else {
+      console.log('Ya estaba en carrito, navegando a checkout');
       navigate('/checkout');
     }
   };
