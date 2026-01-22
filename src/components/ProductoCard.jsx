@@ -1,17 +1,14 @@
-// ========================================
-// 🎴 COMPONENTE CARD GENÉRICO DE PRODUCTO
-// Se adapta según el tipo de producto
-// ========================================
-
 import { Link } from 'react-router-dom';
 import { 
-  Video, FileText, Package, Download, Star, Users, Clock 
+  Video, FileText, Package, Download, Star, Users 
 } from 'lucide-react';
+import { usePais } from '../context/PaisContext';
 import './ProductoCard.css';
 
 const ProductoCard = ({ producto }) => {
+  const { paisActual, convertirPrecio } = usePais();
   
-  // Icono según tipo de producto
+  // Icono según tipo
   const renderIconoTipo = () => {
     const iconos = {
       curso: <Video size={20} />,
@@ -40,11 +37,6 @@ const ProductoCard = ({ producto }) => {
     };
     return badges[producto.tipo] || producto.tipo;
   };
-  
-  // Calcular precio con descuento
-  const precioFinal = producto.oferta?.activa
-    ? (producto.precioUSD * (1 - producto.oferta.porcentajeDescuento / 100)).toFixed(2)
-    : producto.precioUSD;
 
   return (
     <Link to={`/producto/${producto._id}`} className="producto-card">
@@ -53,13 +45,11 @@ const ProductoCard = ({ producto }) => {
         
         {/* Badges */}
         <div className="producto-card-badges">
+          {producto.gratis && (
+            <span className="producto-badge producto-badge-gratis">GRATIS</span>
+          )}
           {producto.nuevo && (
             <span className="producto-badge producto-badge-nuevo">Nuevo</span>
-          )}
-          {producto.oferta?.activa && (
-            <span className="producto-badge producto-badge-oferta">
-              -{producto.oferta.porcentajeDescuento}%
-            </span>
           )}
           {producto.destacado && (
             <span className="producto-badge producto-badge-destacado">⭐ Destacado</span>
@@ -78,89 +68,47 @@ const ProductoCard = ({ producto }) => {
         
         <h3 className="producto-card-titulo">{producto.titulo}</h3>
         
-        {producto.subtitulo && (
-          <p className="producto-card-subtitulo">{producto.subtitulo}</p>
-        )}
-        
         <p className="producto-card-descripcion">
           {producto.descripcion.substring(0, 100)}
           {producto.descripcion.length > 100 && '...'}
         </p>
         
-        {/* Metadatos según tipo */}
-        <div className="producto-card-meta">
-          {/* Para cursos */}
-          {producto.tipo === 'curso' && (
-            <>
-              {producto.metadatos?.instructor && (
-                <span>👨‍🏫 {producto.metadatos.instructor}</span>
-              )}
-              {producto.duracion && (
-                <span>
-                  <Clock size={14} />
-                  {producto.duracion}
-                </span>
-              )}
-              {producto.videos?.length > 0 && (
-                <span>{producto.videos.length} videos</span>
-              )}
-            </>
-          )}
-          
-          {/* Para libros/ebooks */}
-          {['libro', 'ebook'].includes(producto.tipo) && (
-            <>
-              {producto.metadatos?.autor && (
-                <span>✍️ {producto.metadatos.autor}</span>
-              )}
-              {producto.metadatos?.paginas && (
-                <span>{producto.metadatos.paginas} páginas</span>
-              )}
-            </>
-          )}
-          
-          {/* Para descargables */}
-          {['plantilla', 'guia', 'recurso', 'software'].includes(producto.tipo) && (
-            <>
-              {producto.archivos?.length > 0 && (
-                <span>
-                  <Download size={14} />
-                  {producto.archivos.length} archivos
-                </span>
-              )}
-              {producto.metadatos?.software && (
-                <span>{producto.metadatos.software}</span>
-              )}
-            </>
-          )}
-        </div>
-        
-        {/* Valoración y estudiantes */}
+        {/* Valoración y compradores */}
         <div className="producto-card-stats">
           <div className="producto-valoracion">
             <Star size={16} fill="#ffa500" color="#ffa500" />
-            <span>{producto.valoracion.promedio.toFixed(1)}</span>
+            <span>{producto.valoracion?.promedio?.toFixed(1) || '0.0'}</span>
             <span className="producto-valoracion-total">
-              ({producto.valoracion.total})
+              ({producto.valoracion?.total || 0})
             </span>
           </div>
           
           <div className="producto-estudiantes">
             <Users size={16} />
-            <span>{producto.estudiantes}</span>
+            <span>{producto.totalCompradores || 0}</span>
           </div>
         </div>
         
-        {/* Precio */}
+        {/* Precio CON CONVERSIÓN */}
         <div className="producto-card-footer">
-          <div className="producto-precio">
-            {producto.oferta?.activa && (
-              <span className="producto-precio-antes">${producto.precioUSD}</span>
-            )}
-            <span className="producto-precio-actual">${precioFinal}</span>
-          </div>
+          {producto.gratis ? (
+            <div className="producto-precio-gratis">
+              <span className="gratis-text">GRATIS</span>
+            </div>
+          ) : (
+            <div className="producto-precio">
+              <span className="producto-precio-actual">
+                {convertirPrecio(producto.precioUSD)}
+              </span>
+              <span className="producto-precio-moneda">
+                {paisActual.moneda}
+              </span>
+            </div>
+          )}
           
-          <button className="producto-btn-ver-mas">Ver detalles</button>
+          <button className="producto-btn-ver-mas">
+            {producto.gratis ? 'Descargar' : 'Ver detalles'}
+          </button>
         </div>
       </div>
     </Link>

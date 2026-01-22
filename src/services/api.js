@@ -68,36 +68,18 @@ export const cursosAPI = {
 };
 
 // ========================================
-// ✅ PRODUCTOS DIGITALES (Sistema nuevo - COMPLETO)
+// ✅ PRODUCTOS DIGITALES
 // ========================================
 export const productosAPI = {
-  // Obtener todos los productos (público)
+  // Público
   obtenerTodos: (params) => axios.get('/productos', { params }),
-  
-  // Obtener un producto por ID (público)
   obtenerPorId: (id) => axios.get(`/productos/${id}`),
   
-  // Crear producto (admin + multipart/form-data para archivos)
+  // Admin
+  obtenerTodosAdmin: () => axios.get('/productos/admin/todos'),
   crear: (datos) => axios.post('/productos', datos),
-  
-  // Actualizar producto (admin)
   actualizar: (id, datos) => axios.put(`/productos/${id}`, datos),
-  
-  // Eliminar producto (admin)
-  eliminar: (id) => axios.delete(`/productos/${id}`),
-  
-  // Descargar archivo (requiere compra)
-  descargar: (productoId, archivoId) => axios.get(`/productos/${productoId}/descargar/${archivoId}`, {
-    responseType: 'blob' // ✅ Importante para descargas
-  }),
-  
-  // Agregar archivo adicional a producto existente
-  agregarArchivo: (productoId, formData) => axios.post(`/productos/${productoId}/agregar-archivo`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
-  
-  // Eliminar archivo específico
-  eliminarArchivo: (productoId, archivoId) => axios.delete(`/productos/${productoId}/archivo/${archivoId}`)
+  eliminar: (id) => axios.delete(`/productos/${id}`)
 };
 
 // ========================================
@@ -135,16 +117,7 @@ export const adminAPI = {
   eliminarCompra: (compraId) => axios.delete(`/admin/compra/${compraId}`),
   
   // 🔔 Notificaciones
-  obtenerContadorNotificaciones: () => axios.get('/admin/notificaciones/contador'),
-  
-  // ✅ Gestión de productos (admin - COMPLETO)
-  obtenerTodosProductos: () => axios.get('/admin/productos'),
-  obtenerProducto: (id) => axios.get(`/admin/productos/${id}`),
-  crearProducto: (formData) => axios.post('/admin/productos', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
-  actualizarProducto: (id, datos) => axios.put(`/admin/productos/${id}`, datos),
-  eliminarProducto: (id) => axios.delete(`/admin/productos/${id}`)
+  obtenerContadorNotificaciones: () => axios.get('/admin/notificaciones/contador')
 };
 
 // ========================================

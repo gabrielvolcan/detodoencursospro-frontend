@@ -80,6 +80,24 @@
   color: var(--blanco);
 }
 
+/* ⭐ NUEVO: Badge GRATIS */
+.producto-badge-gratis {
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  color: var(--negro);
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0, 255, 136, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(0, 255, 136, 0.6);
+  }
+}
+
 /* Tipo de producto */
 .producto-card-tipo {
   position: absolute;
@@ -230,10 +248,11 @@
   margin-top: 8px;
 }
 
+/* ⭐ NUEVO: Contenedor precio normal */
 .producto-precio {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .producto-precio-antes {
@@ -246,6 +265,32 @@
   color: var(--acento);
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+/* ⭐ NUEVO: Moneda */
+.producto-precio-moneda {
+  color: var(--gris-claro);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ⭐ NUEVO: Contenedor cuando es GRATIS */
+.producto-precio-gratis {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gratis-text {
+  color: var(--acento);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Botón */
@@ -303,6 +348,11 @@
   .producto-card-meta {
     gap: 10px;
   }
+  
+  .producto-precio-actual,
+  .gratis-text {
+    font-size: 1.3rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -314,7 +364,18 @@
     font-size: 1.1rem;
   }
 
-  .producto-precio-actual {
-    font-size: 1.3rem;
+  .producto-precio-actual,
+  .gratis-text {
+    font-size: 1.2rem;
+  }
+  
+  .producto-card-badges {
+    top: 8px;
+    left: 8px;
+  }
+  
+  .producto-badge {
+    padding: 4px 10px;
+    font-size: 0.75rem;
   }
 }

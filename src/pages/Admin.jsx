@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, BASE_URL } from '../services/api';
 import { useNotificaciones } from '../hooks/useNotificaciones';
 import './Admin.css';
+import GestionProductos from './Admin/GestionProductos';
 
 const Admin = () => {
   const { esAdmin } = useAuth();
@@ -723,6 +724,7 @@ const Admin = () => {
         )}
 
         {/* GESTIÓN DE PRODUCTOS */}
+{vistaActual === 'productos' && <GestionProductos />}
 {vista === 'productos' && (
   <div className="gestion-cursos">
     <div className="cursos-header">
