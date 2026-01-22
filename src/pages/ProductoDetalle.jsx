@@ -114,7 +114,7 @@ const ProductoDetalle = () => {
   const handleAgregarCarrito = () => {
     console.log('🛒 Agregar al Carrito clickeado');
     
-    if (!estaAutenticado()) {
+    if (!estaAutenticado) {
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;
     }
@@ -129,7 +129,7 @@ const ProductoDetalle = () => {
   const handleComprarAhora = () => {
     console.log('💳 Comprar Ahora clickeado');
     
-    if (!estaAutenticado()) {
+    if (!estaAutenticado) {
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;
     }
@@ -141,7 +141,7 @@ const ProductoDetalle = () => {
 
   // 🆕 DESCARGA GRATUITA (para productos gratis)
   const handleDescargaGratuita = async () => {
-    if (!estaAutenticado()) {
+    if (!estaAutenticado) {
       localStorage.setItem('productoGratuitoId', id);
       navigate('/registro');
       return;
