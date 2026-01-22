@@ -7,16 +7,20 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ShoppingCart, Download, Video, FileText, Package, 
-  CheckCircle, Star, Users, Clock, Award, Shield 
+  CheckCircle, Star, Users, Clock, Award, Shield, Zap, Gift 
 } from 'lucide-react';
 import { productosAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useCarrito } from '../context/CarritoContext';
+import { usePais } from '../context/PaisContext';
 import './ProductoDetalle.css';
 
 const ProductoDetalle = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { usuario, estaAutenticado } = useAuth();
+  const { agregarAlCarrito, estaEnCarrito } = useCarrito();
+  const { convertirPrecio } = usePais();
   
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -31,10 +35,13 @@ const ProductoDetalle = () => {
       const { data } = await productosAPI.obtenerPorId(id);
       setProducto(data);
       
-      // Verificar si usuario ya lo compró
-      if (usuario) {
-        const comprado = usuario.productosComprados?.some(
-          p => p.producto === id && p.estadoPago === 'aprobado'
+      // ✅ Verificar si usuario ya lo compró
+      if (usuario && usuario.productosComprados) {
+        const comprado = usuario.productosComprados.some(
+          p => {
+            const productoId = typeof p.producto === 'object' ? p.producto._id : p.producto;
+            return productoId === id && p.estadoPago === 'aprobado';
+          }
         );
         setYaComprado(comprado);
       }
@@ -45,14 +52,95 @@ const ProductoDetalle = () => {
     }
   };
 
-  const manejarCompra = () => {
+  // ========================================
+  // 💰 OBTENER PRECIO CON CONVERSIÓN (IGUAL QUE CURSOS)
+  // ========================================
+  const obtenerPrecio = () => {
+    if (!producto) return { formatted: '$0', simbolo: '$', precio: 0 };
+
+    console.log('DEBUG PRODUCTO - Título:', producto.titulo);
+    console.log('DEBUG PRODUCTO - gratis:', producto.gratis);
+    console.log('DEBUG PRODUCTO - precioUSD:', producto.precioUSD);
+
+    // 🆕 SI ES GRATUITO (por campo o por precio 0), MOSTRAR "TOTALMENTE GRATIS"
+    if (producto.gratis === true || producto.precioUSD === 0) {
+      console.log('✅ PRODUCTO - Detectado como GRATUITO');
+      return {
+        precio: 0,
+        moneda: 'USD',
+        simbolo: '',
+        formatted: 'TOTALMENTE GRATIS',
+        esGratuito: true
+      };
+    }
+
+    // Usamos convertirPrecio del contexto (igual que cursos)
+    if (producto.precioUSD && !isNaN(producto.precioUSD)) {
+      return convertirPrecio(parseFloat(producto.precioUSD));
+    }
+
+    // Fallback
+    return { formatted: 'Consultar precio', simbolo: '$', precio: 0 };
+  };
+
+  // ========================================
+  // 🛒 MANEJO DE COMPRA (IGUAL QUE CURSOS)
+  // ========================================
+  const handleAgregarCarrito = () => {
     if (!estaAutenticado()) {
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;
     }
     
-    // Agregar al carrito o ir directo a checkout
-    navigate(`/checkout/${id}`);
+    if (agregarAlCarrito(producto)) {
+      navigate('/carrito');
+    }
+  };
+
+  const handleComprarAhora = () => {
+    if (!estaAutenticado()) {
+      navigate('/login', { state: { from: `/producto/${id}` } });
+      return;
+    }
+    
+    if (agregarAlCarrito(producto)) {
+      navigate('/checkout');
+    }
+  };
+
+  // 🆕 DESCARGA GRATUITA (para productos gratis)
+  const handleDescargaGratuita = async () => {
+    if (!estaAutenticado()) {
+      localStorage.setItem('productoGratuitoId', id);
+      navigate('/registro');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/productos/${id}/descarga-gratuita`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.removeItem('productoGratuitoId');
+        alert('🎉 ¡Producto agregado! Ya puedes descargarlo');
+        navigate('/mis-compras');
+      } else {
+        alert(data.error || 'Error al obtener el producto');
+      }
+    } catch (error) {
+      console.error('❌ Error en descarga gratuita:', error);
+      alert('Error al procesar. Intenta nuevamente.');
+    }
   };
 
   const descargarArchivo = async (archivoId) => {
@@ -67,6 +155,9 @@ const ProductoDetalle = () => {
   if (cargando) return <div className="loading">Cargando...</div>;
   if (!producto) return <div className="error">Producto no encontrado</div>;
 
+  const enCarrito = estaEnCarrito(producto._id);
+  const precioInfo = obtenerPrecio();
+
   // ========================================
   // RENDERIZADO SEGÚN TIPO DE PRODUCTO
   // ========================================
@@ -80,8 +171,12 @@ const ProductoDetalle = () => {
             <div className="hero-imagen">
               <img src={producto.imagen} alt={producto.titulo} />
               {producto.nuevo && <span className="badge-nuevo">Nuevo</span>}
-              {producto.oferta?.activa && (
-                <span className="badge-oferta">-{producto.oferta.porcentajeDescuento}%</span>
+              {producto.destacado && <span className="badge-destacado">⭐ Destacado</span>}
+              {(producto.gratis === true || producto.precioUSD === 0) && (
+                <span className="badge-gratis">
+                  <Gift size={16} />
+                  GRATIS
+                </span>
               )}
             </div>
             
@@ -102,40 +197,71 @@ const ProductoDetalle = () => {
                 {producto.metadatos?.autor && (
                   <span>✍️ {producto.metadatos.autor}</span>
                 )}
-                <span>⭐ {producto.valoracion.promedio.toFixed(1)} ({producto.valoracion.total})</span>
-                <span>👥 {producto.estudiantes} estudiantes</span>
+                <span>
+                  ⭐ {producto.valoracion?.promedio?.toFixed(1) || '5.0'} 
+                  ({producto.valoracion?.total || 0})
+                </span>
+                <span>👥 {producto.totalCompradores || 0} compradores</span>
               </div>
               
               <p className="descripcion">{producto.descripcion}</p>
               
-              {/* PRECIO */}
+              {/* ✅ PRECIO CON CONVERSIÓN */}
               <div className="precio-box">
-                <span className="precio-actual">${producto.precioUSD}</span>
-                {producto.oferta?.activa && (
+                <span className={`precio-actual ${precioInfo.esGratuito ? 'precio-gratis' : ''}`}>
+                  {precioInfo.formatted}
+                </span>
+                {producto.precioAnterior && !precioInfo.esGratuito && (
                   <span className="precio-antes">
-                    ${(producto.precioUSD / (1 - producto.oferta.porcentajeDescuento / 100)).toFixed(2)}
+                    {precioInfo.simbolo}{producto.precioAnterior}
                   </span>
                 )}
               </div>
               
-              {/* BOTÓN DE ACCIÓN */}
-              {yaComprado ? (
-                <div className="ya-comprado">
-                  <CheckCircle size={24} />
-                  <span>Ya tienes este producto</span>
+              {/* ✅ BOTONES DE ACCIÓN (IGUAL QUE CURSOS) */}
+              <div className="acciones-box">
+                {yaComprado ? (
+                  <div className="ya-comprado">
+                    <CheckCircle size={24} />
+                    <span>Ya tienes este producto</span>
+                    <button 
+                      onClick={() => navigate('/mis-compras')}
+                      className="btn-acceder"
+                    >
+                      Ver mis descargas
+                    </button>
+                  </div>
+                ) : (producto.gratis === true || producto.precioUSD === 0) ? (
+                  // 🆕 BOTÓN DE DESCARGA GRATUITA
                   <button 
-                    onClick={() => navigate('/mis-compras')}
-                    className="btn-acceder"
+                    onClick={handleDescargaGratuita} 
+                    className="btn-descarga-gratuita"
                   >
-                    Ver mis descargas
+                    <Gift size={20} />
+                    Obtener GRATIS
                   </button>
-                </div>
-              ) : (
-                <button onClick={manejarCompra} className="btn-comprar">
-                  <ShoppingCart size={20} />
-                  Comprar ahora
-                </button>
-              )}
+                ) : (
+                  // BOTONES DE COMPRA
+                  <>
+                    <button 
+                      onClick={handleComprarAhora} 
+                      className="btn-comprar-ahora"
+                    >
+                      <Zap size={20} />
+                      {enCarrito ? 'Ir al Checkout' : 'Comprar Ahora'}
+                    </button>
+                    {!enCarrito && (
+                      <button 
+                        onClick={handleAgregarCarrito}
+                        className="btn-agregar-carrito"
+                      >
+                        <ShoppingCart size={20} />
+                        Agregar al Carrito
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -146,7 +272,7 @@ const ProductoDetalle = () => {
       ======================================== */}
       
       {/* SI ES CURSO → Mostrar videos */}
-      {producto.tipo === 'curso' && (
+      {producto.tipo === 'curso' && producto.videos && producto.videos.length > 0 && (
         <section className="contenido-curso">
           <div className="container">
             <h2>Contenido del Curso</h2>
@@ -169,7 +295,7 @@ const ProductoDetalle = () => {
       )}
       
       {/* SI ES DESCARGABLE → Mostrar archivos */}
-      {['libro', 'ebook', 'plantilla', 'guia', 'recurso', 'software'].includes(producto.tipo) && (
+      {['libro', 'ebook', 'plantilla', 'guia', 'recurso', 'software'].includes(producto.tipo) && producto.archivos && producto.archivos.length > 0 && (
         <section className="contenido-descargable">
           <div className="container">
             <h2>Archivos Incluidos</h2>
@@ -185,7 +311,7 @@ const ProductoDetalle = () => {
                     </span>
                   </div>
                   
-                  {archivo.esVistPrevia ? (
+                  {archivo.esVistaPrevia ? (
                     <button 
                       onClick={() => window.open(archivo.url, '_blank')}
                       className="btn-vista-previa"
@@ -218,7 +344,7 @@ const ProductoDetalle = () => {
             {producto.incluye?.map((item, index) => (
               <div key={index} className="incluye-item">
                 <CheckCircle size={24} className="check" />
-                <span>{item.texto}</span>
+                <span>{item.texto || item}</span>
               </div>
             ))}
             
@@ -242,14 +368,51 @@ const ProductoDetalle = () => {
       )}
       
       {/* METADATOS ESPECÍFICOS */}
-      <section className="metadatos">
-        <div className="container">
-          <h2>Información Adicional</h2>
-          <div className="metadatos-grid">
-            {renderMetadatos(producto)}
+      {producto.metadatos && Object.keys(producto.metadatos).length > 0 && (
+        <section className="metadatos">
+          <div className="container">
+            <h2>Información Adicional</h2>
+            <div className="metadatos-grid">
+              {renderMetadatos(producto)}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* ✅ CTA FINAL (IGUAL QUE CURSOS) */}
+      {!yaComprado && !(producto.gratis === true || producto.precioUSD === 0) && (
+        <section className="cta-final">
+          <div className="container">
+            <h2>¿Listo para comenzar?</h2>
+            <p>Únete a {producto.totalCompradores || 0}+ personas que ya compraron</p>
+            <button 
+              onClick={handleComprarAhora}
+              className="btn-cta-final"
+            >
+              <Zap size={20} />
+              {enCarrito ? 'Finalizar Compra' : `Comprar por ${precioInfo.formatted}`}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* 🆕 CTA FINAL PARA PRODUCTOS GRATUITOS */}
+      {!yaComprado && (producto.gratis === true || producto.precioUSD === 0) && (
+        <section className="cta-final-gratuito">
+          <div className="container">
+            <Gift size={48} />
+            <h2>🎉 Producto Completamente GRATIS</h2>
+            <p>Obtén acceso inmediato a todo el contenido</p>
+            <button 
+              onClick={handleDescargaGratuita}
+              className="btn-cta-gratuito"
+            >
+              <Gift size={20} />
+              Obtener Ahora Gratis
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 };
@@ -291,11 +454,11 @@ const renderItemsPorDefecto = (producto) => {
   
   if (producto.tipo === 'curso') {
     items.push(
-      <div className="incluye-item">
+      <div key="acceso" className="incluye-item">
         <CheckCircle size={24} className="check" />
         <span>Acceso de por vida</span>
       </div>,
-      <div className="incluye-item">
+      <div key="cert" className="incluye-item">
         <CheckCircle size={24} className="check" />
         <span>Certificado de finalización</span>
       </div>
@@ -304,7 +467,7 @@ const renderItemsPorDefecto = (producto) => {
   
   if (producto.metadatos?.actualizaciones) {
     items.push(
-      <div className="incluye-item">
+      <div key="updates" className="incluye-item">
         <CheckCircle size={24} className="check" />
         <span>Actualizaciones gratuitas</span>
       </div>
@@ -313,7 +476,7 @@ const renderItemsPorDefecto = (producto) => {
   
   if (producto.metadatos?.soporte) {
     items.push(
-      <div className="incluye-item">
+      <div key="support" className="incluye-item">
         <CheckCircle size={24} className="check" />
         <span>Soporte: {producto.metadatos.soporte}</span>
       </div>
@@ -337,7 +500,7 @@ const renderMetadatos = (producto) => {
   if (meta.version) items.push({ label: 'Versión', valor: meta.version });
   if (meta.compatibilidad) items.push({ 
     label: 'Compatibilidad', 
-    valor: meta.compatibilidad.join(', ') 
+    valor: Array.isArray(meta.compatibilidad) ? meta.compatibilidad.join(', ') : meta.compatibilidad
   });
   
   // Para plantillas
