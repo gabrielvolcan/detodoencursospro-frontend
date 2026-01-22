@@ -6,7 +6,11 @@ import { usePais } from '../context/PaisContext';
 import './ProductoCard.css';
 
 const ProductoCard = ({ producto }) => {
-  const { paisActual, convertirPrecio } = usePais();
+  const { obtenerPaisActual, convertirPrecio } = usePais();
+  
+  // ✅ CORRECCIÓN: Obtener país actual y precio convertido correctamente
+  const paisActual = obtenerPaisActual();
+  const precioData = convertirPrecio(producto.precioUSD);
   
   // Icono según tipo
   const renderIconoTipo = () => {
@@ -69,8 +73,8 @@ const ProductoCard = ({ producto }) => {
         <h3 className="producto-card-titulo">{producto.titulo}</h3>
         
         <p className="producto-card-descripcion">
-          {producto.descripcion.substring(0, 100)}
-          {producto.descripcion.length > 100 && '...'}
+          {producto.descripcion?.substring(0, 100) || ''}
+          {producto.descripcion?.length > 100 && '...'}
         </p>
         
         {/* Valoración y compradores */}
@@ -98,10 +102,7 @@ const ProductoCard = ({ producto }) => {
           ) : (
             <div className="producto-precio">
               <span className="producto-precio-actual">
-                {convertirPrecio(producto.precioUSD)}
-              </span>
-              <span className="producto-precio-moneda">
-                {paisActual.moneda}
+                {precioData.formatted}
               </span>
             </div>
           )}
