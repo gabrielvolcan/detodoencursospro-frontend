@@ -1,7 +1,7 @@
-// frontend/src/pages/GestionProductos.jsx
+// frontend/src/pages/admin/GestionProductos.jsx
 import { useState, useEffect } from 'react';
-import { productosAPI } from '../services/api';
-import './Admin.css';
+import { productosAPI } from '../../services/api';
+import '../Admin.css';
 
 const GestionProductos = () => {
   const [productos, setProductos] = useState([]);
