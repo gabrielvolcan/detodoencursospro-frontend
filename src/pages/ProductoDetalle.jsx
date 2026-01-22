@@ -109,46 +109,34 @@ const ProductoDetalle = () => {
   };
 
   // ========================================
-  // 🛒 MANEJO DE COMPRA (IGUAL QUE CURSOS)
+  // 🛒 MANEJO DE COMPRA (MISMO FLUJO QUE CURSOS)
   // ========================================
   const handleAgregarCarrito = () => {
-    console.log('🛒 Botón Agregar al Carrito clickeado');
+    console.log('🛒 Agregar al Carrito clickeado');
     
     if (!estaAutenticado()) {
-      console.log('Usuario no autenticado');
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;
     }
     
-    console.log('Agregando producto al carrito:', producto);
-    const resultado = agregarAlCarrito(producto);
-    console.log('Resultado:', resultado);
-    
-    if (resultado) {
-      navigate('/carrito');
+    if (agregarAlCarrito(producto)) {
+      alert('✅ Producto agregado al carrito');
+    } else {
+      alert('ℹ️ Este producto ya está en tu carrito');
     }
   };
 
   const handleComprarAhora = () => {
-    console.log('💳 Botón Comprar Ahora clickeado');
+    console.log('💳 Comprar Ahora clickeado');
     
     if (!estaAutenticado()) {
-      console.log('Usuario no autenticado');
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;
     }
     
-    console.log('Agregando producto al carrito:', producto);
-    const resultado = agregarAlCarrito(producto);
-    console.log('Resultado:', resultado);
-    
-    if (resultado) {
-      console.log('Navegando a checkout');
-      navigate('/checkout');
-    } else {
-      console.log('Ya estaba en carrito, navegando a checkout');
-      navigate('/checkout');
-    }
+    // Agregar al carrito y luego ir al carrito para revisar
+    agregarAlCarrito(producto);
+    navigate('/carrito');
   };
 
   // 🆕 DESCARGA GRATUITA (para productos gratis)
