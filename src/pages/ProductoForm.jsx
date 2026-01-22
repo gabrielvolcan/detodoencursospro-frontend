@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { productosAPI } from '../services/api';
-import { Save, ArrowLeft } from 'lucide-react';
+import { Save, ArrowLeft, FileText, Link2, DollarSign } from 'lucide-react';
 import './ProductoForm.css';
 
 const ProductoForm = () => {
@@ -13,26 +13,28 @@ const ProductoForm = () => {
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
 
-  // Estado SIMPLE del formulario - solo 6 campos básicos
+  // Estado del formulario con campo de descarga
   const [producto, setProducto] = useState({
     titulo: '',
     descripcion: '',
     tipo: 'libro',
     categoria: '',
     imagen: '',
-    precioUSD: 0
+    precioUSD: 0,
+    archivoURL: '', // ⭐ NUEVO: URL del archivo descargable
+    archivoPeso: ''  // OPCIONAL: Tamaño del archivo (ej: "5 MB")
   });
 
   // Tipos de producto
   const tiposProducto = [
-    { valor: 'libro', label: 'Libro PDF' },
-    { valor: 'ebook', label: 'Ebook Digital' },
-    { valor: 'curso', label: 'Curso' },
-    { valor: 'plantilla', label: 'Plantilla' },
-    { valor: 'guia', label: 'Guía' },
-    { valor: 'software', label: 'Software' },
-    { valor: 'recurso', label: 'Recurso' },
-    { valor: 'bundle', label: 'Bundle' }
+    { valor: 'libro', label: '📚 Libro PDF' },
+    { valor: 'ebook', label: '📖 Ebook Digital' },
+    { valor: 'curso', label: '🎓 Curso' },
+    { valor: 'plantilla', label: '📄 Plantilla' },
+    { valor: 'guia', label: '📋 Guía' },
+    { valor: 'software', label: '💻 Software' },
+    { valor: 'recurso', label: '🎨 Recurso' },
+    { valor: 'bundle', label: '📦 Bundle' }
   ];
 
   useEffect(() => {
@@ -51,7 +53,9 @@ const ProductoForm = () => {
         tipo: data.tipo || 'libro',
         categoria: data.categoria || '',
         imagen: data.imagen || '',
-        precioUSD: data.precioUSD || 0
+        precioUSD: data.precioUSD || 0,
+        archivoURL: data.archivoURL || '',
+        archivoPeso: data.archivoPeso || ''
       });
     } catch (error) {
       console.error('Error cargando producto:', error);
@@ -76,7 +80,7 @@ const ProductoForm = () => {
       setGuardando(true);
       setError('');
 
-      // Validación simple
+      // Validación
       if (!producto.titulo.trim()) {
         setError('El título es obligatorio');
         return;
@@ -89,15 +93,21 @@ const ProductoForm = () => {
         setError('La categoría es obligatoria');
         return;
       }
+      if (!producto.archivoURL.trim()) {
+        setError('La URL del archivo descargable es obligatoria');
+        return;
+      }
 
-      // Preparar datos - SOLO los campos básicos
+      // Preparar datos
       const datos = {
         titulo: producto.titulo.trim(),
         descripcion: producto.descripcion.trim(),
         tipo: producto.tipo,
         categoria: producto.categoria.trim(),
         imagen: producto.imagen.trim() || 'https://via.placeholder.com/400x300?text=Producto',
-        precioUSD: parseFloat(producto.precioUSD) || 0
+        precioUSD: parseFloat(producto.precioUSD) || 0,
+        archivoURL: producto.archivoURL.trim(),
+        archivoPeso: producto.archivoPeso.trim() || ''
       };
 
       console.log('📤 Enviando datos:', datos);
@@ -131,17 +141,18 @@ const ProductoForm = () => {
             <ArrowLeft size={20} />
             Volver
           </button>
-          <h1>{esEdicion ? 'Editar Producto' : 'Crear Producto'}</h1>
+          <h1>{esEdicion ? '✏️ Editar Producto' : '➕ Crear Producto'}</h1>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message">⚠️ {error}</div>}
 
         <form onSubmit={handleSubmit} className="producto-form">
           
-          {/* TIPO */}
+          {/* INFORMACIÓN BÁSICA */}
           <section className="form-section">
-            <h2>Información Básica</h2>
+            <h2><FileText size={20} /> Información Básica</h2>
             
+            {/* TIPO */}
             <div className="form-group">
               <label>Tipo de Producto *</label>
               <select 
@@ -179,8 +190,8 @@ const ProductoForm = () => {
                 value={producto.descripcion}
                 onChange={handleChange}
                 required
-                rows={4}
-                placeholder="Describe tu producto..."
+                rows={5}
+                placeholder="Describe tu producto, qué incluye, qué aprenderán, etc..."
               />
             </div>
 
@@ -196,29 +207,73 @@ const ProductoForm = () => {
                 placeholder="Ej: Programación, Diseño, Marketing"
               />
             </div>
+          </section>
 
-            {/* IMAGEN */}
+          {/* ARCHIVOS Y MULTIMEDIA */}
+          <section className="form-section">
+            <h2><Link2 size={20} /> Archivos y Multimedia</h2>
+            
+            {/* URL DEL ARCHIVO DESCARGABLE - ⭐ NUEVO */}
             <div className="form-group">
-              <label>URL de Imagen</label>
+              <label>URL del Archivo Descargable * 🎯</label>
+              <input
+                type="url"
+                name="archivoURL"
+                value={producto.archivoURL}
+                onChange={handleChange}
+                required
+                placeholder="https://drive.google.com/file/d/xxx o https://tu-servidor.com/archivo.pdf"
+              />
+              <small className="help-text">
+                📥 Este es el link que recibirán los clientes después de comprar. 
+                Puede ser de Google Drive, Dropbox, tu servidor, etc.
+              </small>
+            </div>
+
+            {/* TAMAÑO DEL ARCHIVO - OPCIONAL */}
+            <div className="form-group">
+              <label>Tamaño del Archivo (opcional)</label>
               <input
                 type="text"
+                name="archivoPeso"
+                value={producto.archivoPeso}
+                onChange={handleChange}
+                placeholder="Ej: 5 MB, 150 MB, 1.2 GB"
+              />
+              <small className="help-text">
+                📊 Ayuda a los usuarios a saber cuánto espacio necesitarán
+              </small>
+            </div>
+
+            {/* IMAGEN DE PORTADA */}
+            <div className="form-group">
+              <label>URL de Imagen de Portada</label>
+              <input
+                type="url"
                 name="imagen"
                 value={producto.imagen}
                 onChange={handleChange}
-                placeholder="https://ejemplo.com/imagen.jpg"
+                placeholder="https://ejemplo.com/portada.jpg"
               />
-              <small>Opcional - se usará imagen por defecto si se deja vacío</small>
+              <small className="help-text">
+                🖼️ Opcional - se usará imagen por defecto si se deja vacío
+              </small>
             </div>
             
             {producto.imagen && (
               <div className="imagen-preview">
                 <img src={producto.imagen} alt="Preview" />
+                <p className="preview-label">Vista previa de la portada</p>
               </div>
             )}
+          </section>
 
-            {/* PRECIO */}
+          {/* PRECIO */}
+          <section className="form-section">
+            <h2><DollarSign size={20} /> Precio</h2>
+            
             <div className="form-group">
-              <label>Precio (USD) *</label>
+              <label>Precio en USD *</label>
               <input
                 type="number"
                 name="precioUSD"
@@ -229,6 +284,9 @@ const ProductoForm = () => {
                 step="0.01"
                 placeholder="0.00"
               />
+              <small className="help-text">
+                💵 El precio se convertirá automáticamente a la moneda local del comprador
+              </small>
             </div>
           </section>
 
@@ -248,7 +306,7 @@ const ProductoForm = () => {
               disabled={guardando}
             >
               <Save size={20} />
-              {guardando ? 'Guardando...' : esEdicion ? 'Actualizar' : 'Crear Producto'}
+              {guardando ? 'Guardando...' : esEdicion ? 'Actualizar Producto' : 'Crear Producto'}
             </button>
           </div>
         </form>
