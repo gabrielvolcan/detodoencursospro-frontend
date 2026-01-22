@@ -51,15 +51,40 @@ const Productos = () => {
   const cargarProductos = async () => {
     try {
       setCargando(true);
-      const { data } = await productosAPI.obtenerTodos();
-      setProductos(data);
+      const response = await productosAPI.obtenerTodos();
+      
+      // 🔍 Debug: ver qué estructura devuelve el backend
+      console.log('Respuesta completa:', response);
+      console.log('Response.data:', response.data);
+      
+      // ✅ CORRECCIÓN: Asegurarse de que siempre sea un array
+      let productosData = [];
+      
+      if (Array.isArray(response.data)) {
+        // Si response.data ya es un array
+        productosData = response.data;
+      } else if (response.data && Array.isArray(response.data.productos)) {
+        // Si viene como { productos: [...] }
+        productosData = response.data.productos;
+      } else if (response.data && Array.isArray(response.data.data)) {
+        // Si viene como { data: [...] }
+        productosData = response.data.data;
+      } else {
+        // Si no es ninguno de los casos anteriores
+        console.warn('Formato de respuesta inesperado:', response.data);
+        productosData = [];
+      }
+      
+      setProductos(productosData);
       
       // Extraer categorías únicas
-      const categoriasUnicas = [...new Set(data.map(p => p.categoria))].filter(Boolean);
+      const categoriasUnicas = [...new Set(productosData.map(p => p.categoria))].filter(Boolean);
       setCategorias(categoriasUnicas);
+      
     } catch (error) {
       console.error('Error cargando productos:', error);
       setError('Error al cargar productos');
+      setProductos([]); // ✅ Asegurar que sea array vacío en caso de error
     } finally {
       setCargando(false);
     }
@@ -102,10 +127,10 @@ const Productos = () => {
         resultado.sort((a, b) => b.precioUSD - a.precioUSD);
         break;
       case 'populares':
-        resultado.sort((a, b) => b.estudiantes - a.estudiantes);
+        resultado.sort((a, b) => (b.estudiantes || 0) - (a.estudiantes || 0));
         break;
       case 'valoracion':
-        resultado.sort((a, b) => b.valoracion.promedio - a.valoracion.promedio);
+        resultado.sort((a, b) => (b.valoracion?.promedio || 0) - (a.valoracion?.promedio || 0));
         break;
       default:
         break;
