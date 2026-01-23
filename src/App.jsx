@@ -22,6 +22,7 @@ import CursoForm from './pages/CursoForm';
 import Certificado from './pages/Certificado';
 import VerificarCertificado from './pages/VerificarCertificado';
 import EmailMasivo from './pages/EmailMasivo';
+import GraciasPrompts from './pages/GraciasPrompts';
 
 // ✅ COMPONENTES DE PRODUCTOS (ahora activos)
 import Productos from './pages/Productos';
@@ -69,6 +70,9 @@ function App() {
                   
                   {/* 🆕 VERIFICAR CERTIFICADO (Pública - para que cualquiera pueda verificar) */}
                   <Route path="/verificar-certificado/:codigo" element={<VerificarCertificado />} />
+                  
+                  {/* 🆕 PÁGINA DE GRACIAS PROMPTS */}
+                  <Route path="/gracias-prompts" element={<GraciasPrompts />} />
                   
                   {/* ========================================
                       AUTH - RUTAS PRINCIPALES (sin ñ)

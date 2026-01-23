@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Play, Award, Clock } from 'lucide-react';
+import { BookOpen, Play, Award, Clock, Sparkles, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { usePais } from '../context/PaisContext';
 import axios from '../services/api';
 import './MisCursos.css';
 
 const MisCursos = () => {
   const { estaAutenticado, usuario } = useAuth();
+  const { obtenerPrecio } = usePais();
   const navigate = useNavigate();
   const [cursos, setCursos] = useState([]);
+  const [todosLosCursos, setTodosLosCursos] = useState([]);
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
@@ -16,19 +19,23 @@ const MisCursos = () => {
       navigate('/login');
       return;
     }
-    cargarCursos();
+    cargarDatos();
   }, [estaAutenticado]);
 
-  const cargarCursos = async () => {
+  const cargarDatos = async () => {
     try {
-      // ✅ USAR EL ENDPOINT CORRECTO QUE TRAE TODOS LOS CURSOS
-      const { data } = await axios.get('/auth/usuarios/mis-cursos');
-      
-      console.log('✅ Cursos cargados:', data);
-      setCursos(data);
+      // Cargar mis cursos
+      const { data: misCursosData } = await axios.get('/auth/usuarios/mis-cursos');
+      console.log('✅ Cursos cargados:', misCursosData);
+      setCursos(misCursosData);
+
+      // Cargar todos los cursos para la recomendación
+      const { data: todosData } = await axios.get('/cursos');
+      setTodosLosCursos(todosData);
     } catch (error) {
-      console.error('❌ Error cargando cursos:', error);
+      console.error('❌ Error cargando datos:', error);
       setCursos([]);
+      setTodosLosCursos([]);
     } finally {
       setCargando(false);
     }
@@ -51,6 +58,19 @@ const MisCursos = () => {
     const videosVistos = curso.progresoVideos.length;
     return Math.round((videosVistos / totalVideos) * 100);
   };
+
+  // Verificar si el usuario tiene los prompts
+  const tienePrompts = cursos.some(c => 
+    c.curso?.titulo?.toLowerCase().includes('prompts') ||
+    c.curso?.titulo?.toLowerCase().includes('30 prompts')
+  );
+
+  // Buscar el curso de IA
+  const cursoIA = todosLosCursos.find(c => 
+    c.titulo.toLowerCase().includes('inteligencia artificial') ||
+    c.titulo.toLowerCase().includes('ia') ||
+    c.categoria?.toLowerCase().includes('inteligencia artificial')
+  );
 
   if (cargando) {
     return (
@@ -80,6 +100,28 @@ const MisCursos = () => {
             </div>
           </div>
         </div>
+
+        {/* 🆕 BANNER RECOMENDACIÓN CURSO IA - Solo si tiene los prompts */}
+        {tienePrompts && cursoIA && (
+          <div className="banner-recomendacion-ia">
+            <div className="banner-contenido">
+              <div className="banner-icono">
+                <Sparkles size={32} />
+              </div>
+              <div className="banner-texto">
+                <h3>¿Listo para el siguiente nivel?</h3>
+                <p>Ya dominas los prompts básicos. Aprende a crear prompts profesionales y automatiza tu trabajo con IA.</p>
+              </div>
+              <button 
+                className="btn-banner-curso"
+                onClick={() => navigate(`/curso/${cursoIA._id}`)}
+              >
+                Ver Curso de IA
+                <ArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+        )}
 
         {cursos.length === 0 ? (
           <div className="sin-cursos">
