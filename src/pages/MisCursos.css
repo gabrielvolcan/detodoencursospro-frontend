@@ -4,12 +4,6 @@
   padding: 40px 0;
 }
 
-.mis-cursos-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -55,74 +49,6 @@
   font-size: 0.85rem;
 }
 
-/* ========================================
-   BANNER RECOMENDACIÓN IA
-======================================== */
-.banner-recomendacion-ia {
-  background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 110, 0.05) 100%);
-  border: 2px solid var(--acento);
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 40px;
-}
-
-.banner-contenido {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 25px;
-  align-items: center;
-}
-
-.banner-icono {
-  width: 64px;
-  height: 64px;
-  background: var(--acento);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--negro);
-  flex-shrink: 0;
-}
-
-.banner-texto h3 {
-  color: var(--blanco);
-  font-size: 1.4rem;
-  margin: 0 0 8px 0;
-}
-
-.banner-texto p {
-  color: var(--gris-claro);
-  font-size: 1rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.btn-banner-curso {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  background: var(--acento);
-  color: var(--negro);
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 1rem;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.btn-banner-curso:hover {
-  transform: translateX(5px);
-  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
-}
-
-/* ========================================
-   SIN CURSOS
-======================================== */
 .sin-cursos {
   text-align: center;
   padding: 80px 20px;
@@ -148,14 +74,10 @@
   margin-bottom: 24px;
 }
 
-/* ========================================
-   GRID DE CURSOS
-======================================== */
 .cursos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 24px;
-  clear: both;
 }
 
 .curso-card-mis {
@@ -281,7 +203,6 @@
 .btn-continuar {
   background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
-  border: none;
 }
 
 .btn-continuar:hover {
@@ -300,9 +221,6 @@
   color: var(--negro);
 }
 
-/* ========================================
-   RESPONSIVE
-======================================== */
 @media (max-width: 768px) {
   .page-header {
     flex-direction: column;
@@ -314,50 +232,7 @@
     justify-content: space-between;
   }
 
-  .banner-recomendacion-ia {
-    padding: 20px;
-    margin-bottom: 30px;
-  }
-
-  .banner-contenido {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 20px;
-  }
-
-  .banner-icono {
-    margin: 0 auto;
-  }
-
-  .banner-texto h3 {
-    font-size: 1.2rem;
-  }
-
-  .banner-texto p {
-    font-size: 0.9rem;
-  }
-
-  .btn-banner-curso {
-    width: 100%;
-    justify-content: center;
-  }
-
   .cursos-grid {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .banner-recomendacion-ia {
-    padding: 15px;
-  }
-
-  .banner-icono {
-    width: 48px;
-    height: 48px;
-  }
-
-  .banner-texto h3 {
-    font-size: 1.1rem;
   }
 }
