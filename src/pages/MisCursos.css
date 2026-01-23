@@ -1,9 +1,8 @@
 .mis-cursos-page {
   min-height: 100vh;
   background: var(--negro);
-  padding: 100px 0 40px 0;
+  padding: 120px 0 60px 0;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .mis-cursos-container {
@@ -11,7 +10,6 @@
   margin: 0 auto;
   padding: 0 20px;
   width: 100%;
-  box-sizing: border-box;
 }
 
 .page-header {
@@ -21,7 +19,6 @@
   margin-bottom: 40px;
   padding-bottom: 24px;
   border-bottom: 2px solid var(--gris-oscuro);
-  width: 100%;
 }
 
 .page-header h1 {
@@ -69,8 +66,6 @@
   border-radius: 16px;
   padding: 30px;
   margin-bottom: 40px;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .banner-contenido {
@@ -136,8 +131,6 @@
   background: var(--negro-claro);
   border: 2px dashed var(--gris-oscuro);
   border-radius: 16px;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .sin-cursos svg {
@@ -164,7 +157,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 24px;
-  width: 100%;
 }
 
 .curso-card-mis {
@@ -173,8 +165,6 @@
   border-radius: 16px;
   overflow: hidden;
   transition: all 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .curso-card-mis:hover {
@@ -316,7 +306,7 @@
 ======================================== */
 @media (max-width: 768px) {
   .mis-cursos-page {
-    padding: 90px 0 40px 0;
+    padding: 100px 0 40px 0;
   }
 
   .page-header {
@@ -364,7 +354,7 @@
 
 @media (max-width: 480px) {
   .mis-cursos-page {
-    padding: 80px 0 30px 0;
+    padding: 90px 0 30px 0;
   }
 
   .banner-recomendacion-ia {
