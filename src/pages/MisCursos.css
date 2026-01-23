@@ -4,6 +4,12 @@
   padding: 40px 0;
 }
 
+.mis-cursos-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;

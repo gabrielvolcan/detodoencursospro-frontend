@@ -83,7 +83,7 @@ const MisCursos = () => {
 
   return (
     <div className="mis-cursos-page">
-      <div className="container py-4">
+      <div className="mis-cursos-container">
         <div className="page-header">
           <div>
             <h1>Mis Cursos</h1>
