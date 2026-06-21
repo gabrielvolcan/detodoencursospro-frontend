@@ -15,8 +15,8 @@ const GestionProductos = () => {
   const cargarProductos = async () => {
     try {
       setLoading(true);
-      const data = await productosAPI.obtenerTodosAdmin();
-      setProductos(data);
+      const { data } = await productosAPI.obtenerTodosAdmin();
+      setProductos(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error al cargar productos:', error);
       setMensaje({ tipo: 'error', texto: 'Error al cargar productos' });
@@ -77,7 +77,7 @@ const GestionProductos = () => {
         <h1>Gestión de Productos Digitales</h1>
         <button 
           className="btn-crear"
-          onClick={() => window.location.href = '/admin/productos/nuevo'}
+          onClick={() => window.location.href = '/admin/producto/nuevo'}
         >
           + Nuevo Producto
         </button>
@@ -122,9 +122,9 @@ const GestionProductos = () => {
                 <tr key={producto._id}>
                   <td>
                     <div className="curso-tabla-info">
-                      {producto.imagenURL && (
-                        <img 
-                          src={producto.imagenURL} 
+                      {producto.imagen && (
+                        <img
+                          src={producto.imagen}
                           alt={producto.titulo}
                           style={{ width: '60px', height: '45px', objectFit: 'cover', borderRadius: '6px' }}
                         />
@@ -132,7 +132,7 @@ const GestionProductos = () => {
                       <div>
                         <strong>{producto.titulo}</strong>
                         <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--gris-claro)', marginTop: '4px' }}>
-                          {producto.descripcionCorta?.substring(0, 50)}...
+                          {producto.descripcion?.substring(0, 50)}...
                         </span>
                       </div>
                     </div>
@@ -191,7 +191,7 @@ const GestionProductos = () => {
                       </button>
                       <button 
                         className="btn-icon"
-                        onClick={() => window.location.href = `/admin/productos/editar/${producto._id}`}
+                        onClick={() => window.location.href = `/admin/producto/${producto._id}/editar`}
                         title="Editar producto"
                       >
                         ✏️

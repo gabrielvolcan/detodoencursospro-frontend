@@ -84,6 +84,7 @@ export const productosAPI = {
 
   // Admin
   obtenerTodosAdmin: () => axios.get('/productos/admin/todos'),
+  obtenerPorIdAdmin: (id) => axios.get(`/productos/admin/${id}`),
   crear: (datos) => axios.post('/productos', datos),
   actualizar: (id, datos) => axios.put(`/productos/${id}`, datos),
   eliminar: (id) => axios.delete(`/productos/${id}`)

@@ -46,7 +46,8 @@ const ProductoForm = () => {
   const cargarProducto = async () => {
     try {
       setCargando(true);
-      const { data } = await productosAPI.obtenerPorId(id);
+      // Endpoint admin: trae el producto completo (incluye archivoURL, que el endpoint público oculta)
+      const { data } = await productosAPI.obtenerPorIdAdmin(id);
       setProducto({
         titulo: data.titulo || '',
         descripcion: data.descripcion || '',
