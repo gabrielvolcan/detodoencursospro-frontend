@@ -28,29 +28,29 @@ const CheckoutManual = () => {
   // 💰 FUNCIÓN PARA OBTENER PRECIO (CURSOS Y PRODUCTOS)
   // ========================================
   const obtenerPrecio = (item) => {
-    // Si tiene precios por país
-    if (item.precios && item.precios[paisSeleccionado]) {
-      return item.precios[paisSeleccionado].monto;
+    // Si tiene precios por país (mismo valor que registra el backend)
+    if (item.precios && item.precios[paisSeleccionado] && item.precios[paisSeleccionado].monto != null) {
+      return Number(item.precios[paisSeleccionado].monto);
     }
-    
-    // Si tiene precioUSD, convertir
+
+    // Si tiene precioUSD, convertir con las MISMAS tasas que el backend
     if (item.precioUSD) {
       const tasas = {
         USD: 1,
         PEN: 3.36,
         CLP: 894,
-        ARS: 1490,
-        UYU: 39,
-        VES: 1
+        ARS: 1505,
+        UYU: 38.9,
+        VES: 50
       };
-      return item.precioUSD * (tasas[monedaPais] || 1);
+      return Number(item.precioUSD) * (tasas[monedaPais] || 1);
     }
-    
+
     // Fallback precio viejo
     if (item.precio) {
-      return item.precio;
+      return Number(item.precio);
     }
-    
+
     return 0;
   };
 
