@@ -3,62 +3,52 @@
 ======================================== */
 
 .curso-card {
-  background: var(--grad-superficie);
-  border: var(--borde);
-  border-radius: var(--radio-md);
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform var(--t-media), border-color var(--t-media), box-shadow var(--t-media);
+  transition: all 0.3s ease;
   animation: cursoFadeIn 0.5s ease-out;
 }
 
 .curso-card:hover {
   transform: translateY(-8px);
-  border-color: rgba(0, 255, 149, 0.4);
-  box-shadow: var(--sombra-lg), 0 0 0 1px rgba(0, 255, 149, 0.18);
+  border-color: var(--acento);
+  box-shadow: 0 12px 32px rgba(0, 255, 136, 0.15);
 }
 
-/* IMAGEN */
+/* IMAGEN - SIN ZOOM RARO */
 .curso-imagen-container {
   position: relative;
   width: 100%;
-  height: 190px;
+  height: 200px;
   overflow: hidden;
   background: var(--gris-oscuro);
-}
-
-.curso-imagen-container::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgba(8, 11, 10, 0.55) 100%);
-  pointer-events: none;
 }
 
 .curso-imagen {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--t-lenta);
+  transition: transform 0.3s ease;
 }
 
-.curso-card:hover .curso-imagen {
-  transform: scale(1.06);
-}
+/* QUITAR ZOOM - COMENTAR ESTA LÍNEA */
+/* .curso-card:hover .curso-imagen {
+  transform: scale(1.05);
+} */
 
 /* Badges */
 .curso-descuento-badge,
 .curso-destacado-badge {
   position: absolute;
   top: 12px;
-  padding: 6px 13px;
-  border-radius: var(--radio-full);
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  z-index: 3;
-  box-shadow: var(--sombra-sm);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  z-index: 2;
 }
 
 .curso-descuento-badge {
@@ -69,16 +59,8 @@
 
 .curso-destacado-badge {
   left: 12px;
-  background: var(--grad-acento);
+  background: var(--acento);
   color: var(--negro);
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.curso-destacado-badge::before {
-  content: '★';
-  font-size: 0.8rem;
 }
 
 /* Contenido */
@@ -91,23 +73,20 @@
 
 .curso-categoria {
   display: inline-block;
-  padding: 5px 13px;
-  background: var(--acento-soft);
+  padding: 4px 12px;
+  background: var(--gris-oscuro);
   color: var(--acento);
-  font-size: 0.72rem;
-  font-weight: 700;
-  border-radius: var(--radio-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 20px;
   width: fit-content;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  border: 1px solid rgba(0, 255, 149, 0.18);
+  letter-spacing: 0.5px;
 }
 
 .curso-titulo {
-  font-family: var(--font-display);
   font-size: 1.2rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
   color: var(--blanco);
   line-height: 1.3;
   min-height: 2.6em;
@@ -169,20 +148,17 @@
 }
 
 .curso-precio-actual {
-  color: var(--blanco);
-  font-family: var(--font-display);
+  color: var(--acento);
   font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-weight: 700;
 }
 
 .curso-btn-agregar,
 .curso-btn-en-carrito,
 .curso-btn-acceder {
-  padding: 11px 20px;
-  border-radius: var(--radio-xs);
-  font-family: var(--font-display);
-  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
   font-size: 0.9rem;
   display: flex;
   align-items: center;
@@ -194,14 +170,13 @@
 }
 
 .curso-btn-agregar {
-  background: var(--grad-acento);
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
-  box-shadow: var(--sombra-acento);
 }
 
 .curso-btn-agregar:hover {
   transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
 }
 
 .curso-btn-en-carrito {

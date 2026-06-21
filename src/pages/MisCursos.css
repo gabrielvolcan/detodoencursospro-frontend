@@ -23,9 +23,6 @@
   color: var(--blanco);
   font-size: 2.5rem;
   margin-bottom: 8px;
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.02em;
 }
 
 .page-header p {
@@ -41,16 +38,9 @@
 .header-stats .stat {
   text-align: center;
   padding: 12px 24px;
-  background: var(--grad-superficie);
-  border: var(--borde);
-  border-radius: var(--radio-sm);
-  box-shadow: var(--sombra-sm);
-  transition: border-color var(--t-media), box-shadow var(--t-media);
-}
-
-.header-stats .stat:hover {
-  border-color: var(--borde-acento);
-  box-shadow: var(--sombra-acento);
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 12px;
 }
 
 .header-stats .stat strong {
@@ -58,8 +48,6 @@
   color: var(--acento);
   font-size: 2rem;
   margin-bottom: 4px;
-  font-family: var(--font-display);
-  font-weight: 800;
 }
 
 .header-stats .stat span {
@@ -71,12 +59,11 @@
    BANNER RECOMENDACIÓN IA
 ======================================== */
 .banner-recomendacion-ia {
-  background: var(--grad-acento-soft);
-  border: var(--borde-acento);
-  border-radius: var(--radio-md);
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 110, 0.05) 100%);
+  border: 2px solid var(--acento);
+  border-radius: 16px;
   padding: 30px;
   margin-bottom: 40px;
-  box-shadow: var(--sombra-md), var(--sombra-acento);
 }
 
 .banner-contenido {
@@ -89,22 +76,19 @@
 .banner-icono {
   width: 64px;
   height: 64px;
-  background: var(--grad-acento);
-  border-radius: var(--radio-sm);
+  background: var(--acento);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--negro);
   flex-shrink: 0;
-  box-shadow: var(--sombra-acento);
 }
 
 .banner-texto h3 {
   color: var(--blanco);
   font-size: 1.4rem;
   margin: 0 0 8px 0;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .banner-texto p {
@@ -119,25 +103,19 @@
   align-items: center;
   gap: 8px;
   padding: 14px 24px;
-  background: var(--grad-acento);
+  background: var(--acento);
   color: var(--negro);
   border: none;
-  border-radius: var(--radio-sm);
+  border-radius: 10px;
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
-  box-shadow: var(--sombra-acento);
-  transition: all var(--t-media);
+  transition: all 0.3s ease;
 }
 
 .btn-banner-curso:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
-}
-
-.btn-banner-curso:focus-visible {
-  outline: 2px solid var(--acento);
-  outline-offset: 3px;
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
 }
 
 /* ========================================
@@ -160,8 +138,6 @@
   color: var(--blanco);
   font-size: 2rem;
   margin-bottom: 12px;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .sin-cursos p {
@@ -181,21 +157,20 @@
 }
 
 .curso-card-mis {
-  background: var(--grad-superficie);
-  border: var(--borde);
-  border-radius: var(--radio-md);
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
   overflow: visible;
   display: flex;
   flex-direction: column;
   height: auto;
-  box-shadow: var(--sombra-md);
-  transition: border-color var(--t-media), box-shadow var(--t-media), transform var(--t-media);
+  transition: all 0.3s ease;
 }
 
 .curso-card-mis:hover {
   transform: translateY(-4px);
   border-color: var(--acento);
-  box-shadow: var(--sombra-lg), var(--sombra-acento);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.15);
 }
 
 .curso-imagen {
@@ -222,13 +197,12 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: var(--grad-acento);
+  background: var(--acento);
   color: var(--negro);
-  border-radius: var(--radio-full);
+  border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 700;
   z-index: 10;
-  box-shadow: var(--sombra-acento);
 }
 
 .curso-content {
@@ -243,8 +217,6 @@
   font-size: 1.3rem;
   margin-bottom: 8px;
   line-height: 1.3;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .curso-categoria {
@@ -264,10 +236,9 @@
 
 .progreso-fill {
   height: 100%;
-  background: var(--grad-acento);
+  background: linear-gradient(90deg, var(--acento) 0%, #00cc6e 100%);
   border-radius: 4px;
-  box-shadow: 0 0 12px var(--acento-glow);
-  transition: width var(--t-media);
+  transition: width 0.3s ease;
 }
 
 .progreso-text {
@@ -318,21 +289,14 @@
 }
 
 .btn-continuar {
-  background: var(--grad-acento);
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
   border: none;
-  box-shadow: var(--sombra-acento);
 }
 
 .btn-continuar:hover {
   transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
-}
-
-.btn-continuar:focus-visible,
-.btn-certificado:focus-visible {
-  outline: 2px solid var(--acento);
-  outline-offset: 3px;
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
 }
 
 .btn-certificado {

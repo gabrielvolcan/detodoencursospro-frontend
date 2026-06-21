@@ -2,35 +2,20 @@
    PRODUCTOS - HERO (TEMA OSCURO)
 ======================================== */
 .productos-hero {
-  position: relative;
-  background: var(--grad-superficie);
+  background: var(--negro);
   color: var(--blanco);
   padding: 60px 20px;
   text-align: center;
-  border-bottom: 1px solid var(--borde-acento);
-  overflow: hidden;
-}
-
-.productos-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, var(--acento-soft) 0%, transparent 60%);
-  pointer-events: none;
+  border-bottom: 1px solid var(--gris-oscuro);
 }
 
 .productos-hero h1 {
-  position: relative;
-  font-family: var(--font-display);
   font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
   margin-bottom: 10px;
   color: var(--blanco);
 }
 
 .productos-hero p {
-  position: relative;
   font-size: 1.1rem;
   color: var(--gris-claro);
 }
@@ -50,22 +35,12 @@
   gap: 10px;
   background: var(--negro-claro);
   padding: 12px 20px;
-  border-radius: var(--radio-sm);
-  border: 1px solid var(--borde);
+  border-radius: 8px;
+  border: 1px solid var(--gris-oscuro);
   margin-bottom: 20px;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  transition: var(--t-media);
-}
-
-.buscador:focus-within {
-  border-color: var(--acento);
-  box-shadow: 0 0 0 3px var(--acento-soft), var(--sombra-acento);
-}
-
-.buscador:focus-within svg {
-  color: var(--acento);
 }
 
 .buscador input {
@@ -100,13 +75,12 @@
   gap: 8px;
   padding: 10px 20px;
   background: var(--negro-claro);
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-full);
+  border: 2px solid var(--gris-oscuro);
+  border-radius: 8px;
   cursor: pointer;
-  transition: var(--t-rapida);
+  transition: all 0.2s;
   white-space: nowrap;
   font-size: 0.95rem;
-  font-weight: 500;
   color: var(--blanco);
 }
 
@@ -116,11 +90,9 @@
 }
 
 .tipo-btn.activo {
-  background: var(--grad-acento);
+  background: var(--acento);
   color: var(--negro);
-  border-color: transparent;
-  font-weight: 600;
-  box-shadow: var(--sombra-acento);
+  border-color: var(--acento);
 }
 
 /* Controles adicionales */
@@ -137,33 +109,25 @@
   gap: 8px;
   padding: 10px 20px;
   background: var(--negro-claro);
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-sm);
+  border: 2px solid var(--gris-oscuro);
+  border-radius: 8px;
   cursor: pointer;
-  transition: var(--t-rapida);
+  transition: all 0.2s;
   color: var(--blanco);
 }
 
 .btn-filtros:hover {
   border-color: var(--acento);
-  color: var(--acento);
 }
 
 .select-orden {
   padding: 10px 15px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-sm);
+  border: 2px solid var(--gris-oscuro);
+  border-radius: 8px;
   background: var(--negro-claro);
   cursor: pointer;
   font-size: 0.95rem;
   color: var(--blanco);
-  transition: var(--t-rapida);
-}
-
-.select-orden:focus {
-  border-color: var(--acento);
-  outline: none;
-  box-shadow: 0 0 0 3px var(--acento-soft);
 }
 
 .vista-toggle {
@@ -171,8 +135,8 @@
   gap: 5px;
   background: var(--negro-claro);
   padding: 5px;
-  border-radius: var(--radio-sm);
-  border: 1px solid var(--borde);
+  border-radius: 8px;
+  border: 2px solid var(--gris-oscuro);
   margin-left: auto;
 }
 
@@ -180,14 +144,10 @@
   padding: 8px 12px;
   background: transparent;
   border: none;
-  border-radius: var(--radio-xs);
+  border-radius: 5px;
   cursor: pointer;
-  transition: var(--t-rapida);
+  transition: all 0.2s;
   color: var(--gris-claro);
-}
-
-.vista-toggle button:hover {
-  color: var(--blanco);
 }
 
 .vista-toggle button.activo {
@@ -199,10 +159,9 @@
 .filtros-avanzados {
   margin-top: 20px;
   padding: 20px;
-  background: var(--grad-superficie);
-  border-radius: var(--radio-md);
-  border: 1px solid var(--borde);
-  box-shadow: var(--sombra-md);
+  background: var(--negro-claro);
+  border-radius: 8px;
+  border: 2px solid var(--gris-oscuro);
   display: flex;
   gap: 20px;
   align-items: flex-end;
@@ -225,34 +184,25 @@
 
 .filtro-grupo select {
   padding: 10px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-xs);
+  border: 2px solid var(--gris-oscuro);
+  border-radius: 6px;
   font-size: 0.95rem;
   background: var(--gris-oscuro);
   color: var(--blanco);
-  transition: var(--t-rapida);
-}
-
-.filtro-grupo select:focus {
-  border-color: var(--acento);
-  outline: none;
-  box-shadow: 0 0 0 3px var(--acento-soft);
 }
 
 .btn-limpiar-filtros {
   padding: 10px 20px;
-  background: var(--rojo-soft);
-  color: var(--rojo);
-  border: 1px solid var(--rojo);
-  border-radius: var(--radio-xs);
+  background: var(--rojo);
+  color: var(--blanco);
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: var(--t-rapida);
 }
 
 .btn-limpiar-filtros:hover {
-  background: var(--rojo);
-  color: var(--blanco);
+  background: #cc0000;
 }
 
 /* ========================================
@@ -300,9 +250,7 @@
 }
 
 .sin-resultados h3 {
-  font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 700;
   margin-bottom: 10px;
   color: var(--blanco);
 }
@@ -314,20 +262,18 @@
 
 .sin-resultados button {
   padding: 12px 30px;
-  background: var(--grad-acento);
+  background: var(--acento);
   color: var(--negro);
   border: none;
-  border-radius: var(--radio-sm);
+  border-radius: 8px;
   cursor: pointer;
-  font-family: var(--font-display);
-  font-weight: 700;
-  transition: var(--t-media);
-  box-shadow: var(--sombra-acento);
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 .sin-resultados button:hover {
   transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
+  box-shadow: 0 4px 12px rgba(0, 230, 118, 0.4);
 }
 
 /* ========================================
@@ -366,20 +312,12 @@
 
 .productos-error button {
   padding: 12px 30px;
-  background: var(--grad-acento);
+  background: var(--acento);
   color: var(--negro);
   border: none;
-  border-radius: var(--radio-sm);
+  border-radius: 8px;
   cursor: pointer;
-  font-family: var(--font-display);
-  font-weight: 700;
-  transition: var(--t-media);
-  box-shadow: var(--sombra-acento);
-}
-
-.productos-error button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
+  font-weight: 600;
 }
 
 /* ========================================

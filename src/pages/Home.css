@@ -35,10 +35,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(circle at 20% 50%, rgba(0, 255, 149, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(0, 204, 110, 0.07) 0%, transparent 50%),
-    linear-gradient(180deg, rgba(8, 11, 10, 0.35) 0%, rgba(8, 11, 10, 0.85) 100%);
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
 }
 
 .hero-content {
@@ -55,21 +54,18 @@
 }
 
 .hero-titulo {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-size: 3.5rem;
   font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  line-height: 1.2;
   margin-bottom: 24px;
   color: var(--blanco);
 }
 
 .gradient-text {
-  background: linear-gradient(120deg, #00ff95 0%, #4dffb0 45%, #00cc6e 100%);
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 40px rgba(0, 255, 149, 0.25);
 }
 
 .hero-descripcion {
@@ -121,10 +117,9 @@
 
 .btn-primary, .btn-secondary, .btn-cta, .btn-ver-mas {
   padding: 16px 32px;
-  border-radius: var(--radio-full);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -135,14 +130,13 @@
 }
 
 .btn-primary, .btn-cta {
-  background: var(--grad-acento);
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
-  box-shadow: var(--sombra-acento);
 }
 
 .btn-primary:hover, .btn-cta:hover {
   transform: translateY(-4px);
-  box-shadow: var(--sombra-acento-fuerte);
+  box-shadow: 0 12px 32px rgba(0, 255, 136, 0.4);
 }
 
 .btn-secondary {
@@ -175,11 +169,10 @@
 }
 
 .feature-card {
-  background: rgba(18, 24, 21, 0.78);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: var(--borde);
-  border-radius: var(--radio-md);
+  background: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -338,10 +331,8 @@
    SECCIONES
 ======================================== */
 .section-header h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.9rem, 3.5vw, 2.6rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: 2.5rem;
+  font-weight: 700;
   margin-bottom: 12px;
   color: var(--blanco);
 }

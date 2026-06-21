@@ -8,9 +8,6 @@
   color: var(--blanco);
   font-size: 2.5rem;
   margin-bottom: 30px;
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.02em;
 }
 
 .checkout-content {
@@ -20,14 +17,13 @@
 }
 
 .resumen-compra {
-  background: var(--grad-superficie);
-  border: var(--borde-acento);
-  border-radius: var(--radio-md);
+  background: var(--negro-claro);
+  border: 2px solid var(--acento);
+  border-radius: 16px;
   padding: 24px;
   height: fit-content;
   position: sticky;
   top: 100px;
-  box-shadow: var(--sombra-lg), var(--sombra-acento);
 }
 
 .resumen-compra h2 {
@@ -36,17 +32,14 @@
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--gris-oscuro);
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .item-resumen {
   display: flex;
   gap: 12px;
   padding: 12px;
-  background: var(--negro);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: var(--radio-xs);
+  background: var(--gris-oscuro);
+  border-radius: 8px;
   margin-bottom: 12px;
 }
 
@@ -83,19 +76,16 @@
 }
 
 .metodos-pago-section {
-  background: var(--grad-superficie);
-  border: var(--borde);
-  border-radius: var(--radio-md);
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
   padding: 30px;
-  box-shadow: var(--sombra-md);
 }
 
 .metodos-pago-section h2 {
   color: var(--blanco);
   font-size: 1.8rem;
   margin-bottom: 12px;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .pais-seleccionado {
@@ -118,22 +108,21 @@
 .metodo-card {
   background: var(--gris-oscuro);
   border: 2px solid var(--gris);
-  border-radius: var(--radio-sm);
+  border-radius: 12px;
   padding: 20px;
   cursor: pointer;
-  transition: all var(--t-media);
+  transition: all 0.3s ease;
 }
 
 .metodo-card:hover {
   border-color: var(--acento);
   transform: translateY(-2px);
-  box-shadow: var(--sombra-acento);
 }
 
 .metodo-card.seleccionado {
   border-color: var(--acento);
   background: var(--negro);
-  box-shadow: var(--sombra-acento-fuerte);
+  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.2);
 }
 
 .metodo-header {
@@ -167,8 +156,6 @@
 .metodo-header h3 {
   color: var(--blanco);
   font-size: 1.2rem;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .metodo-instrucciones {
@@ -201,7 +188,7 @@
   gap: 12px;
   margin-top: 16px;
   padding: 12px;
-  background: rgba(255, 213, 74, 0.1);
+  background: rgba(255, 215, 0, 0.1);
   border-left: 4px solid var(--amarillo);
   border-radius: 6px;
 }
@@ -219,23 +206,17 @@
 .btn-continuar {
   width: 100%;
   padding: 16px;
-  background: var(--grad-acento);
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
-  border-radius: var(--radio-sm);
+  border-radius: 12px;
   font-size: 1.1rem;
   font-weight: 700;
-  box-shadow: var(--sombra-acento);
-  transition: all var(--t-media);
+  transition: all 0.3s ease;
 }
 
 .btn-continuar:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
-}
-
-.btn-continuar:focus-visible {
-  outline: 2px solid var(--acento);
-  outline-offset: 3px;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
 }
 
 .btn-continuar:disabled {
@@ -244,34 +225,28 @@
 }
 
 .subir-comprobante-section {
-  background: var(--grad-superficie);
-  border: var(--borde);
-  border-radius: var(--radio-md);
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
   padding: 30px;
-  box-shadow: var(--sombra-md);
 }
 
 .subir-comprobante-section h2 {
   color: var(--blanco);
   font-size: 1.8rem;
   margin-bottom: 24px;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .instrucciones-comprobante {
-  background: var(--negro);
-  border: 1px solid var(--gris-oscuro);
+  background: var(--gris-oscuro);
   padding: 20px;
-  border-radius: var(--radio-sm);
+  border-radius: 12px;
   margin-bottom: 24px;
 }
 
 .instrucciones-comprobante h3 {
   color: var(--acento);
   margin-bottom: 12px;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .instrucciones-comprobante ul {
@@ -311,17 +286,14 @@
   padding: 12px 16px;
   background: var(--gris-oscuro);
   border: 2px solid transparent;
-  border-radius: var(--radio-xs);
+  border-radius: 8px;
   color: var(--blanco);
   font-size: 1rem;
-  transition: border-color var(--t-rapida), box-shadow var(--t-rapida), background var(--t-rapida);
 }
 
 .input-comprobante:focus {
-  outline: none;
   border-color: var(--acento);
   background: var(--negro);
-  box-shadow: 0 0 0 3px var(--acento-soft);
 }
 
 .preview-comprobante {
@@ -333,10 +305,9 @@
 }
 
 .servicios-sugeridos {
-  background: var(--negro);
-  border: 1px solid var(--gris-oscuro);
+  background: var(--gris-oscuro);
   padding: 16px;
-  border-radius: var(--radio-xs);
+  border-radius: 8px;
   margin-bottom: 24px;
 }
 
@@ -348,22 +319,19 @@
 .servicios-sugeridos a {
   display: inline-block;
   padding: 8px 16px;
-  background: var(--acento-soft);
+  background: var(--negro);
   color: var(--acento);
   border: 1px solid var(--acento);
   border-radius: 6px;
   margin-right: 12px;
   margin-bottom: 8px;
   font-size: 0.9rem;
-  font-weight: 600;
-  transition: all var(--t-media);
+  transition: all 0.3s ease;
 }
 
 .servicios-sugeridos a:hover {
-  background: var(--grad-acento);
+  background: var(--acento);
   color: var(--negro);
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-acento);
 }
 
 .btn-enviar-comprobante {
@@ -373,23 +341,17 @@
   gap: 10px;
   width: 100%;
   padding: 16px;
-  background: var(--grad-acento);
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
-  border-radius: var(--radio-sm);
+  border-radius: 12px;
   font-size: 1.1rem;
   font-weight: 700;
-  box-shadow: var(--sombra-acento);
-  transition: all var(--t-media);
+  transition: all 0.3s ease;
 }
 
 .btn-enviar-comprobante:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
-}
-
-.btn-enviar-comprobante:focus-visible {
-  outline: 2px solid var(--acento);
-  outline-offset: 3px;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
 }
 
 .btn-enviar-comprobante:disabled {
@@ -405,34 +367,30 @@
 }
 
 .exito-card {
-  background: var(--grad-superficie);
-  border: var(--borde-acento);
-  border-radius: var(--radio-xl);
+  background: var(--negro-claro);
+  border: 2px solid var(--acento);
+  border-radius: 24px;
   padding: 60px 40px;
   text-align: center;
   max-width: 600px;
-  box-shadow: var(--sombra-xl), var(--sombra-acento);
 }
 
 .exito-icon {
   width: 100px;
   height: 100px;
-  background: var(--grad-acento);
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 24px;
-  box-shadow: var(--sombra-acento-fuerte);
 }
 
 .exito-card h1 {
   color: var(--blanco);
   font-size: 2.5rem;
   margin-bottom: 16px;
-  font-family: var(--font-display);
-  font-weight: 800;
 }
 
 .exito-card p {
@@ -463,26 +421,14 @@
 }
 
 .exito-acciones .btn-primary {
-  background: var(--grad-acento);
+  background: var(--acento);
   color: var(--negro);
-  box-shadow: var(--sombra-acento);
-  transition: all var(--t-media);
-}
-
-.exito-acciones .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
 }
 
 .exito-acciones .btn-secondary {
   background: transparent;
   border: 2px solid var(--acento);
   color: var(--acento);
-  transition: all var(--t-media);
-}
-
-.exito-acciones .btn-secondary:hover {
-  background: var(--acento-soft);
 }
 
 @media (max-width: 1024px) {

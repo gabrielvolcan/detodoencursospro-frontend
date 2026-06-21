@@ -6,9 +6,6 @@
 .carrito-page h1 {
   font-size: 2.5rem;
   color: var(--blanco);
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.02em;
 }
 
 .carrito-content {
@@ -24,37 +21,33 @@
 }
 
 .carrito-item {
-  background: var(--grad-superficie);
-  border: var(--borde);
-  border-radius: var(--radio-md);
+  background: var(--negro-claro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 16px;
   padding: 20px;
   display: grid;
   grid-template-columns: 120px 1fr auto auto;
   gap: 20px;
   align-items: center;
-  box-shadow: var(--sombra-md);
-  transition: border-color var(--t-media), box-shadow var(--t-media), transform var(--t-media);
+  transition: all 0.3s ease;
 }
 
 .carrito-item:hover {
   border-color: var(--acento);
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-acento);
+  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.1);
 }
 
 .carrito-item img {
   width: 120px;
   height: 80px;
   object-fit: cover;
-  border-radius: var(--radio-xs);
+  border-radius: 8px;
 }
 
 .item-info h3 {
   font-size: 1.1rem;
   color: var(--blanco);
   margin-bottom: 8px;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .item-info p {
@@ -66,13 +59,12 @@
 .item-categoria {
   display: inline-block;
   padding: 4px 12px;
-  background: var(--acento-soft);
+  background: var(--gris-oscuro);
   color: var(--acento);
   font-size: 0.75rem;
   font-weight: 600;
-  border-radius: var(--radio-full);
+  border-radius: 20px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 .item-precio {
@@ -85,8 +77,8 @@
   padding: 10px;
   background: var(--gris-oscuro);
   color: var(--rojo);
-  border-radius: var(--radio-xs);
-  transition: all var(--t-rapida);
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .btn-eliminar:hover {
@@ -96,14 +88,13 @@
 }
 
 .carrito-resumen {
-  background: var(--grad-superficie);
-  border: var(--borde-acento);
-  border-radius: var(--radio-md);
+  background: var(--negro-claro);
+  border: 2px solid var(--acento);
+  border-radius: 16px;
   padding: 30px;
   height: fit-content;
   position: sticky;
   top: 100px;
-  box-shadow: var(--sombra-lg), var(--sombra-acento);
 }
 
 .carrito-resumen h3 {
@@ -112,8 +103,6 @@
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--gris-oscuro);
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .resumen-items {
@@ -146,27 +135,21 @@
 .btn-pagar {
   width: 100%;
   padding: 16px;
-  background: var(--grad-acento);
+  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
   color: var(--negro);
-  border-radius: var(--radio-sm);
+  border-radius: 12px;
   font-size: 1.1rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  box-shadow: var(--sombra-acento);
-  transition: all var(--t-media);
+  transition: all 0.3s ease;
 }
 
 .btn-pagar:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-acento-fuerte);
-}
-
-.btn-pagar:focus-visible {
-  outline: 2px solid var(--acento);
-  outline-offset: 3px;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
 }
 
 .btn-pagar:disabled {
@@ -189,9 +172,8 @@
   font-size: 0.9rem;
   margin-top: 16px;
   padding: 12px;
-  background: rgba(255, 213, 74, 0.12);
-  border: 1px solid rgba(255, 213, 74, 0.3);
-  border-radius: var(--radio-xs);
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 8px;
 }
 
 .garantia {
@@ -234,8 +216,6 @@
   font-size: 2rem;
   color: var(--blanco);
   margin-bottom: 12px;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .carrito-vacio p {
