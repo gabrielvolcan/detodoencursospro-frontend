@@ -1,7 +1,9 @@
 .admin-page {
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: 250px minmax(0, 1fr);
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
 }
 
 .admin-sidebar {
@@ -57,6 +59,14 @@
 .admin-content {
   padding: 40px;
   background: var(--negro);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.admin-content > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .dashboard h1,
@@ -128,6 +138,8 @@
   border: 1px solid var(--gris-oscuro);
   border-radius: 16px;
   padding: 24px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .section h2 {
@@ -154,11 +166,21 @@
   align-items: center;
 }
 
+.curso-popular-item > div {
+  min-width: 0;
+}
+
+.curso-popular-item h4,
+.curso-popular-item p {
+  overflow-wrap: anywhere;
+}
+
 .curso-popular-item img {
   width: 80px;
   height: 60px;
   object-fit: cover;
   border-radius: 6px;
+  flex-shrink: 0;
 }
 
 .curso-popular-item h4 {
@@ -176,15 +198,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   padding: 12px;
   background: var(--gris-oscuro);
   border-radius: 8px;
+}
+
+.venta-item > div {
+  min-width: 0;
 }
 
 .venta-item strong {
   color: var(--blanco);
   display: block;
   margin-bottom: 4px;
+  overflow-wrap: anywhere;
 }
 
 .venta-item p {
@@ -196,6 +224,7 @@
   color: var(--acento);
   font-size: 1.2rem;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .cursos-header {
@@ -230,6 +259,17 @@
   border: 1px solid var(--gris-oscuro);
   border-radius: 16px;
   overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.cursos-tabla table {
+  min-width: 760px;
+}
+
+.usuarios-tabla table {
+  min-width: 880px;
 }
 
 table {
@@ -238,6 +278,15 @@ table {
 }
 
 thead {
+  background: var(--gris-oscuro);
+}
+
+.cursos-tabla thead th,
+.usuarios-tabla thead th,
+.ventas-tabla-mejorada thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   background: var(--gris-oscuro);
 }
 
@@ -261,6 +310,11 @@ td {
   display: flex;
   gap: 12px;
   align-items: center;
+  min-width: 0;
+}
+
+.curso-tabla-info > div {
+  min-width: 0;
 }
 
 .curso-tabla-info img {
@@ -268,6 +322,7 @@ td {
   height: 45px;
   object-fit: cover;
   border-radius: 6px;
+  flex-shrink: 0;
 }
 
 .curso-tabla-info strong {
@@ -275,6 +330,7 @@ td {
   color: var(--blanco);
   margin-bottom: 4px;
   font-size: 0.95rem;
+  overflow-wrap: anywhere;
 }
 
 .curso-tabla-info span {
@@ -852,6 +908,9 @@ td {
   border: 1px solid var(--gris-oscuro);
   border-radius: 16px;
   overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .ventas-tabla-mejorada table {
@@ -1043,7 +1102,7 @@ td {
 /* DASHBOARD MEJORADO */
 .dashboard-grid-mejorado {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
   margin-bottom: 40px;
 }
@@ -1053,6 +1112,8 @@ td {
   border: 1px solid var(--gris-oscuro);
   border-radius: 16px;
   padding: 24px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .dashboard-card h2 {
@@ -1195,6 +1256,7 @@ td {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   padding: 12px;
   background: var(--gris-oscuro);
   border-radius: 8px;
@@ -1209,11 +1271,14 @@ td {
 .metodo-nombre {
   color: var(--blanco);
   font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .metodo-cantidad {
   color: var(--acento);
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .sin-datos {
@@ -1270,7 +1335,7 @@ td {
 /* Tablets grandes y pantallas medianas */
 @media (max-width: 1400px) {
   .dashboard-grid-mejorado {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
