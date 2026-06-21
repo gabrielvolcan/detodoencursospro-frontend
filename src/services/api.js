@@ -64,7 +64,10 @@ export const cursosAPI = {
   // 🎥 REPRODUCTOR DE VIDEOS
   obtenerParaAprender: (id) => axios.get(`/cursos/${id}/aprender`),
   marcarVideoVisto: (cursoId, temaId) => axios.post(`/cursos/${cursoId}/marcar-visto`, { temaId }),
-  desmarcarVideoVisto: (cursoId, temaId) => axios.post(`/cursos/${cursoId}/desmarcar-visto`, { temaId })
+  desmarcarVideoVisto: (cursoId, temaId) => axios.post(`/cursos/${cursoId}/desmarcar-visto`, { temaId }),
+
+  // 🎁 INSCRIPCIÓN A CURSO GRATUITO
+  inscripcionGratuita: (id) => axios.post(`/cursos/${id}/inscripcion-gratuita`)
 };
 
 // ========================================
@@ -75,6 +78,10 @@ export const productosAPI = {
   obtenerTodos: (params) => axios.get('/productos', { params }),
   obtenerPorId: (id) => axios.get(`/productos/${id}`),
   
+  // Descargas
+  descargaGratuita: (id) => axios.post(`/productos/${id}/descarga-gratuita`),
+  descargar: (id, archivoId) => axios.get(`/productos/${id}/archivos/${archivoId}/descargar`),
+
   // Admin
   obtenerTodosAdmin: () => axios.get('/productos/admin/todos'),
   crear: (datos) => axios.post('/productos', datos),
@@ -92,6 +99,21 @@ export const pagosAPI = {
   }),
   misCompras: () => axios.get('/pagos-manual/mis-compras'),
   obtenerCompra: (id) => axios.get(`/pagos-manual/compra/${id}`)
+};
+
+// ========================================
+// COMPROBANTES (endpoint autenticado)
+// El backend ya NO sirve /uploads públicamente. El comprobante se obtiene
+// SOLO vía GET /pagos-manual/comprobante/:compraId con Authorization Bearer.
+// Como <img src> / <a href> no pueden enviar el header, descargamos el blob
+// y devolvemos un object URL para usarlo como src o abrirlo con window.open.
+// IMPORTANTE: quien llame debe liberar el object URL con URL.revokeObjectURL.
+// ========================================
+export const getComprobanteUrl = async (compraId) => {
+  const { data } = await axios.get(`/pagos-manual/comprobante/${compraId}`, {
+    responseType: 'blob'
+  });
+  return URL.createObjectURL(data);
 };
 
 // ========================================

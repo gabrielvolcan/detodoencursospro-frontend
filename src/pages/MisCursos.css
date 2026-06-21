@@ -23,6 +23,9 @@
   color: var(--blanco);
   font-size: 2.5rem;
   margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .page-header p {
@@ -38,9 +41,16 @@
 .header-stats .stat {
   text-align: center;
   padding: 12px 24px;
-  background: var(--negro-claro);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 12px;
+  background: var(--grad-superficie);
+  border: var(--borde);
+  border-radius: var(--radio-sm);
+  box-shadow: var(--sombra-sm);
+  transition: border-color var(--t-media), box-shadow var(--t-media);
+}
+
+.header-stats .stat:hover {
+  border-color: var(--borde-acento);
+  box-shadow: var(--sombra-acento);
 }
 
 .header-stats .stat strong {
@@ -48,6 +58,8 @@
   color: var(--acento);
   font-size: 2rem;
   margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-weight: 800;
 }
 
 .header-stats .stat span {
@@ -59,11 +71,12 @@
    BANNER RECOMENDACIÓN IA
 ======================================== */
 .banner-recomendacion-ia {
-  background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 110, 0.05) 100%);
-  border: 2px solid var(--acento);
-  border-radius: 16px;
+  background: var(--grad-acento-soft);
+  border: var(--borde-acento);
+  border-radius: var(--radio-md);
   padding: 30px;
   margin-bottom: 40px;
+  box-shadow: var(--sombra-md), var(--sombra-acento);
 }
 
 .banner-contenido {
@@ -76,19 +89,22 @@
 .banner-icono {
   width: 64px;
   height: 64px;
-  background: var(--acento);
-  border-radius: 12px;
+  background: var(--grad-acento);
+  border-radius: var(--radio-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--negro);
   flex-shrink: 0;
+  box-shadow: var(--sombra-acento);
 }
 
 .banner-texto h3 {
   color: var(--blanco);
   font-size: 1.4rem;
   margin: 0 0 8px 0;
+  font-family: var(--font-display);
+  font-weight: 700;
 }
 
 .banner-texto p {
@@ -103,19 +119,25 @@
   align-items: center;
   gap: 8px;
   padding: 14px 24px;
-  background: var(--acento);
+  background: var(--grad-acento);
   color: var(--negro);
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radio-sm);
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.3s ease;
+  box-shadow: var(--sombra-acento);
+  transition: all var(--t-media);
 }
 
 .btn-banner-curso:hover {
-  transform: translateX(5px);
-  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-acento-fuerte);
+}
+
+.btn-banner-curso:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
 }
 
 /* ========================================
@@ -138,6 +160,8 @@
   color: var(--blanco);
   font-size: 2rem;
   margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
 }
 
 .sin-cursos p {
@@ -157,20 +181,21 @@
 }
 
 .curso-card-mis {
-  background: var(--negro-claro);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 16px;
+  background: var(--grad-superficie);
+  border: var(--borde);
+  border-radius: var(--radio-md);
   overflow: visible;
   display: flex;
   flex-direction: column;
   height: auto;
-  transition: all 0.3s ease;
+  box-shadow: var(--sombra-md);
+  transition: border-color var(--t-media), box-shadow var(--t-media), transform var(--t-media);
 }
 
 .curso-card-mis:hover {
   transform: translateY(-4px);
   border-color: var(--acento);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.15);
+  box-shadow: var(--sombra-lg), var(--sombra-acento);
 }
 
 .curso-imagen {
@@ -197,12 +222,13 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: var(--acento);
+  background: var(--grad-acento);
   color: var(--negro);
-  border-radius: 20px;
+  border-radius: var(--radio-full);
   font-size: 0.85rem;
   font-weight: 700;
   z-index: 10;
+  box-shadow: var(--sombra-acento);
 }
 
 .curso-content {
@@ -217,6 +243,8 @@
   font-size: 1.3rem;
   margin-bottom: 8px;
   line-height: 1.3;
+  font-family: var(--font-display);
+  font-weight: 700;
 }
 
 .curso-categoria {
@@ -236,9 +264,10 @@
 
 .progreso-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--acento) 0%, #00cc6e 100%);
+  background: var(--grad-acento);
   border-radius: 4px;
-  transition: width 0.3s ease;
+  box-shadow: 0 0 12px var(--acento-glow);
+  transition: width var(--t-media);
 }
 
 .progreso-text {
@@ -289,14 +318,21 @@
 }
 
 .btn-continuar {
-  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  background: var(--grad-acento);
   color: var(--negro);
   border: none;
+  box-shadow: var(--sombra-acento);
 }
 
 .btn-continuar:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+  box-shadow: var(--sombra-acento-fuerte);
+}
+
+.btn-continuar:focus-visible,
+.btn-certificado:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
 }
 
 .btn-certificado {

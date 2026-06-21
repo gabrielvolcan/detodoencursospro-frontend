@@ -4,18 +4,30 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, var(--negro) 0%, var(--negro-claro) 100%);
 }
 
 .verificar-email-card {
-  background: #1e1e1e;
-  border: 1px solid rgba(0, 255, 136, 0.2);
-  border-radius: 16px;
+  background: var(--grad-superficie);
+  border: 1px solid var(--borde-acento);
+  border-radius: var(--radio-md);
   padding: 3rem;
   max-width: 500px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--sombra-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.verificar-email-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--grad-acento);
 }
 
 .verificar-icono {
@@ -29,34 +41,39 @@
 }
 
 .verificar-icono.verificando {
-  background: rgba(0, 255, 136, 0.1);
-  color: #00ff88;
+  background: var(--acento-soft);
+  color: var(--acento);
+  box-shadow: var(--sombra-acento);
 }
 
 .verificar-icono.exito {
-  background: rgba(0, 255, 136, 0.1);
-  color: #00ff88;
+  background: var(--acento-soft);
+  color: var(--acento);
+  box-shadow: var(--sombra-acento);
 }
 
 .verificar-icono.error {
-  background: rgba(255, 68, 68, 0.1);
-  color: #ff4444;
+  background: var(--rojo-soft);
+  color: var(--rojo);
 }
 
 .verificar-email-card h1 {
-  color: #fff;
+  color: var(--blanco);
+  font-family: var(--font-display);
   font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin-bottom: 1rem;
 }
 
 .verificar-email-card p {
-  color: #aaa;
+  color: var(--gris-claro);
   font-size: 1.1rem;
   margin-bottom: 1rem;
 }
 
 .redirect-msg {
-  color: #00ff88;
+  color: var(--acento);
   font-size: 0.9rem;
   margin-top: 1.5rem;
 }
@@ -73,46 +90,57 @@
 .btn-registro,
 .btn-login {
   padding: 0.8rem 2rem;
-  border-radius: 8px;
+  border-radius: var(--radio-xs);
   text-decoration: none;
   font-weight: 600;
-  transition: all 0.3s ease;
+  font-family: var(--font-display);
+  transition: all var(--t-media);
   display: inline-block;
 }
 
+.btn-login-manual:focus-visible,
+.btn-registro:focus-visible,
+.btn-login:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
 .btn-login-manual {
-  background: #00ff88;
-  color: #0a0a0a;
-  border: 2px solid #00ff88;
+  background: var(--grad-acento);
+  color: var(--negro);
+  border: 2px solid var(--acento);
+  box-shadow: var(--sombra-acento);
 }
 
 .btn-login-manual:hover {
   background: transparent;
-  color: #00ff88;
+  color: var(--acento);
   transform: translateY(-2px);
+  box-shadow: var(--sombra-acento-fuerte);
 }
 
 .btn-registro {
   background: transparent;
-  color: #00ff88;
-  border: 2px solid #00ff88;
+  color: var(--acento);
+  border: 2px solid var(--acento);
 }
 
 .btn-registro:hover {
-  background: #00ff88;
-  color: #0a0a0a;
+  background: var(--grad-acento);
+  color: var(--negro);
   transform: translateY(-2px);
+  box-shadow: var(--sombra-acento);
 }
 
 .btn-login {
   background: transparent;
-  color: #fff;
-  border: 2px solid #333;
+  color: var(--blanco);
+  border: 2px solid var(--borde);
 }
 
 .btn-login:hover {
-  border-color: #00ff88;
-  color: #00ff88;
+  border-color: var(--acento);
+  color: var(--acento);
   transform: translateY(-2px);
 }
 

@@ -5,7 +5,7 @@ import {
   Globe, CreditCard, BarChart3, TrendingDown, Activity, Mail, Package  // ← AGREGADO Package
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { adminAPI, cursosAPI, BASE_URL } from '../services/api';
+import { adminAPI, cursosAPI, getComprobanteUrl } from '../services/api';
 import { useNotificaciones } from '../hooks/useNotificaciones';
 import './Admin.css';
 import GestionProductos from './admin/GestionProductos';
@@ -37,6 +37,24 @@ const Admin = () => {
   const [metodosPago, setMetodosPago] = useState([]);
   const [cursosIngresos, setCursosIngresos] = useState([]);
   const [ventasUltimos7Dias, setVentasUltimos7Dias] = useState([]);
+
+  // 📸 Comprobantes: el backend ya NO sirve /uploads públicamente.
+  // Se obtienen vía endpoint autenticado y se abren como object URL.
+  const [comprobanteCargando, setComprobanteCargando] = useState(null);
+
+  const verComprobante = async (compraId) => {
+    try {
+      setComprobanteCargando(compraId);
+      const url = await getComprobanteUrl(compraId);
+      window.open(url, '_blank', 'noopener,noreferrer');
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (error) {
+      console.error('Error cargando comprobante:', error);
+      alert('No se pudo cargar el comprobante.');
+    } finally {
+      setComprobanteCargando(null);
+    }
+  };
 
   useEffect(() => {
     if (!esAdmin()) {
@@ -857,14 +875,14 @@ const Admin = () => {
                     {compra.comprobante?.url && (
                       <div className="pago-comprobante">
                         <strong>Comprobante:</strong>
-                        <a 
-                          href={`${BASE_URL}${compra.comprobante.url}`} 
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
+                          type="button"
+                          onClick={() => verComprobante(compra._id)}
+                          disabled={comprobanteCargando === compra._id}
                           className="btn-ver-comprobante"
                         >
-                          📸 Ver Comprobante
-                        </a>
+                          {comprobanteCargando === compra._id ? '⏳ Cargando...' : '📸 Ver Comprobante'}
+                        </button>
                       </div>
                     )}
 
@@ -1157,14 +1175,14 @@ const Admin = () => {
               {modalDetalleVenta.comprobante?.url && (
                 <div className="detalle-section">
                   <h3>Comprobante</h3>
-                  <a 
-                    href={`${BASE_URL}${modalDetalleVenta.comprobante.url}`} 
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => verComprobante(modalDetalleVenta._id)}
+                    disabled={comprobanteCargando === modalDetalleVenta._id}
                     className="btn-ver-comprobante"
                   >
-                    📸 Ver Comprobante
-                  </a>
+                    {comprobanteCargando === modalDetalleVenta._id ? '⏳ Cargando...' : '📸 Ver Comprobante'}
+                  </button>
                 </div>
               )}
             </div>

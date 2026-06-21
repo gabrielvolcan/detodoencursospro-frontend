@@ -21,16 +21,20 @@ export const AuthProvider = ({ children }) => {
 
   const verificarSesion = async () => {
     const token = localStorage.getItem('token');
-    const usuarioGuardado = localStorage.getItem('usuario');
 
-    if (token && usuarioGuardado) {
+    // Si hay token (aunque sea uno residual/sin usuario), validarlo contra el backend.
+    if (token && token !== 'undefined') {
       try {
         const { data } = await authAPI.obtenerPerfil();
         setUsuario(data);
+        localStorage.setItem('usuario', JSON.stringify(data));
       } catch (error) {
         console.error('Error verificando sesión:', error);
         cerrarSesion();
       }
+    } else if (token === 'undefined') {
+      // Limpiar token basura de versiones anteriores
+      cerrarSesion();
     }
     setCargando(false);
   };
@@ -52,11 +56,14 @@ export const AuthProvider = ({ children }) => {
 
   const registrarse = async (datosUsuario) => {
     try {
+      // El backend NO devuelve token ni usuario: el registro requiere verificar
+      // el email antes de poder iniciar sesión. No se debe simular sesión acá.
       const { data } = await authAPI.registro(datosUsuario);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('usuario', JSON.stringify(data.usuario));
-      setUsuario(data.usuario);
-      return { exito: true };
+      return {
+        exito: true,
+        mensaje: data.mensaje || 'Registro exitoso. Revisa tu email para verificar tu cuenta.',
+        cursoGratuitoInscrito: data.cursoGratuitoInscrito
+      };
     } catch (error) {
       return {
         exito: false,

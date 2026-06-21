@@ -3,12 +3,12 @@
 ======================================== */
 
 .producto-card {
-  background: var(--negro-claro);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 16px;
+  background: var(--grad-superficie);
+  border: var(--borde);
+  border-radius: var(--radio-md);
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform var(--t-media), border-color var(--t-media), box-shadow var(--t-media);
   animation: productoFadeIn 0.5s ease-out;
   display: flex;
   flex-direction: column;
@@ -18,8 +18,8 @@
 
 .producto-card:hover {
   transform: translateY(-8px);
-  border-color: var(--acento);
-  box-shadow: 0 12px 32px rgba(0, 255, 136, 0.15);
+  border-color: rgba(0, 255, 149, 0.4);
+  box-shadow: var(--sombra-lg), 0 0 0 1px rgba(0, 255, 149, 0.18);
 }
 
 /* ========================================
@@ -38,13 +38,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform var(--t-lenta);
 }
 
-/* SIN ZOOM */
-/* .producto-card:hover .producto-card-imagen img {
-  transform: scale(1.05);
-} */
+.producto-card:hover .producto-card-imagen img {
+  transform: scale(1.06);
+}
 
 /* Badges */
 .producto-card-badges {
@@ -58,15 +57,17 @@
 }
 
 .producto-badge {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 6px 13px;
+  border-radius: var(--radio-full);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--sombra-sm);
 }
 
 .producto-badge-nuevo {
-  background: var(--acento);
+  background: var(--grad-acento);
   color: var(--negro);
 }
 
@@ -108,9 +109,10 @@
   gap: 6px;
   padding: 6px 12px;
   background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   color: var(--blanco);
-  border-radius: 6px;
+  border-radius: var(--radio-xs);
   font-size: 0.8rem;
   font-weight: 600;
   z-index: 2;
@@ -135,15 +137,16 @@
 /* Categoría */
 .producto-card-categoria {
   display: inline-block;
-  padding: 4px 12px;
-  background: var(--gris-oscuro);
+  padding: 5px 13px;
+  background: var(--acento-soft);
   color: var(--acento);
-  font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: var(--radio-full);
   width: fit-content;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+  border: 1px solid rgba(0, 255, 149, 0.18);
 }
 
 /* Título */
@@ -262,9 +265,11 @@
 }
 
 .producto-precio-actual {
-  color: var(--acento);
+  color: var(--blanco);
+  font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 /* ⭐ NUEVO: Moneda */
@@ -295,24 +300,26 @@
 
 /* Botón */
 .producto-btn-ver-mas {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 11px 20px;
+  border-radius: var(--radio-xs);
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: 8px;
   transition: all 0.3s ease;
   white-space: nowrap;
-  background: linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%);
+  background: var(--grad-acento);
   color: var(--negro);
   border: none;
   cursor: pointer;
+  box-shadow: var(--sombra-acento);
 }
 
 .producto-btn-ver-mas:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+  box-shadow: var(--sombra-acento-fuerte);
 }
 
 /* ========================================

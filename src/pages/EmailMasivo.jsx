@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Send, Eye, Users, ArrowLeft, Mail } from 'lucide-react';
-import axios from 'axios';
-import { cursosAPI } from '../services/api';
+import { cursosAPI, emailMasivoAPI } from '../services/api';
 import './EmailMasivo.css';
 
 const EmailMasivo = () => {
@@ -49,7 +48,7 @@ const EmailMasivo = () => {
 
   const obtenerDestinatarios = async () => {
     try {
-      const { data } = await axios.post('/email-masivo/previsualizar', {
+      const { data } = await emailMasivoAPI.previsualizar({
         tipo: formData.tipo,
         cursoId: formData.cursoId,
         categoria: formData.categoria
@@ -90,7 +89,7 @@ const EmailMasivo = () => {
     setResultado(null);
 
     try {
-      const { data } = await axios.post('/email-masivo/enviar', formData);
+      const { data } = await emailMasivoAPI.enviar(formData);
       setResultado(data);
       
       if (data.exito) {

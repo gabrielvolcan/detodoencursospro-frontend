@@ -8,7 +8,7 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background: linear-gradient(135deg, var(--acento), #00cc6e);
+  background: var(--grad-acento);
   color: var(--negro);
   padding: 6px 14px;
   border-radius: 20px;
@@ -44,7 +44,7 @@
 .curso-btn-gratuito {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, var(--acento), #00cc6e);
+  background: var(--grad-acento);
   color: var(--negro);
   border: none;
   border-radius: 8px;
@@ -58,7 +58,7 @@
 }
 
 .curso-btn-gratuito:hover {
-  background: linear-gradient(135deg, #00e676, var(--acento));
+  background: linear-gradient(135deg, var(--acento-hover), var(--acento));
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
 }
@@ -94,7 +94,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: linear-gradient(135deg, var(--acento), #00cc6e);
+  background: var(--grad-acento);
   color: var(--negro);
   padding: 4px 12px;
   border-radius: 12px;
@@ -122,7 +122,7 @@
 .btn-inscripcion-gratuita {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, var(--acento), #00cc6e);
+  background: var(--grad-acento);
   color: var(--negro);
   border: none;
   border-radius: 12px;
@@ -140,7 +140,7 @@
 }
 
 .btn-inscripcion-gratuita:hover {
-  background: linear-gradient(135deg, #00e676, var(--acento));
+  background: linear-gradient(135deg, var(--acento-hover), var(--acento));
   transform: translateY(-3px);
   box-shadow: 0 12px 32px rgba(0, 255, 136, 0.6);
 }
@@ -185,7 +185,7 @@
 
 .btn-cta-gratuito-grande {
   padding: 18px 48px;
-  background: linear-gradient(135deg, var(--acento), #00cc6e);
+  background: var(--grad-acento);
   color: var(--negro);
   border: none;
   border-radius: 50px;
@@ -199,7 +199,7 @@
 }
 
 .btn-cta-gratuito-grande:hover {
-  background: linear-gradient(135deg, #00e676, var(--acento));
+  background: linear-gradient(135deg, var(--acento-hover), var(--acento));
   transform: translateY(-4px);
   box-shadow: 0 14px 40px rgba(0, 255, 136, 0.6);
 }
@@ -237,7 +237,7 @@
 
 .btn-cta-gratuito-small {
   padding: 14px 40px;
-  background: linear-gradient(135deg, var(--acento), #00cc6e);
+  background: var(--grad-acento);
   color: var(--negro);
   border: none;
   border-radius: 30px;
@@ -255,7 +255,7 @@
 }
 
 .btn-cta-gratuito-small:hover {
-  background: linear-gradient(135deg, #00e676, var(--acento));
+  background: linear-gradient(135deg, var(--acento-hover), var(--acento));
   transform: translateY(-3px);
   box-shadow: 0 10px 28px rgba(0, 255, 136, 0.6);
 }

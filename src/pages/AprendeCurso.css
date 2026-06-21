@@ -24,6 +24,7 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
+  box-shadow: var(--sombra-acento);
 }
 
 @keyframes spin {
@@ -55,29 +56,35 @@
 
 .btn-volver {
   padding: 12px 24px;
-  background: var(--acento);
+  background: var(--grad-acento);
   color: var(--negro);
-  border-radius: 8px;
+  border-radius: var(--radio-xs);
   text-decoration: none;
   font-weight: 600;
-  transition: all 0.3s ease;
+  font-family: var(--font-display);
+  transition: all var(--t-media);
+  box-shadow: var(--sombra-acento);
 }
 
 .btn-volver:hover {
-  background: #00cc6e;
+  filter: brightness(1.05);
   transform: translateY(-2px);
+  box-shadow: var(--sombra-acento-fuerte);
 }
 
 /* ========================================
    HEADER DEL CURSO
 ======================================== */
 .aprender-header {
-  background: var(--negro-claro);
-  border-bottom: 2px solid var(--gris-oscuro);
+  background: var(--grad-superficie);
+  border-bottom: 1px solid var(--borde);
   padding: 20px 40px;
   position: sticky;
   top: 70px;
   z-index: 100;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--sombra-sm);
 }
 
 .btn-back {
@@ -86,11 +93,11 @@
   gap: 8px;
   padding: 10px 20px;
   background: var(--gris-oscuro);
-  border: 1px solid var(--gris);
-  border-radius: 8px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-xs);
   color: var(--gris-claro);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--t-media);
   margin-bottom: 15px;
 }
 
@@ -98,11 +105,20 @@
   background: var(--gris);
   color: var(--blanco);
   border-color: var(--acento);
+  transform: translateX(-3px);
+}
+
+.btn-back:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
 }
 
 .header-info h1 {
   color: var(--blanco);
+  font-family: var(--font-display);
   font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin-bottom: 15px;
 }
 
@@ -116,14 +132,17 @@
   flex: 1;
   height: 8px;
   background: var(--gris-oscuro);
-  border-radius: 10px;
+  border-radius: var(--radio-full);
   overflow: hidden;
+  border: 1px solid var(--borde);
 }
 
 .progreso-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--acento), #00cc6e);
-  transition: width 0.5s ease;
+  background: var(--grad-acento);
+  border-radius: var(--radio-full);
+  box-shadow: 0 0 12px var(--acento-glow);
+  transition: width var(--t-lenta);
 }
 
 .progreso-texto {
@@ -138,18 +157,25 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: var(--acento);
+  background: var(--grad-acento);
   color: var(--negro);
-  border-radius: 8px;
+  border-radius: var(--radio-xs);
   text-decoration: none;
   font-weight: 700;
-  transition: all 0.3s ease;
+  font-family: var(--font-display);
+  transition: all var(--t-media);
+  box-shadow: var(--sombra-acento);
 }
 
 .btn-certificado:hover {
-  background: #00cc6e;
+  filter: brightness(1.05);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+  box-shadow: var(--sombra-acento-fuerte);
+}
+
+.btn-certificado:focus-visible {
+  outline: 2px solid var(--blanco);
+  outline-offset: 2px;
 }
 
 /* ========================================
@@ -166,23 +192,27 @@
 ======================================== */
 .aprender-sidebar {
   background: var(--negro-claro);
-  border-right: 2px solid var(--gris-oscuro);
+  border-right: 1px solid var(--borde);
   overflow-y: auto;
   max-height: calc(100vh - 180px);
 }
 
 .sidebar-header {
   padding: 24px;
-  border-bottom: 2px solid var(--gris-oscuro);
-  background: var(--negro);
+  border-bottom: 1px solid var(--borde);
+  background: var(--grad-superficie);
   position: sticky;
   top: 0;
   z-index: 10;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .sidebar-header h3 {
   color: var(--blanco);
+  font-family: var(--font-display);
   font-size: 1.2rem;
+  font-weight: 700;
   margin-bottom: 8px;
 }
 
@@ -201,12 +231,14 @@
 
 .modulo-titulo {
   color: var(--acento);
+  font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 700;
   margin-bottom: 12px;
-  padding: 8px 12px;
-  background: var(--gris-oscuro);
-  border-radius: 6px;
+  padding: 10px 14px;
+  background: var(--acento-soft);
+  border: 1px solid var(--borde-acento);
+  border-radius: var(--radio-xs);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -223,20 +255,28 @@
   gap: 12px;
   padding: 12px;
   background: var(--gris-oscuro);
-  border: 1px solid transparent;
-  border-radius: 8px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--t-media);
+  position: relative;
 }
 
 .tema-item:hover {
   background: var(--gris);
-  border-color: var(--acento);
+  border-color: var(--borde-acento);
+  transform: translateX(3px);
+}
+
+.tema-item:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
 }
 
 .tema-item.activo {
-  background: var(--acento);
+  background: var(--grad-acento);
   border-color: var(--acento);
+  box-shadow: var(--sombra-acento);
 }
 
 .tema-item.activo .tema-titulo {
@@ -317,7 +357,7 @@
 .video-info {
   padding: 30px 40px;
   background: var(--negro-claro);
-  border-top: 2px solid var(--gris-oscuro);
+  border-top: 1px solid var(--borde-acento);
 }
 
 .video-header {
@@ -338,8 +378,10 @@
 
 .video-titulo {
   color: var(--blanco);
+  font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin: 0;
   line-height: 1.4;
 }
@@ -350,10 +392,10 @@
   gap: 8px;
   padding: 12px 20px;
   background: var(--gris-oscuro);
-  border: 1px solid var(--gris);
-  border-radius: 8px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-xs);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--t-media);
   white-space: nowrap;
 }
 
@@ -413,10 +455,10 @@
 .texto-container {
   max-width: 1000px;
   width: 100%;
-  background: var(--negro-claro);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  background: var(--grad-superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  box-shadow: var(--sombra-xl);
   overflow: hidden;
 }
 
@@ -441,8 +483,10 @@
 }
 
 .texto-titulo {
+  font-family: var(--font-display);
   font-size: 1.8rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin: 0;
   line-height: 1.3;
   color: var(--blanco);
@@ -460,20 +504,27 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: var(--gris-oscuro);
-  border: 1px solid var(--acento);
+  background: var(--acento-soft);
+  border: 1px solid var(--borde-acento);
   color: var(--acento);
-  border-radius: 8px;
+  border-radius: var(--radio-xs);
   font-weight: 600;
+  font-family: var(--font-display);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--t-media);
 }
 
 .btn-copiar:hover {
-  background: var(--acento);
+  background: var(--grad-acento);
   color: var(--negro);
+  border-color: var(--acento);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+  box-shadow: var(--sombra-acento);
+}
+
+.btn-copiar:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
 }
 
 .btn-copiar:active {
@@ -511,7 +562,8 @@
   margin: 0;
   padding: 2rem;
   background: var(--negro-claro);
-  border-radius: 12px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
   border-left: 4px solid var(--acento);
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
 }

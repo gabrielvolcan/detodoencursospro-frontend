@@ -84,28 +84,14 @@ const DetalleCurso = () => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/cursos/${id}/inscripcion-gratuita`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // 🆕 Limpiar localStorage después de inscripción exitosa
-        localStorage.removeItem('cursoGratuitoId');
-        
-        alert('🎉 ¡Inscripción exitosa! Ya puedes acceder al curso');
-        navigate(`/aprender/${id}`);
-      } else {
-        alert(data.error || 'Error en la inscripción');
-      }
+      await cursosAPI.inscripcionGratuita(id);
+      // Limpiar localStorage después de inscripción exitosa
+      localStorage.removeItem('cursoGratuitoId');
+      alert('🎉 ¡Inscripción exitosa! Ya podés acceder al curso');
+      navigate(`/aprender/${id}`);
     } catch (error) {
-      console.error('❌ Error en inscripción:', error);
-      alert('Error al inscribirte. Intenta nuevamente.');
+      console.error('Error en inscripción:', error);
+      alert(error.response?.data?.error || 'Error al inscribirte. Intentá nuevamente.');
     }
   };
 

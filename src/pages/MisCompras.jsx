@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Package, Clock, CheckCircle, XCircle, Eye } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import { getComprobanteUrl, pagosAPI } from '../services/api';
 import './MisCompras.css';
 
 const MisCompras = () => {
@@ -21,14 +21,29 @@ const MisCompras = () => {
 
   const cargarCompras = async () => {
     try {
-      const { data } = await axios.get('/api/pagos-manual/mis-compras', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const { data } = await pagosAPI.misCompras();
       setCompras(data);
     } catch (error) {
       console.error('Error cargando compras:', error);
     } finally {
       setCargando(false);
+    }
+  };
+
+  const [comprobanteCargando, setComprobanteCargando] = useState(null);
+
+  const verComprobante = async (compraId) => {
+    try {
+      setComprobanteCargando(compraId);
+      const url = await getComprobanteUrl(compraId);
+      window.open(url, '_blank', 'noopener,noreferrer');
+      // Liberar el object URL pasado un tiempo prudencial para que la pestaña lo cargue
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (error) {
+      console.error('Error cargando comprobante:', error);
+      alert('No se pudo cargar el comprobante.');
+    } finally {
+      setComprobanteCargando(null);
     }
   };
 
@@ -126,30 +141,56 @@ const MisCompras = () => {
                     </div>
                   </div>
 
-                  <div className="compra-cursos">
-                    <h4>Cursos:</h4>
-                    {compra.cursos.map(item => (
-                      <div key={item._id} className="curso-item">
-                        <img src={item.curso?.imagen} alt={item.curso?.titulo} />
-                        <div className="curso-info">
-                          <strong>{item.curso?.titulo}</strong>
-                          <span>${item.precio}</span>
+                  {compra.cursos?.length > 0 && (
+                    <div className="compra-cursos">
+                      <h4>Cursos:</h4>
+                      {compra.cursos.map(item => (
+                        <div key={item._id} className="curso-item">
+                          <img src={item.curso?.imagen} alt={item.curso?.titulo} />
+                          <div className="curso-info">
+                            <strong>{item.curso?.titulo}</strong>
+                            <span>${item.precio}</span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {compra.productos?.length > 0 && (
+                    <div className="compra-cursos">
+                      <h4>Productos:</h4>
+                      {compra.productos.map(item => (
+                        <div key={item._id} className="curso-item">
+                          <img src={item.producto?.imagen} alt={item.producto?.titulo} />
+                          <div className="curso-info">
+                            <strong>{item.producto?.titulo}</strong>
+                            <span>${item.precio}</span>
+                          </div>
+                          {compra.estadoPago === 'aprobado' && item.producto?._id && (
+                            <button
+                              type="button"
+                              className="btn-ver-comprobante"
+                              onClick={() => navigate(`/producto/${item.producto._id}`)}
+                            >
+                              ⬇️ Descargar
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   {compra.comprobante?.url && (
                     <div className="compra-comprobante">
                       <strong>Comprobante:</strong>
-                      <a 
-                        href={`http://localhost:5000${compra.comprobante.url}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        type="button"
+                        onClick={() => verComprobante(compra._id)}
+                        disabled={comprobanteCargando === compra._id}
                         className="btn-ver-comprobante"
                       >
-                        📸 Ver Comprobante Subido
-                      </a>
+                        {comprobanteCargando === compra._id ? '⏳ Cargando...' : '📸 Ver Comprobante Subido'}
+                      </button>
                     </div>
                   )}
 
@@ -169,7 +210,7 @@ const MisCompras = () => {
                   {compra.estadoPago === 'aprobado' && (
                     <div className="compra-aprobada">
                       <CheckCircle size={20} />
-                      <span>¡Pago aprobado! Accede a tus cursos desde "Mis Cursos"</span>
+                      <span>¡Pago aprobado! Accedé a tus cursos desde "Mis Cursos" y descargá tus productos con el botón de arriba.</span>
                     </div>
                   )}
 

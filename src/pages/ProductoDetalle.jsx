@@ -9,6 +9,7 @@ import {
   ShoppingCart, Download, Video, FileText, Package, 
   CheckCircle, Star, Users, Clock, Award, Shield, Zap, Gift 
 } from 'lucide-react';
+import DOMPurify from 'dompurify';
 import { productosAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useCarrito } from '../context/CarritoContext';
@@ -61,13 +62,8 @@ const ProductoDetalle = () => {
   const obtenerPrecio = () => {
     if (!producto) return { formatted: '$0', simbolo: '$', precio: 0 };
 
-    console.log('DEBUG PRODUCTO - Título:', producto.titulo);
-    console.log('DEBUG PRODUCTO - gratis:', producto.gratis);
-    console.log('DEBUG PRODUCTO - precioUSD:', producto.precioUSD);
-
-    // 🆕 SI ES GRATUITO (por campo o por precio 0), MOSTRAR "TOTALMENTE GRATIS"
-    if (producto.gratis === true || producto.precioUSD === 0) {
-      console.log('✅ PRODUCTO - Detectado como GRATUITO');
+    // Solo "gratis" si está marcado explícitamente (alineado con el backend)
+    if (producto.gratis === true) {
       return {
         precio: 0,
         moneda: 'USD',
@@ -148,29 +144,17 @@ const ProductoDetalle = () => {
     }
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/productos/${id}/descarga-gratuita`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.removeItem('productoGratuitoId');
-        alert('🎉 ¡Producto agregado! Ya puedes descargarlo');
-        navigate('/mis-compras');
-      } else {
-        alert(data.error || 'Error al obtener el producto');
+      const { data } = await productosAPI.descargaGratuita(id);
+      localStorage.removeItem('productoGratuitoId');
+      // El backend devuelve archivoURL: abrir la descarga directamente
+      if (data.archivoURL) {
+        window.open(data.archivoURL, '_blank');
       }
+      alert('🎉 ¡Producto agregado! Ya podés descargarlo desde "Mis Compras".');
+      navigate('/mis-compras');
     } catch (error) {
-      console.error('❌ Error en descarga gratuita:', error);
-      alert('Error al procesar. Intenta nuevamente.');
+      console.error('Error en descarga gratuita:', error);
+      alert(error.response?.data?.error || 'Error al procesar. Intentá nuevamente.');
     }
   };
 
@@ -203,7 +187,7 @@ const ProductoDetalle = () => {
               <img src={producto.imagen} alt={producto.titulo} />
               {producto.nuevo && <span className="badge-nuevo">Nuevo</span>}
               {producto.destacado && <span className="badge-destacado">⭐ Destacado</span>}
-              {(producto.gratis === true || producto.precioUSD === 0) && (
+              {(producto.gratis === true) && (
                 <span className="badge-gratis">
                   <Gift size={16} />
                   GRATIS
@@ -262,7 +246,7 @@ const ProductoDetalle = () => {
                       Ver mis descargas
                     </button>
                   </div>
-                ) : (producto.gratis === true || producto.precioUSD === 0) ? (
+                ) : (producto.gratis === true) ? (
                   // 🆕 BOTÓN DE DESCARGA GRATUITA
                   <button 
                     onClick={handleDescargaGratuita} 
@@ -392,7 +376,7 @@ const ProductoDetalle = () => {
             <h2>Detalles</h2>
             <div 
               className="contenido-html"
-              dangerouslySetInnerHTML={{ __html: producto.descripcionLarga }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(producto.descripcionLarga || '') }}
             />
           </div>
         </section>
@@ -411,7 +395,7 @@ const ProductoDetalle = () => {
       )}
 
       {/* ✅ CTA FINAL (IGUAL QUE CURSOS) */}
-      {!yaComprado && !(producto.gratis === true || producto.precioUSD === 0) && (
+      {!yaComprado && producto.gratis !== true && (
         <section className="cta-final">
           <div className="container">
             <h2>¿Listo para comenzar?</h2>
@@ -428,7 +412,7 @@ const ProductoDetalle = () => {
       )}
 
       {/* 🆕 CTA FINAL PARA PRODUCTOS GRATUITOS */}
-      {!yaComprado && (producto.gratis === true || producto.precioUSD === 0) && (
+      {!yaComprado && (producto.gratis === true) && (
         <section className="cta-final-gratuito">
           <div className="container">
             <Gift size={48} />

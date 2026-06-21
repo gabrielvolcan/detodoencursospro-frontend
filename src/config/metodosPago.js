@@ -1,3 +1,12 @@
+// ⚠️ ADVERTENCIA DE SEGURIDAD / PRIVACIDAD
+// Este archivo contiene DATOS PERSONALES del receptor de pagos (RUT, cédula,
+// CUIL, alias bancarios, números de cuenta, etc.) hardcodeados. Al ser parte
+// del bundle de Vite, TODOS estos datos quedan EXPUESTOS PÚBLICAMENTE en el
+// JavaScript que se sirve al navegador: cualquier persona puede leerlos.
+// La UI los necesita para que el cliente pueda pagar, por lo que NO se eliminan
+// aquí, pero IDEALMENTE deberían servirse desde un endpoint del backend
+// (p. ej. GET /metodos-pago) y no incluirse en el bundle del frontend.
+// TODO: mover estos datos sensibles al backend.
 export const METODOS_PAGO_POR_PAIS = {
   internacional: {
     nombre: 'Internacional',

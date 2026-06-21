@@ -1,6 +1,6 @@
 .email-masivo-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, var(--negro) 0%, var(--negro-claro) 100%);
   padding: 20px;
 }
 
@@ -21,8 +21,10 @@
 
 .email-header h1 {
   font-size: 2rem;
-  color: #ffffff;
-  font-family: 'Montserrat', sans-serif;
+  color: var(--blanco);
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin: 0;
 }
 
@@ -31,18 +33,18 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-  border: 1px solid rgba(0, 255, 136, 0.3);
-  border-radius: 8px;
+  background: var(--gris-oscuro);
+  color: var(--blanco);
+  border: 1px solid var(--acento-glow);
+  border-radius: var(--radio-xs);
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Montserrat', sans-serif;
+  transition: all var(--t-media);
+  font-family: var(--font-body);
 }
 
 .btn-back:hover {
-  background: rgba(0, 255, 136, 0.1);
-  border-color: #00ff88;
+  background: var(--acento-soft);
+  border-color: var(--acento);
   transform: translateX(-4px);
 }
 
@@ -65,17 +67,19 @@
 }
 
 .config-section {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(0, 255, 136, 0.2);
-  border-radius: 12px;
+  background: var(--grad-superficie);
+  border: var(--borde);
+  border-radius: var(--radio-sm);
   padding: 24px;
+  box-shadow: var(--sombra-md);
 }
 
 .config-section h3 {
   font-size: 1.2rem;
-  color: #00ff88;
+  color: var(--acento);
   margin: 0 0 20px 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-display);
+  font-weight: 700;
 }
 
 .form-group {
@@ -90,29 +94,30 @@
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--blanco-suave);
   margin-bottom: 8px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-body);
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #ffffff;
+  background: var(--negro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: var(--radio-xs);
+  color: var(--blanco);
   font-size: 1rem;
-  font-family: 'Montserrat', sans-serif;
-  transition: all 0.3s ease;
+  font-family: var(--font-body);
+  transition: all var(--t-media);
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #00ff88;
-  background: rgba(0, 255, 136, 0.05);
+  border-color: var(--acento);
+  background: var(--negro);
+  box-shadow: 0 0 0 3px var(--acento-soft);
 }
 
 .destinatarios-count {
@@ -120,10 +125,10 @@
   align-items: center;
   gap: 12px;
   padding: 16px;
-  background: rgba(0, 255, 136, 0.1);
-  border: 1px solid rgba(0, 255, 136, 0.3);
-  border-radius: 8px;
-  color: #00ff88;
+  background: var(--acento-soft);
+  border: 1px solid var(--acento-glow);
+  border-radius: var(--radio-xs);
+  color: var(--acento);
   font-weight: 700;
   font-size: 1.1rem;
   margin-top: 20px;
@@ -137,7 +142,7 @@
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--blanco-suave);
   margin-bottom: 8px;
 }
 
@@ -145,55 +150,66 @@
 .plantilla-selector select {
   width: 100%;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #ffffff;
+  background: var(--negro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: var(--radio-xs);
+  color: var(--blanco);
   font-size: 1rem;
+  transition: all var(--t-media);
+}
+
+.plantilla-selector input:focus,
+.plantilla-selector select:focus {
+  outline: none;
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px var(--acento-soft);
 }
 
 /* ========================================
    EDITOR
 ======================================== */
 .email-editor {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(0, 255, 136, 0.2);
-  border-radius: 12px;
+  background: var(--grad-superficie);
+  border: var(--borde);
+  border-radius: var(--radio-sm);
   padding: 24px;
+  box-shadow: var(--sombra-md);
 }
 
 .editor-section h3 {
   font-size: 1.3rem;
-  color: #ffffff;
+  color: var(--blanco);
   margin: 0 0 24px 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-display);
+  font-weight: 700;
 }
 
 .email-editor textarea {
   width: 100%;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #ffffff;
+  background: var(--negro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: var(--radio-xs);
+  color: var(--blanco);
   font-size: 1rem;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-body);
   resize: vertical;
-  transition: all 0.3s ease;
+  transition: all var(--t-media);
 }
 
 .email-editor textarea:focus {
   outline: none;
-  border-color: #00ff88;
-  background: rgba(0, 255, 136, 0.05);
+  border-color: var(--acento);
+  background: var(--negro);
+  box-shadow: 0 0 0 3px var(--acento-soft);
 }
 
 .plantilla-info {
   padding: 16px;
-  background: rgba(0, 136, 255, 0.1);
-  border: 1px solid rgba(0, 136, 255, 0.3);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.8);
+  background: rgba(77, 171, 247, 0.1);
+  border: 1px solid rgba(77, 171, 247, 0.3);
+  border-radius: var(--radio-xs);
+  color: var(--blanco-suave);
   font-size: 0.9rem;
   margin-top: 16px;
 }
@@ -207,15 +223,17 @@
 
 .preview-section h3 {
   font-size: 1.2rem;
-  color: #00ff88;
+  color: var(--acento);
   margin-bottom: 16px;
+  font-family: var(--font-display);
+  font-weight: 700;
 }
 
 .email-preview {
   background: #ffffff;
-  border-radius: 8px;
+  border-radius: var(--radio-xs);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--sombra-lg);
 }
 
 .preview-header {
@@ -250,35 +268,42 @@
   align-items: center;
   gap: 8px;
   padding: 14px 28px;
-  border-radius: 8px;
+  border-radius: var(--radio-xs);
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Montserrat', sans-serif;
+  transition: all var(--t-media);
+  font-family: var(--font-body);
   border: none;
 }
 
 .btn-previsualizar {
   background: transparent;
-  border: 2px solid #00ff88;
-  color: #00ff88;
+  border: 2px solid var(--acento);
+  color: var(--acento);
 }
 
 .btn-previsualizar:hover {
-  background: rgba(0, 255, 136, 0.1);
+  background: var(--acento-soft);
+}
+
+.btn-previsualizar:focus-visible,
+.btn-enviar:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
 }
 
 .btn-enviar {
   flex: 1;
-  background: linear-gradient(135deg, #00ff88 0%, #00cc6e 100%);
-  color: #000000;
+  background: var(--grad-acento);
+  color: var(--negro);
   font-weight: 800;
+  box-shadow: var(--sombra-acento);
 }
 
 .btn-enviar:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
+  box-shadow: var(--sombra-acento-fuerte);
 }
 
 .btn-enviar:disabled {
@@ -292,31 +317,33 @@
 .resultado {
   margin-top: 30px;
   padding: 24px;
-  border-radius: 12px;
+  border-radius: var(--radio-sm);
   border: 2px solid;
 }
 
 .resultado.exito {
-  background: rgba(0, 255, 136, 0.1);
-  border-color: #00ff88;
+  background: var(--acento-soft);
+  border-color: var(--acento);
 }
 
 .resultado.error {
-  background: rgba(255, 68, 68, 0.1);
-  border-color: #ff4444;
+  background: var(--rojo-soft);
+  border-color: var(--rojo);
 }
 
 .resultado h4 {
   margin: 0 0 16px 0;
   font-size: 1.2rem;
-  color: #ffffff;
+  color: var(--blanco);
+  font-family: var(--font-display);
+  font-weight: 700;
 }
 
 .estadisticas {
   display: flex;
   gap: 24px;
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--blanco-suave);
 }
 
 .estadisticas p {
