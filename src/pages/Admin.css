@@ -4,6 +4,7 @@
   min-height: 100vh;
   width: 100%;
   max-width: 100%;
+  overflow-x: hidden;
 }
 
 .admin-sidebar {
@@ -261,15 +262,16 @@
   overflow-x: auto;
   overflow-y: hidden;
   min-width: 0;
+  width: 100%;
   max-width: 100%;
 }
 
 .cursos-tabla table {
-  min-width: 760px;
+  min-width: 640px;
 }
 
 .usuarios-tabla table {
-  min-width: 880px;
+  min-width: 720px;
 }
 
 table {
@@ -291,19 +293,24 @@ thead {
 }
 
 th {
-  padding: 16px;
+  padding: 12px 10px;
   text-align: left;
   color: var(--acento);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
 }
 
 td {
-  padding: 16px;
+  padding: 12px 10px;
   border-top: 1px solid var(--gris-oscuro);
   color: var(--gris-claro);
+  font-size: 0.9rem;
+  /* Permite que emails/textos largos corten línea en vez de ensanchar la tabla */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .curso-tabla-info {
@@ -910,6 +917,7 @@ td {
   overflow-x: auto;
   overflow-y: hidden;
   min-width: 0;
+  width: 100%;
   max-width: 100%;
 }
 
