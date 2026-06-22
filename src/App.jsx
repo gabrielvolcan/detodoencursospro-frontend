@@ -30,15 +30,24 @@ import ProductoDetalle from './pages/ProductoDetalle';
 import LectorLibro from './pages/LectorLibro';
 import ProductoForm from './pages/ProductoForm';
 
+// Loader mientras se verifica la sesión (evita rebotes antes de cargar el usuario)
+const CargandoSesion = () => (
+  <div className="loading-container" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div className="spinner"></div>
+  </div>
+);
+
 // Componente para rutas privadas
 const PrivateRoute = ({ children }) => {
-  const { usuario } = useAuth();
+  const { usuario, cargando } = useAuth();
+  if (cargando) return <CargandoSesion />;
   return usuario ? children : <Navigate to="/login" />;
 };
 
 // Componente para rutas de admin
 const AdminRoute = ({ children }) => {
-  const { usuario } = useAuth();
+  const { usuario, cargando } = useAuth();
+  if (cargando) return <CargandoSesion />;
   return usuario && usuario.rol === 'admin' ? children : <Navigate to="/" />;
 };
 

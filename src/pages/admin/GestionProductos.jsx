@@ -1,9 +1,11 @@
 // frontend/src/pages/admin/GestionProductos.jsx
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { productosAPI } from '../../services/api';
 import '../Admin.css';
 
 const GestionProductos = () => {
+  const navigate = useNavigate();
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mensaje, setMensaje] = useState({ tipo: '', texto: '' });
@@ -77,7 +79,7 @@ const GestionProductos = () => {
         <h1>Gestión de Productos Digitales</h1>
         <button 
           className="btn-crear"
-          onClick={() => window.location.href = '/admin/producto/nuevo'}
+          onClick={() => navigate('/admin/producto/nuevo')}
         >
           + Nuevo Producto
         </button>
@@ -191,7 +193,7 @@ const GestionProductos = () => {
                       </button>
                       <button 
                         className="btn-icon"
-                        onClick={() => window.location.href = `/admin/producto/${producto._id}/editar`}
+                        onClick={() => navigate(`/admin/producto/${producto._id}/editar`)}
                         title="Editar producto"
                       >
                         ✏️
