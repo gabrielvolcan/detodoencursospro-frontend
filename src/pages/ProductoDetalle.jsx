@@ -239,11 +239,19 @@ const ProductoDetalle = () => {
                   <div className="ya-comprado">
                     <CheckCircle size={24} />
                     <span>Ya tienes este producto</span>
-                    <button 
+                    {producto.libro?.archivoId && (
+                      <button
+                        onClick={() => navigate(`/leer/${producto._id}`)}
+                        className="btn-acceder"
+                      >
+                        📖 Leer ahora
+                      </button>
+                    )}
+                    <button
                       onClick={() => navigate('/mis-compras')}
                       className="btn-acceder"
                     >
-                      Ver mis descargas
+                      Ver mis compras
                     </button>
                   </div>
                 ) : (producto.gratis === true) ? (

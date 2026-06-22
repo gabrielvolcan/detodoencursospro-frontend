@@ -82,6 +82,13 @@ export const productosAPI = {
   descargaGratuita: (id) => axios.post(`/productos/${id}/descarga-gratuita`),
   descargar: (id, archivoId) => axios.get(`/productos/${id}/archivos/${archivoId}/descargar`),
 
+  // 📖 Lector de libros en plataforma (PDF/EPUB)
+  libroInfo: (id) => axios.get(`/productos/${id}/libro-info`),
+  leerLibroBlob: (id) => axios.get(`/productos/${id}/leer`, { responseType: 'blob' }),
+  subirLibro: (id, formData) => axios.post(`/productos/${id}/libro`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+
   // Admin
   obtenerTodosAdmin: () => axios.get('/productos/admin/todos'),
   obtenerPorIdAdmin: (id) => axios.get(`/productos/admin/${id}`),

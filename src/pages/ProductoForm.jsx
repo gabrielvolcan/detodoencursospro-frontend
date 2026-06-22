@@ -25,6 +25,10 @@ const ProductoForm = () => {
     archivoPeso: ''  // OPCIONAL: Tamaño del archivo (ej: "5 MB")
   });
 
+  // 📖 Archivo del libro (PDF/EPUB) para el lector en plataforma
+  const [libroArchivo, setLibroArchivo] = useState(null);
+  const [libroActual, setLibroActual] = useState(null); // info del libro ya subido (al editar)
+
   // Tipos de producto
   const tiposProducto = [
     { valor: 'libro', label: '📚 Libro PDF' },
@@ -58,6 +62,7 @@ const ProductoForm = () => {
         archivoURL: data.archivoURL || '',
         archivoPeso: data.archivoPeso || ''
       });
+      if (data.libro?.archivoId) setLibroActual(data.libro);
     } catch (error) {
       console.error('Error cargando producto:', error);
       setError('Error al cargar producto');
@@ -94,10 +99,7 @@ const ProductoForm = () => {
         setError('La categoría es obligatoria');
         return;
       }
-      if (!producto.archivoURL.trim()) {
-        setError('La URL del archivo descargable es obligatoria');
-        return;
-      }
+      // archivoURL es opcional: puede ser un producto de solo lectura (libro en plataforma)
 
       // Preparar datos
       const datos = {
@@ -111,13 +113,27 @@ const ProductoForm = () => {
         archivoPeso: producto.archivoPeso.trim() || ''
       };
 
-      console.log('📤 Enviando datos:', datos);
-
-      // Crear o actualizar
+      // Crear o actualizar (capturamos el id para subir el libro si hace falta)
+      let productoId = id;
       if (esEdicion) {
         await productosAPI.actualizar(id, datos);
       } else {
-        await productosAPI.crear(datos);
+        const { data } = await productosAPI.crear(datos);
+        productoId = data?.producto?._id;
+      }
+
+      // Subir el libro (PDF/EPUB) para el lector en plataforma, si se eligió uno
+      if (libroArchivo && productoId) {
+        const fd = new FormData();
+        fd.append('libro', libroArchivo);
+        try {
+          await productosAPI.subirLibro(productoId, fd);
+        } catch (errLibro) {
+          console.error('Error subiendo el libro:', errLibro);
+          alert('El producto se guardó, pero hubo un error subiendo el libro. Probá de nuevo editándolo.');
+          navigate('/admin');
+          return;
+        }
       }
 
       alert(esEdicion ? 'Producto actualizado' : 'Producto creado exitosamente');
@@ -214,20 +230,19 @@ const ProductoForm = () => {
           <section className="form-section">
             <h2><Link2 size={20} /> Archivos y Multimedia</h2>
             
-            {/* URL DEL ARCHIVO DESCARGABLE - ⭐ NUEVO */}
+            {/* URL DEL ARCHIVO DESCARGABLE (opcional) */}
             <div className="form-group">
-              <label>URL del Archivo Descargable * 🎯</label>
+              <label>URL del Archivo Descargable (opcional)</label>
               <input
                 type="url"
                 name="archivoURL"
                 value={producto.archivoURL}
                 onChange={handleChange}
-                required
                 placeholder="https://drive.google.com/file/d/xxx o https://tu-servidor.com/archivo.pdf"
               />
               <small className="help-text">
-                📥 Este es el link que recibirán los clientes después de comprar. 
-                Puede ser de Google Drive, Dropbox, tu servidor, etc.
+                📥 Link de descarga que recibe el cliente. Dejalo vacío si el producto es
+                un libro de <strong>solo lectura</strong> (lo subís abajo y se lee en la web).
               </small>
             </div>
 
@@ -243,6 +258,23 @@ const ProductoForm = () => {
               />
               <small className="help-text">
                 📊 Ayuda a los usuarios a saber cuánto espacio necesitarán
+              </small>
+            </div>
+
+            {/* 📖 LIBRO PARA LECTOR EN PLATAFORMA (solo lectura) */}
+            <div className="form-group">
+              <label>📖 Libro para leer en la plataforma (PDF o EPUB)</label>
+              <input
+                type="file"
+                accept=".pdf,.epub,application/pdf,application/epub+zip"
+                onChange={(e) => setLibroArchivo(e.target.files[0] || null)}
+              />
+              <small className="help-text">
+                El cliente lo lee dentro de la web (con marca de agua), <strong>sin descargarlo</strong>.
+                {libroActual?.archivoId && (
+                  <> Ya hay un libro cargado: <strong>{libroActual.nombreOriginal} ({libroActual.formato?.toUpperCase()})</strong>. Subí otro para reemplazarlo.</>
+                )}
+                {libroArchivo && <> · Seleccionado: <strong>{libroArchivo.name}</strong></>}
               </small>
             </div>
 

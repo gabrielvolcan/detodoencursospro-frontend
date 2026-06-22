@@ -166,7 +166,16 @@ const MisCompras = () => {
                             <strong>{item.producto?.titulo}</strong>
                             <span>${item.precio}</span>
                           </div>
-                          {compra.estadoPago === 'aprobado' && item.producto?._id && (
+                          {compra.estadoPago === 'aprobado' && item.producto?._id && item.producto?.libro?.archivoId && (
+                            <button
+                              type="button"
+                              className="btn-ver-comprobante"
+                              onClick={() => navigate(`/leer/${item.producto._id}`)}
+                            >
+                              📖 Leer
+                            </button>
+                          )}
+                          {compra.estadoPago === 'aprobado' && item.producto?._id && !item.producto?.libro?.archivoId && (
                             <button
                               type="button"
                               className="btn-ver-comprobante"

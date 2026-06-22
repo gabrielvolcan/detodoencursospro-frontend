@@ -27,6 +27,7 @@ import GraciasPrompts from './pages/GraciasPrompts';
 // ✅ COMPONENTES DE PRODUCTOS (ahora activos)
 import Productos from './pages/Productos';
 import ProductoDetalle from './pages/ProductoDetalle';
+import LectorLibro from './pages/LectorLibro';
 import ProductoForm from './pages/ProductoForm';
 
 // Componente para rutas privadas
@@ -93,6 +94,7 @@ function App() {
                   <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
                   <Route path="/checkout" element={<PrivateRoute><CheckoutManual /></PrivateRoute>} />
                   <Route path="/mis-compras" element={<PrivateRoute><MisCompras /></PrivateRoute>} />
+                  <Route path="/leer/:id" element={<PrivateRoute><LectorLibro /></PrivateRoute>} />
                   <Route path="/mis-cursos-aprender" element={<PrivateRoute><MisCursos /></PrivateRoute>} />
                   <Route path="/certificado/:cursoId" element={<PrivateRoute><Certificado /></PrivateRoute>} />
                   
