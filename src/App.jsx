@@ -28,6 +28,8 @@ import GraciasPrompts from './pages/GraciasPrompts';
 import Productos from './pages/Productos';
 import ProductoDetalle from './pages/ProductoDetalle';
 import LectorLibro from './pages/LectorLibro';
+import Legales from './pages/Legales';
+import Footer from './components/Footer';
 import ProductoForm from './pages/ProductoForm';
 
 // Loader mientras se verifica la sesión (evita rebotes antes de cargar el usuario)
@@ -123,9 +125,16 @@ function App() {
                   ======================================== */}
                   <Route path="/admin/producto/nuevo" element={<AdminRoute><ProductoForm /></AdminRoute>} />
                   <Route path="/admin/producto/:id/editar" element={<AdminRoute><ProductoForm /></AdminRoute>} />
+
+                  {/* 📄 PÁGINAS LEGALES */}
+                  <Route path="/terminos" element={<Legales documento="terminos" />} />
+                  <Route path="/privacidad" element={<Legales documento="privacidad" />} />
+                  <Route path="/reembolsos" element={<Legales documento="reembolsos" />} />
                 </Routes>
               </main>
-              
+
+              <Footer />
+
               {/* 🤖 Chatbot flotante (visible en todas las páginas) */}
               <ChatbotFAQ />
             </div>
