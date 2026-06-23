@@ -85,7 +85,7 @@
   height: calc(100vh - 130px);
 }
 
-/* Marca de agua en mosaico (disuasor) */
+/* Marca de agua en mosaico (disuasor sutil) */
 .lector-marca-agua {
   position: absolute;
   inset: 56px 0 0 0;
@@ -95,17 +95,18 @@
   flex-wrap: wrap;
   align-content: center;
   justify-content: center;
-  gap: 60px 80px;
-  transform: rotate(-28deg) scale(1.4);
+  gap: 90px 110px;
+  transform: rotate(-28deg) scale(1.3);
   overflow: hidden;
-  opacity: 0.10;
+  opacity: 0.04;
 }
 .lector-marca-agua span {
-  color: #00ff95;
-  font-size: 0.95rem;
-  font-weight: 700;
+  color: #888;
+  font-size: 0.8rem;
+  font-weight: 600;
   white-space: nowrap;
 }
+.lector-page.oscuro .lector-marca-agua span { color: #aaa; }
 
 .lector-estado {
   position: fixed;
@@ -135,4 +136,16 @@
   .lector-titulo { font-size: 0.85rem; }
   .lector-btn { padding: 7px 9px; font-size: 0.8rem; }
   .lector-epub { height: calc(100vh - 120px); }
+}
+
+/* 🌙 Modo oscuro del PDF: invierte el lienzo (página oscura, texto claro) */
+.lector-contenido.oscuro canvas {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Ocultar el chat flotante mientras se lee un libro */
+body.lector-abierto .chatbot-btn-flotante,
+body.lector-abierto .chatbot-ventana,
+body.lector-abierto .chatbot-badge {
+  display: none !important;
 }
