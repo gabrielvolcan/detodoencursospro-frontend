@@ -1351,6 +1351,71 @@ td {
   transform: translateY(0);
 }
 
+/* 🆕 Tendencia vs mes anterior */
+.stat-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.stat-trend.up { color: #00ff95; }
+.stat-trend.down { color: #ff6b6b; }
+.stat-trend.flat { color: var(--gris-claro); }
+.stat-trend.accion { color: var(--acento); font-weight: 600; }
+
+/* 🆕 Card de acción (Pagos Pendientes, clickable) */
+.stat-card-accion {
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  width: 100%;
+}
+.stat-card-accion.pendiente-activo {
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.22);
+}
+
+/* 🆕 Header de card con selector de rango */
+.dashboard-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gris-oscuro);
+}
+.dashboard-card-head h2 {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.rango-selector {
+  display: flex;
+  gap: 4px;
+  background: var(--gris-oscuro);
+  padding: 3px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.rango-selector button {
+  border: none;
+  background: transparent;
+  color: var(--gris-claro);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.rango-selector button.activo {
+  background: var(--acento);
+  color: var(--negro);
+}
+
 /* ========================================
    RESPONSIVE - MEJORADO
 ======================================== */

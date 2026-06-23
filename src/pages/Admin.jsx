@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   DollarSign, Users, BookOpen, TrendingUp, Plus, Edit2, Trash2, Eye, X, ShoppingCart, Bell,
-  Globe, CreditCard, BarChart3, TrendingDown, Activity, Mail, Package  // ← AGREGADO Package
+  Globe, CreditCard, BarChart3, TrendingDown, Activity, Mail, Package, Clock, ArrowUp, ArrowDown
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, getComprobanteUrl } from '../services/api';
@@ -37,6 +37,9 @@ const Admin = () => {
   const [metodosPago, setMetodosPago] = useState([]);
   const [cursosIngresos, setCursosIngresos] = useState([]);
   const [ventasUltimos7Dias, setVentasUltimos7Dias] = useState([]);
+  const [productosIngresos, setProductosIngresos] = useState([]);
+  const [ventasPorDiaRaw, setVentasPorDiaRaw] = useState([]);
+  const [rangoDias, setRangoDias] = useState(7);
 
   // 📸 Comprobantes: el backend ya NO sirve /uploads públicamente.
   // Se obtienen vía endpoint autenticado y se abren como object URL.
@@ -90,12 +93,14 @@ const Admin = () => {
       setCursos(cursosRes.data);
       setUsuarios(usuariosRes.data);
       setComprasPendientes(comprasRes.data);
-      
-      // Calcular métricas adicionales
+      // 🆕 Datos del backend (precisos, sobre todas las ventas)
+      setProductosIngresos(statsRes.data.productosIngresos || []);
+      setVentasPorDiaRaw(statsRes.data.ventasPorDia || []);
+
+      // Calcular métricas adicionales (ventas por país / métodos desde las últimas ventas)
       calcularVentasPorPais(statsRes.data.ultimasVentas || []);
       calcularMetodosPago(statsRes.data.ultimasVentas || []);
       calcularCursosIngresos(statsRes.data.ultimasVentas || [], cursosRes.data);
-      calcularVentasUltimos7Dias(statsRes.data.ultimasVentas || []);
     } catch (error) {
       console.error('Error cargando datos:', error);
     } finally {
@@ -186,32 +191,39 @@ const Admin = () => {
     setCursosIngresos(cursosConIngresos.slice(0, 5));
   };
 
-  // 📈 Calcular ventas últimos 7 días
-  const calcularVentasUltimos7Dias = (ventas) => {
+  // 📈 Serie de ventas para el gráfico (rango seleccionable, datos precisos del backend)
+  const serieGrafico = () => {
+    const mapa = {};
+    ventasPorDiaRaw.forEach(d => { mapa[d._id] = { total: d.total, cantidad: d.cantidad }; });
+    const serie = [];
     const hoy = new Date();
-    const ultimos7Dias = [];
-
-    for (let i = 6; i >= 0; i--) {
-      const fecha = new Date(hoy);
-      fecha.setDate(fecha.getDate() - i);
-      const fechaStr = fecha.toISOString().split('T')[0];
-      
-      const ventasDia = ventas.filter(v => {
-        if (v.estadoPago !== 'aprobado') return false;
-        const ventaFecha = new Date(v.createdAt).toISOString().split('T')[0];
-        return ventaFecha === fechaStr;
-      });
-
-      const totalDia = ventasDia.reduce((sum, v) => sum + v.total, 0);
-
-      ultimos7Dias.push({
-        fecha: fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
-        total: totalDia,
-        cantidad: ventasDia.length
+    for (let i = rangoDias - 1; i >= 0; i--) {
+      const f = new Date(hoy);
+      f.setDate(f.getDate() - i);
+      const key = f.toISOString().split('T')[0];
+      const reg = mapa[key] || { total: 0, cantidad: 0 };
+      serie.push({
+        fecha: f.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+        total: reg.total,
+        cantidad: reg.cantidad
       });
     }
+    return serie;
+  };
 
-    setVentasUltimos7Dias(ultimos7Dias);
+  // Recalcular el gráfico cuando cambian los datos o el rango
+  useEffect(() => {
+    setVentasUltimos7Dias(serieGrafico());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ventasPorDiaRaw, rangoDias]);
+
+  // ↕️ Tendencia vs mes anterior
+  const tendencia = (actual, anterior) => {
+    const a = Number(actual) || 0;
+    const b = Number(anterior) || 0;
+    if (b === 0) return { pct: a > 0 ? 100 : 0, signo: a > 0 ? 'up' : 'flat' };
+    const pct = ((a - b) / b) * 100;
+    return { pct: Math.abs(pct).toFixed(0), signo: pct > 0 ? 'up' : (pct < 0 ? 'down' : 'flat') };
   };
 
   // 💵 Calcular ticket promedio
@@ -471,6 +483,16 @@ const Admin = () => {
                 <div className="stat-info">
                   <span className="stat-label">Ingresos Totales</span>
                   <span className="stat-value">${estadisticas?.estadisticas?.ingresosTotal?.toFixed(2) || 0}</span>
+                  {(() => {
+                    const t = tendencia(estadisticas?.estadisticas?.ingresosMesTotal, estadisticas?.estadisticas?.ingresosMesAnterior);
+                    return (
+                      <span className={`stat-trend ${t.signo}`}>
+                        {t.signo === 'up' && <ArrowUp size={13} />}
+                        {t.signo === 'down' && <ArrowDown size={13} />}
+                        {t.pct}% este mes vs anterior
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
 
@@ -481,6 +503,16 @@ const Admin = () => {
                 <div className="stat-info">
                   <span className="stat-label">Total Usuarios</span>
                   <span className="stat-value">{estadisticas?.estadisticas?.totalUsuarios || 0}</span>
+                  {(() => {
+                    const t = tendencia(estadisticas?.estadisticas?.usuariosMes, estadisticas?.estadisticas?.usuariosMesAnterior);
+                    return (
+                      <span className={`stat-trend ${t.signo}`}>
+                        {t.signo === 'up' && <ArrowUp size={13} />}
+                        {t.signo === 'down' && <ArrowDown size={13} />}
+                        {t.pct}% nuevos vs mes anterior
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
 
@@ -503,6 +535,22 @@ const Admin = () => {
                   <span className="stat-value">{estadisticas?.estadisticas?.ventasCompletadas || 0}</span>
                 </div>
               </div>
+
+              {/* 🆕 Pagos pendientes — acceso rápido a aprobar */}
+              <button
+                type="button"
+                className={`stat-card stat-card-accion ${(estadisticas?.estadisticas?.pagosPendientes || 0) > 0 ? 'pendiente-activo' : ''}`}
+                onClick={() => setVista('pagos')}
+              >
+                <div className="stat-icon ico-ambar">
+                  <Clock size={28} />
+                </div>
+                <div className="stat-info">
+                  <span className="stat-label">Pagos Pendientes</span>
+                  <span className="stat-value">{estadisticas?.estadisticas?.pagosPendientes || 0}</span>
+                  <span className="stat-trend accion">Revisar y aprobar →</span>
+                </div>
+              </button>
 
               {/* 🆕 MÉTRICAS ADICIONALES */}
               <div className="stat-card">
@@ -563,10 +611,24 @@ const Admin = () => {
 
               {/* 📈 VENTAS ÚLTIMOS 7 DÍAS */}
               <div className="dashboard-card">
-                <h2>
-                  <TrendingUp size={24} />
-                  Ventas Últimos 7 Días
-                </h2>
+                <div className="dashboard-card-head">
+                  <h2>
+                    <TrendingUp size={24} />
+                    Ventas (últimos {rangoDias} días)
+                  </h2>
+                  <div className="rango-selector">
+                    {[7, 14, 30].map(d => (
+                      <button
+                        key={d}
+                        type="button"
+                        className={rangoDias === d ? 'activo' : ''}
+                        onClick={() => setRangoDias(d)}
+                      >
+                        {d}d
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <div className="grafico-ventas">
                   {ventasUltimos7Dias.map((dia, index) => {
                     const maxTotal = Math.max(...ventasUltimos7Dias.map(d => d.total), 1);
@@ -629,6 +691,26 @@ const Admin = () => {
                     ))
                   ) : (
                     <p className="sin-datos">No hay cursos con ventas aún</p>
+                  )}
+                </div>
+              </div>
+
+              {/* 🆕 TOP PRODUCTOS POR INGRESOS */}
+              <div className="section">
+                <h2>Top Productos por Ingresos</h2>
+                <div className="cursos-populares">
+                  {productosIngresos.length > 0 ? (
+                    productosIngresos.map(prod => (
+                      <div key={prod._id} className="curso-popular-item">
+                        <img src={prod.imagen} alt={prod.titulo} />
+                        <div>
+                          <h4>{prod.titulo}</h4>
+                          <p>{prod.ventas || 0} ventas • <strong>${(prod.ingresos || 0).toFixed(2)} ingresos</strong></p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="sin-datos">No hay productos vendidos aún</p>
                   )}
                 </div>
               </div>
