@@ -143,6 +143,38 @@
   filter: invert(1) hue-rotate(180deg);
 }
 
+/* 🌙 Modo oscuro del EPUB: que cubra TODA la hoja (no solo el texto).
+   react-reader pinta contenedores en blanco por defecto: los forzamos oscuros. */
+.lector-page.oscuro .lector-epub,
+.lector-page.oscuro .lector-epub > div,
+.lector-page.oscuro .lector-epub > div > div {
+  background-color: #15171a !important;
+}
+
+/* Aviso/toast (marcaste página, etc.) */
+.lector-aviso {
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  background: #00ff95;
+  color: #06120c;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+/* Helpers desktop/mobile en la barra del visor */
+.solo-mobile { display: none; }
+@media (max-width: 640px) {
+  .solo-desktop { display: none; }
+  .solo-mobile { display: inline; }
+}
+
 /* Ocultar el chat flotante mientras se lee un libro */
 body.lector-abierto .chatbot-btn-flotante,
 body.lector-abierto .chatbot-ventana,

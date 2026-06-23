@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { ReactReader } from 'react-reader';
-import { ChevronLeft, ChevronRight, ArrowLeft, ZoomIn, ZoomOut, Moon, Sun } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ZoomIn, ZoomOut, Moon, Sun, Bookmark, BookmarkCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { productosAPI } from '../services/api';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -22,46 +22,54 @@ const LectorLibro = () => {
 
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
-  const [info, setInfo] = useState(null);       // { formato, titulo }
-  const [pdfFile, setPdfFile] = useState(null);  // object URL para PDF
-  const [epubData, setEpubData] = useState(null);// ArrayBuffer para EPUB
+  const [info, setInfo] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [epubData, setEpubData] = useState(null);
 
-  // modo oscuro (persistido global)
   const [oscuro, setOscuro] = useState(() => localStorage.getItem('lector:oscuro') !== 'false');
 
-  // estado PDF
+  // PDF
   const [numPaginas, setNumPaginas] = useState(0);
   const [pagina, setPagina] = useState(1);
   const [escala, setEscala] = useState(1);
   const contenedorRef = useRef(null);
   const [anchoPagina, setAnchoPagina] = useState(700);
 
-  // estado EPUB
+  // EPUB
   const [locationEpub, setLocationEpub] = useState(null);
   const renditionRef = useRef(null);
 
-  const marcaAgua = usuario?.email || 'Detodo en Cursos';
+  // Marcador manual
+  const claveMarca = `lector:${id}:marca`;
+  const [marca, setMarca] = useState(() => localStorage.getItem(`lector:${id}:marca`) || null);
+  const [aviso, setAviso] = useState('');
 
-  // claves de "seguir leyendo" por libro
+  const marcaAgua = usuario?.email || 'Detodo en Cursos';
   const clavePdf = `lector:${id}:pdfPagina`;
   const claveEpub = `lector:${id}:epubCfi`;
 
-  // Ocultar el chat flotante mientras se lee (clase en el body)
+  // Ocultar el chat flotante mientras se lee
   useEffect(() => {
     document.body.classList.add('lector-abierto');
     return () => document.body.classList.remove('lector-abierto');
   }, []);
 
-  // Guardar preferencia de modo oscuro
   useEffect(() => {
     localStorage.setItem('lector:oscuro', oscuro ? 'true' : 'false');
   }, [oscuro]);
 
-  // Aplica el tema al EPUB (epub.js)
+  // Tema EPUB (cubre html + body para que NO queden bordes claros)
   const aplicarTemaEpub = useCallback((rend, esOscuro) => {
     if (!rend) return;
-    rend.themes.register('claro', { body: { background: '#ffffff', color: '#1a1a1a' } });
-    rend.themes.register('oscuro', { body: { background: '#121212', color: '#cfcfcf' } });
+    rend.themes.register('claro', {
+      'html, body': { background: '#ffffff !important', color: '#1a1a1a !important' }
+    });
+    rend.themes.register('oscuro', {
+      'html, body': { background: '#15171a !important', color: '#d6d6d6 !important' },
+      'p, span, div, h1, h2, h3, h4, h5, h6, li, a, blockquote, em, strong, td, th': { color: '#d6d6d6 !important' },
+      'a': { color: '#5fd9a6 !important' },
+      'img': { 'background-color': 'transparent !important' }
+    });
     rend.themes.select(esOscuro ? 'oscuro' : 'claro');
   }, []);
 
@@ -77,7 +85,6 @@ const LectorLibro = () => {
         setCargando(true);
         const { data: meta } = await productosAPI.libroInfo(id);
         setInfo(meta);
-
         const { data: blob } = await productosAPI.leerLibroBlob(id);
         if (meta.formato === 'pdf') {
           urlCreada = URL.createObjectURL(blob);
@@ -85,7 +92,6 @@ const LectorLibro = () => {
         } else {
           const buf = await blob.arrayBuffer();
           setEpubData(buf);
-          // restaurar dónde quedó (EPUB)
           const cfiGuardado = localStorage.getItem(claveEpub);
           if (cfiGuardado) setLocationEpub(cfiGuardado);
         }
@@ -102,7 +108,6 @@ const LectorLibro = () => {
     return () => { if (urlCreada) URL.revokeObjectURL(urlCreada); };
   }, [id, claveEpub]);
 
-  // Ancho responsivo de la página PDF
   useEffect(() => {
     const calcular = () => {
       const w = contenedorRef.current?.clientWidth || 700;
@@ -113,18 +118,35 @@ const LectorLibro = () => {
     return () => window.removeEventListener('resize', calcular);
   }, [info]);
 
-  // PDF: al cargar, restaurar la última página leída
   const onPdfCargado = ({ numPages }) => {
     setNumPaginas(numPages);
-    const guardada = parseInt(localStorage.getItem(clavePdf), 10);
+    const guardada = Number.parseInt(localStorage.getItem(clavePdf), 10);
     if (guardada && guardada >= 1 && guardada <= numPages) setPagina(guardada);
   };
 
-  // PDF: guardar la página actual
   const irAPagina = (nueva) => {
     const p = Math.min(numPaginas || nueva, Math.max(1, nueva));
     setPagina(p);
     localStorage.setItem(clavePdf, String(p));
+  };
+
+  // Marcador: guardar la posición actual
+  const marcar = () => {
+    const valor = info?.formato === 'pdf' ? String(pagina) : (locationEpub || '');
+    if (!valor) return;
+    localStorage.setItem(claveMarca, valor);
+    setMarca(valor);
+    setAviso('📑 Página marcada');
+    setTimeout(() => setAviso(''), 2000);
+  };
+
+  // Marcador: ir a la marca guardada
+  const irAMarca = () => {
+    if (!marca) return;
+    if (info?.formato === 'pdf') irAPagina(Number.parseInt(marca, 10) || 1);
+    else setLocationEpub(marca);
+    setAviso('Fuiste a tu marca');
+    setTimeout(() => setAviso(''), 1500);
   };
 
   const sinClickDerecho = useCallback((e) => { e.preventDefault(); }, []);
@@ -147,15 +169,25 @@ const LectorLibro = () => {
     );
   }
 
+  const marcaEnPaginaActual = info?.formato === 'pdf' && marca && Number(marca) === pagina;
+
   return (
     <div className={`lector-page ${oscuro ? 'oscuro' : ''}`} onContextMenu={sinClickDerecho}>
       {/* Barra superior */}
       <div className="lector-topbar">
         <button className="lector-btn" onClick={() => navigate(-1)} title="Volver">
-          <ArrowLeft size={18} /> Volver
+          <ArrowLeft size={18} /> <span className="solo-desktop">Volver</span>
         </button>
         <span className="lector-titulo">{info?.titulo}</span>
         <div className="lector-controles">
+          <button className="lector-btn" onClick={marcar} title="Marcar esta página">
+            {marcaEnPaginaActual ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+          </button>
+          {marca && (
+            <button className="lector-btn" onClick={irAMarca} title="Ir a mi marca">
+              <span className="solo-desktop">Mi marca</span><span className="solo-mobile">📑</span>
+            </button>
+          )}
           <button className="lector-btn" onClick={() => setOscuro(o => !o)} title={oscuro ? 'Modo claro' : 'Modo oscuro'}>
             {oscuro ? <Sun size={18} /> : <Moon size={18} />}
           </button>
@@ -167,6 +199,8 @@ const LectorLibro = () => {
           )}
         </div>
       </div>
+
+      {aviso && <div className="lector-aviso">{aviso}</div>}
 
       {/* Marca de agua (disuasor sutil) */}
       <div className="lector-marca-agua" aria-hidden="true">
