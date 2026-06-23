@@ -465,8 +465,8 @@ const Admin = () => {
             {/* MÉTRICAS PRINCIPALES */}
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon" style={{background: 'linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%)'}}>
-                  <DollarSign size={32} />
+                <div className="stat-icon ico-verde">
+                  <DollarSign size={28} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Ingresos Totales</span>
@@ -475,8 +475,8 @@ const Admin = () => {
               </div>
 
               <div className="stat-card">
-                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
-                  <Users size={32} />
+                <div className="stat-icon ico-azul">
+                  <Users size={28} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Total Usuarios</span>
@@ -485,8 +485,8 @@ const Admin = () => {
               </div>
 
               <div className="stat-card">
-                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'}}>
-                  <BookOpen size={32} />
+                <div className="stat-icon ico-violeta">
+                  <BookOpen size={28} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Total Cursos</span>
@@ -495,8 +495,8 @@ const Admin = () => {
               </div>
 
               <div className="stat-card">
-                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'}}>
-                  <TrendingUp size={32} />
+                <div className="stat-icon ico-cyan">
+                  <TrendingUp size={28} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Ventas Completadas</span>
@@ -506,8 +506,8 @@ const Admin = () => {
 
               {/* 🆕 MÉTRICAS ADICIONALES */}
               <div className="stat-card">
-                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'}}>
-                  <Activity size={32} />
+                <div className="stat-icon ico-ambar">
+                  <Activity size={28} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Ticket Promedio</span>
@@ -516,8 +516,8 @@ const Admin = () => {
               </div>
 
               <div className="stat-card">
-                <div className="stat-icon" style={{background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'}}>
-                  <BarChart3 size={32} />
+                <div className="stat-icon ico-rosa">
+                  <BarChart3 size={28} />
                 </div>
                 <div className="stat-info">
                   <span className="stat-label">Tasa de Conversión</span>
