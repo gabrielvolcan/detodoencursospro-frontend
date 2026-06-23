@@ -349,6 +349,21 @@
     font-size: 1.7rem;
   }
 
+  /* Inputs y botón con touch targets cómodos */
+  .form-group input {
+    padding: 15px 16px;
+    font-size: 16px; /* evita el zoom automático de iOS al enfocar */
+  }
+
+  .toggle-password {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .btn-submit {
+    min-height: 50px;
+  }
+
   .password-requirements {
     padding: 10px 12px;
   }

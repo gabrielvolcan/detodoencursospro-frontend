@@ -510,9 +510,35 @@
 
   .form-actions button {
     width: 100%;
+    min-height: 48px;
   }
 
   .archivo-item {
     flex-direction: column;
+  }
+
+  /* Inputs cómodos y sin zoom de iOS */
+  .form-group input,
+  .form-group textarea,
+  .form-group select,
+  .archivo-info input,
+  .tags-input input {
+    font-size: 16px;
+  }
+
+  .tags-input {
+    flex-direction: column;
+  }
+
+  .tags-input button,
+  .upload-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .incluye-item button,
+  .btn-eliminar {
+    min-height: 40px;
+    min-width: 40px;
   }
 }

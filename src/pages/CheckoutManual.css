@@ -442,8 +442,26 @@
 }
 
 @media (max-width: 768px) {
+  .checkout-manual-page {
+    padding: 30px 0;
+  }
+
   .checkout-manual-page h1 {
     font-size: 2rem;
+  }
+
+  .metodos-pago-section,
+  .subir-comprobante-section {
+    padding: 24px 20px;
+  }
+
+  .metodos-pago-section h2,
+  .subir-comprobante-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .metodo-card {
+    padding: 16px;
   }
 
   .exito-card {

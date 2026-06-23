@@ -174,16 +174,33 @@ img {
 .py-4 { padding-top: 40px; padding-bottom: 40px; }
 .py-5 { padding-top: 50px; padding-bottom: 50px; }
 
-/* Responsive */
+/* ========================================
+   RESPONSIVE TABLET (769px - 1024px)
+======================================== */
+@media (max-width: 1024px) {
+  .grid-2, .grid-3, .grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ========================================
+   RESPONSIVE MÓVIL (max 768px)
+======================================== */
 @media (max-width: 768px) {
+  /* 🛡️ Guarda global anti-desborde horizontal en mobile */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
   .container {
     padding: 0 15px;
   }
-  
+
   .grid {
     gap: 20px;
   }
-  
+
   .grid-2, .grid-3, .grid-4 {
     grid-template-columns: 1fr;
   }

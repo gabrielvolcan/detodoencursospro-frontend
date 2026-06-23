@@ -224,7 +224,31 @@
   }
 
   .filtro-btn {
-    padding: 8px 16px;
+    padding: 11px 16px;
     font-size: 0.9rem;
+    min-height: 44px;
+  }
+
+  .btn-filtros-mobile,
+  .btn-limpiar {
+    min-height: 44px;
+  }
+
+  .input-busqueda {
+    min-height: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cursos-header {
+    padding: 40px 0;
+  }
+
+  .cursos-header h1 {
+    font-size: 1.7rem;
+  }
+
+  .filtros-container {
+    padding: 18px;
   }
 }

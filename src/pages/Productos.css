@@ -323,9 +323,23 @@
 /* ========================================
    RESPONSIVE
 ======================================== */
+@media (max-width: 1024px) {
+  .productos-grid.grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
+  .productos-hero {
+    padding: 40px 16px;
+  }
+
   .productos-hero h1 {
     font-size: 2rem;
+  }
+
+  .productos-controles {
+    padding: 24px 16px;
   }
 
   .tipos-filtros {
@@ -333,14 +347,34 @@
     overflow-x: auto;
   }
 
+  /* Touch targets cómodos */
+  .tipo-btn,
+  .btn-filtros {
+    min-height: 44px;
+  }
+
+  .vista-toggle button {
+    min-height: 40px;
+    min-width: 44px;
+  }
+
   .controles-adicionales {
     flex-direction: column;
     align-items: stretch;
   }
 
+  .select-orden {
+    width: 100%;
+    min-height: 44px;
+  }
+
   .vista-toggle {
     margin-left: 0;
     justify-content: center;
+  }
+
+  .productos-resultados {
+    padding: 30px 16px;
   }
 
   .productos-grid.grid {
@@ -349,5 +383,10 @@
 
   .filtros-avanzados {
     flex-direction: column;
+  }
+
+  .filtro-grupo {
+    min-width: 0;
+    width: 100%;
   }
 }

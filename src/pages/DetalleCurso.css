@@ -744,8 +744,14 @@
 }
 
 @media (max-width: 768px) {
+  .curso-hero-mejorado {
+    padding: 50px 0 40px;
+  }
+
   .hero-titulo {
     font-size: 2rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .hero-descripcion {

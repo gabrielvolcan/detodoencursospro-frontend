@@ -463,5 +463,27 @@
 
   .form-actions button {
     width: 100%;
+    min-height: 48px;
+  }
+
+  /* Inputs cómodos y sin zoom de iOS */
+  .form-group input,
+  .form-group textarea,
+  .form-group select,
+  .modulo-titulo-input,
+  .tema-titulo-input,
+  .tema-video-input,
+  .tema-duracion-input {
+    font-size: 16px;
+  }
+
+  .tema-duracion-input {
+    max-width: 100%;
+  }
+
+  .btn-eliminar-modulo,
+  .btn-agregar-modulo,
+  .btn-agregar-tema {
+    min-height: 44px;
   }
 }
