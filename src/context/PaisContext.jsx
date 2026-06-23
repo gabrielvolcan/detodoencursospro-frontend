@@ -77,6 +77,36 @@ export const PaisProvider = ({ children }) => {
     return `${simbolo}${precio.toFixed(2)}`;
   };
 
+  // Formatea un monto ya en moneda local (para totales)
+  const formatearMonto = (monto, moneda = 'USD') => {
+    const simbolo = TASAS_CONVERSION[moneda]?.simbolo || '$';
+    return formatearPrecio(Number(monto) || 0, simbolo, moneda);
+  };
+
+  // 💰 FUENTE ÚNICA DE PRECIOS: precio de un ítem (curso o producto) según el país elegido.
+  // Maneja precios[pais] ya configurados o convierte precioUSD con las tasas centrales.
+  const precioDeItem = (item) => {
+    if (!item) return { precio: 0, moneda: 'USD', simbolo: '$', formatted: '$0.00', esGratis: true };
+
+    // 1) precio por país ya cargado (cursos)
+    if (item.precios && item.precios[paisSeleccionado] && item.precios[paisSeleccionado].monto != null) {
+      const moneda = item.precios[paisSeleccionado].moneda || obtenerMoneda();
+      const monto = Number(item.precios[paisSeleccionado].monto) || 0;
+      const simbolo = TASAS_CONVERSION[moneda]?.simbolo || '$';
+      return { precio: monto, moneda, simbolo, formatted: formatearPrecio(monto, simbolo, moneda), esGratis: monto === 0 };
+    }
+
+    // 2) precioUSD → convertir con las tasas centrales
+    if (item.precioUSD != null && !isNaN(item.precioUSD)) {
+      const c = convertirPrecio(item.precioUSD);
+      return { precio: c.precio, moneda: c.moneda, simbolo: c.simbolo, formatted: c.formatted, esGratis: Number(item.precioUSD) === 0 };
+    }
+
+    // 3) fallback precio viejo (USD)
+    const monto = Number(item.precio) || 0;
+    return { precio: monto, moneda: 'USD', simbolo: '$', formatted: formatearPrecio(monto, '$', 'USD'), esGratis: monto === 0 };
+  };
+
   const obtenerPaisActual = () => {
     return PAISES.find(p => p.codigo === paisSeleccionado) || PAISES[0];
   };
@@ -103,6 +133,8 @@ export const PaisProvider = ({ children }) => {
     paisSeleccionado,
     setPaisSeleccionado,
     convertirPrecio,
+    precioDeItem,
+    formatearMonto,
     obtenerPaisActual,
     obtenerMoneda,
     normalizarCodigoPais,

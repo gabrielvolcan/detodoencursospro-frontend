@@ -11,7 +11,7 @@ import './CheckoutManual.css';
 const CheckoutManual = () => {
   const { items, vaciarCarrito } = useCarrito();
   const { usuario, estaAutenticado } = useAuth();
-  const { paisSeleccionado, obtenerMoneda } = usePais();
+  const { paisSeleccionado, obtenerMoneda, precioDeItem, formatearMonto } = usePais();
   const navigate = useNavigate();
 
   const [metodoSeleccionado, setMetodoSeleccionado] = useState(null);
@@ -33,17 +33,9 @@ const CheckoutManual = () => {
       return Number(item.precios[paisSeleccionado].monto);
     }
 
-    // Si tiene precioUSD, convertir con las MISMAS tasas que el backend
-    if (item.precioUSD) {
-      const tasas = {
-        USD: 1,
-        PEN: 3.36,
-        CLP: 894,
-        ARS: 1505,
-        UYU: 38.9,
-        VES: 50
-      };
-      return Number(item.precioUSD) * (tasas[monedaPais] || 1);
+    // Conversión centralizada en PaisContext (única fuente de verdad)
+    if (item.precioUSD != null && !isNaN(item.precioUSD)) {
+      return precioDeItem(item).precio;
     }
 
     // Fallback precio viejo
@@ -60,29 +52,7 @@ const CheckoutManual = () => {
   };
 
   const totalPais = calcularTotal();
-  
-  const formatearPrecio = (monto) => {
-    const simbolos = {
-      USD: '$',
-      PEN: 'S/',
-      CLP: '$',
-      ARS: '$',
-      UYU: '$',
-      VES: 'Bs'
-    };
-    
-    const simbolo = simbolos[monedaPais] || '$';
-    
-    // Para monedas grandes sin decimales
-    if (monedaPais === 'CLP' || monedaPais === 'ARS') {
-      return `${simbolo}${Math.round(monto).toLocaleString('es')}`;
-    }
-    
-    // Para el resto con 2 decimales
-    return `${simbolo}${monto.toFixed(2)}`;
-  };
-
-  const totalFormateado = formatearPrecio(totalPais);
+  const totalFormateado = formatearMonto(totalPais, monedaPais);
 
   useEffect(() => {
     if (!estaAutenticado) {

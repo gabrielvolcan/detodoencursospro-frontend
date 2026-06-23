@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCarrito } from '../context/CarritoContext';
@@ -7,81 +6,21 @@ import { usePais } from '../context/PaisContext';
 import './Carrito.css';
 
 const Carrito = () => {
-  const { items, eliminarDelCarrito, obtenerTotal } = useCarrito();
+  const { items, eliminarDelCarrito } = useCarrito();
   const { estaAutenticado } = useAuth();
-  const { paisSeleccionado, obtenerMoneda } = usePais();
+  // 💰 Precios centralizados en PaisContext (única fuente de verdad)
+  const { precioDeItem, formatearMonto } = usePais();
   const navigate = useNavigate();
 
-  // ========================================
-  // 💰 FUNCIÓN PARA OBTENER PRECIO POR PAÍS
-  // ========================================
-  const obtenerPrecioCurso = (curso) => {
-    // Si tiene el sistema nuevo de precios
-    if (curso.precios && curso.precios[paisSeleccionado]) {
-      return {
-        monto: curso.precios[paisSeleccionado].monto,
-        moneda: curso.precios[paisSeleccionado].moneda
-      };
-    }
-    
-    // Si tiene precioUSD, convertir
-    if (curso.precioUSD) {
-      const moneda = obtenerMoneda();
-      const tasas = {
-        USD: 1,
-        PEN: 3.36,
-        CLP: 894,
-        ARS: 1490,
-        UYU: 39
-      };
-      return {
-        monto: curso.precioUSD * (tasas[moneda] || 1),
-        moneda: moneda
-      };
-    }
-    
-    // Fallback antiguo
-    return {
-      monto: curso.precio || 0,
-      moneda: 'USD'
-    };
-  };
-
-  const obtenerSimbolo = (moneda) => {
-    const simbolos = {
-      USD: '$',
-      PEN: 'S/',
-      CLP: '$',
-      ARS: '$',
-      UYU: '$',
-      VES: 'Bs'
-    };
-    return simbolos[moneda] || '$';
-  };
-
-  const formatearPrecio = (monto, moneda) => {
-    const simbolo = obtenerSimbolo(moneda);
-    
-    // Para monedas grandes sin decimales
-    if (moneda === 'CLP' || moneda === 'ARS') {
-      return `${simbolo}${Math.round(monto).toLocaleString('es')}`;
-    }
-    
-    // Para el resto con 2 decimales
-    return `${simbolo}${monto.toFixed(2)}`;
-  };
-
-  // Calcular total del carrito
+  // Total del carrito usando la función central
   const calcularTotal = () => {
     let total = 0;
     let moneda = 'USD';
-    
     items.forEach(curso => {
-      const precio = obtenerPrecioCurso(curso);
-      total += precio.monto;
-      moneda = precio.moneda; // Tomar la moneda del primer curso
+      const p = precioDeItem(curso);
+      total += p.precio;
+      moneda = p.moneda;
     });
-    
     return { total, moneda };
   };
 
@@ -90,10 +29,7 @@ const Carrito = () => {
       navigate('/login?redirect=/carrito');
       return;
     }
-
     if (items.length === 0) return;
-
-    // Redirigir al checkout manual
     navigate('/checkout');
   };
 
@@ -122,8 +58,8 @@ const Carrito = () => {
         <div className="carrito-content">
           <div className="carrito-items">
             {items.map(curso => {
-              const precio = obtenerPrecioCurso(curso);
-              
+              const precio = precioDeItem(curso);
+
               return (
                 <div key={curso._id} className="carrito-item">
                   <img src={curso.imagen} alt={curso.titulo} />
@@ -133,9 +69,9 @@ const Carrito = () => {
                     <span className="item-categoria">{curso.categoria}</span>
                   </div>
                   <div className="item-precio">
-                    {formatearPrecio(precio.monto, precio.moneda)}
+                    {precio.formatted}
                   </div>
-                  <button 
+                  <button
                     className="btn-eliminar"
                     onClick={() => eliminarDelCarrito(curso._id)}
                   >
@@ -148,19 +84,19 @@ const Carrito = () => {
 
           <div className="carrito-resumen">
             <h3>Resumen del Pedido</h3>
-            
+
             <div className="resumen-items">
               <div className="resumen-linea">
                 <span>Subtotal ({items.length} {items.length === 1 ? 'curso' : 'cursos'})</span>
-                <span>{formatearPrecio(total, moneda)}</span>
+                <span>{formatearMonto(total, moneda)}</span>
               </div>
               <div className="resumen-linea total">
                 <span>Total</span>
-                <span>{formatearPrecio(total, moneda)}</span>
+                <span>{formatearMonto(total, moneda)}</span>
               </div>
             </div>
 
-            <button 
+            <button
               className="btn-pagar"
               onClick={handlePagar}
             >
