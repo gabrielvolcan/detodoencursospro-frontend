@@ -253,7 +253,8 @@ const LectorLibro = () => {
                 renditionRef.current = rend;
                 aplicarTemaEpub(rend, oscuro);
               }}
-              epubOptions={{ flow: 'paginated' }}
+              // Lectura continua (scroll): evita las páginas en blanco del modo paginado
+              epubOptions={{ flow: 'scrolled', manager: 'continuous' }}
             />
           </div>
         )}
