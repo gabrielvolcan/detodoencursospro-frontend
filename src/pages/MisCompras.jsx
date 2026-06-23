@@ -216,12 +216,34 @@ const MisCompras = () => {
                     </div>
                   )}
 
-                  {compra.estadoPago === 'aprobado' && (
-                    <div className="compra-aprobada">
-                      <CheckCircle size={20} />
-                      <span>¡Pago aprobado! Accedé a tus cursos desde "Mis Cursos" y descargá tus productos con el botón de arriba.</span>
-                    </div>
-                  )}
+                  {compra.estadoPago === 'aprobado' && (() => {
+                    const tieneCursos = compra.cursos?.length > 0;
+                    const tieneProductos = compra.productos?.length > 0;
+                    return (
+                      <div className="compra-aprobada">
+                        <CheckCircle size={20} />
+                        <span>
+                          {tieneCursos && tieneProductos &&
+                            '¡Pago aprobado! Tus cursos están en "Mis Cursos", y tus libros/productos los leés o descargás con el botón de aquí arriba.'}
+                          {tieneCursos && !tieneProductos &&
+                            '¡Pago aprobado! Ya podés acceder a tus cursos.'}
+                          {!tieneCursos && tieneProductos &&
+                            '¡Pago aprobado! 📖 Ya podés leer o descargar lo que compraste con el botón de aquí arriba.'}
+                          {!tieneCursos && !tieneProductos &&
+                            '¡Pago aprobado!'}
+                        </span>
+                        {tieneCursos && (
+                          <button
+                            type="button"
+                            className="btn-ver-comprobante"
+                            onClick={() => navigate('/mis-cursos-aprender')}
+                          >
+                            Ir a Mis Cursos →
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {compra.estadoPago === 'pendiente' && !compra.comprobante?.url && (
                     <div className="compra-pendiente">
