@@ -242,6 +242,8 @@
 .pub .alert-err { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.4); color: #f56b6b; }
 .pub .alert-ok { background: rgba(22,224,138,.1); border: 1px solid rgba(22,224,138,.4); color: var(--green2); }
 .pub .alert-warn { background: rgba(245,196,81,.1); border: 1px solid rgba(245,196,81,.4); color: #f5c451; }
+.pub .spin { animation: pub-spin 1s linear infinite; }
+@keyframes pub-spin { to { transform: rotate(360deg); } }
 .pub .pay-instr { white-space: pre-wrap; word-break: break-word; font-family: inherit; font-size: 14px; line-height: 1.6; color: var(--ink); background: var(--elev); border: 1px solid var(--bd); border-radius: 10px; padding: 14px; margin: 0; }
 
 /* Legales */
