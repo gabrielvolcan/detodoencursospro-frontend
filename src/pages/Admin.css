@@ -1833,6 +1833,7 @@ td {
 }
 
 .tipo-badge {
+  display: inline-block;
   background: var(--gris-oscuro);
   padding: 4px 12px;
   border-radius: 20px;
@@ -1840,6 +1841,7 @@ td {
   font-weight: 600;
   color: var(--acento);
   text-transform: capitalize;
+  white-space: nowrap;
 }
 
 .btn-icon.destacado-activo {
