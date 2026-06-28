@@ -72,9 +72,14 @@ const ProductoDetalle = () => {
     return { formatted: 'Consultar precio', simbolo: '$', precio: 0 };
   };
 
-  // 🛒 Compra (mismo flujo que cursos)
+  // 🛒 Compra: si no hay sesión, mandamos a registrarse (guardamos a dónde volver)
+  const irARegistro = () => {
+    localStorage.setItem('intentoCompraProductoId', id);
+    navigate('/registro');
+  };
+
   const handleAgregarCarrito = () => {
-    if (!estaAutenticado) { navigate('/login', { state: { from: `/producto/${id}` } }); return; }
+    if (!estaAutenticado) { irARegistro(); return; }
     if (agregarAlCarrito(producto)) {
       alert('✅ Producto agregado al carrito');
     } else {
@@ -83,7 +88,7 @@ const ProductoDetalle = () => {
   };
 
   const handleComprarAhora = () => {
-    if (!estaAutenticado) { navigate('/login', { state: { from: `/producto/${id}` } }); return; }
+    if (!estaAutenticado) { irARegistro(); return; }
     agregarAlCarrito(producto);
     navigate('/carrito');
   };
