@@ -1,134 +1,71 @@
 import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import './Auth.css';
+import '../styles/publico.css';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { iniciarSesion } = useAuth();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
-  const [mostrarPassword, setMostrarPassword] = useState(false);
+  const [verPass, setVerPass] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-    setError('');
-  };
+  const set = (e) => { setForm({ ...form, [e.target.name]: e.target.value }); setError(''); };
 
-  const handleSubmit = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setError('');
-    setCargando(true);
-
-    const resultado = await iniciarSesion(formData.email, formData.password);
-
-    if (resultado.exito) {
+    setError(''); setCargando(true);
+    const r = await iniciarSesion(form.email, form.password);
+    if (r.exito) {
       const redirect = searchParams.get('redirect') || '/';
-      navigate(redirect);
+      navigate(redirect.startsWith('/') ? redirect : '/');
     } else {
-      setError(resultado.error);
+      setError(r.error);
     }
     setCargando(false);
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-container">
-        <div className="auth-box">
-          <div className="auth-header">
-            <LogIn size={48} className="auth-icon" />
-            <h1>Iniciar Sesión</h1>
-            <p>Accede a tus cursos y continúa aprendiendo</p>
+    <div className="pub">
+      <section className="auth">
+        <div className="auth-bg"></div>
+        <form className="auth-card" onSubmit={submit}>
+          <div className="auth-ic"><LogIn className="ic ic-lg" /></div>
+          <h1 className="h2 tc">Iniciar Sesión</h1>
+          <p className="muted tc" style={{ margin: '8px 0 30px' }}>Accede a tus cursos y continúa aprendiendo</p>
+
+          {error && <div className="alert alert-err">{error}</div>}
+
+          <label className="field">
+            <span className="lbl"><Mail className="ic ic-s" />Email</span>
+            <input className="inp" type="email" name="email" value={form.email} onChange={set} required placeholder="tu@email.com" autoComplete="email" />
+          </label>
+          <label className="field" style={{ marginBottom: 8 }}>
+            <span className="lbl"><Lock className="ic ic-s" />Contraseña</span>
+            <span className="pass-wrap">
+              <input className="inp" type={verPass ? 'text' : 'password'} name="password" value={form.password} onChange={set} required placeholder="••••••••" autoComplete="current-password" />
+              <button className="pass-eye" type="button" onClick={() => setVerPass(!verPass)} tabIndex={-1}>
+                {verPass ? <EyeOff className="ic ic-s" /> : <Eye className="ic ic-s" />}
+              </button>
+            </span>
+          </label>
+          <div className="tc" style={{ margin: '0 0 24px' }}>
+            <button type="button" className="green sm fw7 pointer" style={{ background: 'none', border: 0 }} onClick={() => navigate('/recuperar-contrasena')}>¿Olvidaste tu contraseña?</button>
           </div>
 
-          {error && (
-            <div className="alert alert-error">
-              {error}
-            </div>
-          )}
+          <button type="submit" className="btn btnp btn-block btn-lg" disabled={cargando}>
+            {cargando ? 'Iniciando...' : 'Iniciar Sesión'}
+          </button>
 
-          <form onSubmit={handleSubmit} className="auth-form">
-            <div className="form-group">
-              <label htmlFor="email">
-                <Mail size={18} />
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder="tu@email.com"
-                autoComplete="email"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">
-                <Lock size={18} />
-                Contraseña
-              </label>
-              <div className="password-input-wrapper">
-                <input
-                  type={mostrarPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                />
-                <button
-                  type="button"
-                  className="toggle-password"
-                  onClick={() => setMostrarPassword(!mostrarPassword)}
-                  tabIndex="-1"
-                >
-                  {mostrarPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-            </div>
-
-            <div className="forgot-password">
-              <Link to="/recuperar-contraseña">¿Olvidaste tu contraseña?</Link>
-            </div>
-
-            <button 
-              type="submit" 
-              className="btn-submit"
-              disabled={cargando}
-            >
-              {cargando ? (
-                <>
-                  <div className="spinner-small"></div>
-                  Iniciando...
-                </>
-              ) : (
-                'Iniciar Sesión'
-              )}
-            </button>
-          </form>
-
-          <div className="auth-footer">
-            <p>
-              ¿No tienes cuenta?{' '}
-              <Link to="/registro">Regístrate aquí</Link>
-            </p>
-          </div>
-        </div>
-      </div>
+          <div className="rule" style={{ margin: '24px 0' }}></div>
+          <p className="tc sm muted" style={{ margin: 0 }}>
+            ¿No tienes cuenta? <button type="button" className="green fw7 pointer" style={{ background: 'none', border: 0 }} onClick={() => navigate('/registro')}>Regístrate aquí</button>
+          </p>
+        </form>
+      </section>
     </div>
   );
 };
