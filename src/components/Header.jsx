@@ -1,243 +1,134 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, User, LogOut, Shield, Package, ChevronDown, BookOpen, Globe } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  Globe, ShoppingCart, ChevronDown, GraduationCap, Package, LogOut, Shield, Menu,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCarrito } from '../context/CarritoContext';
-import PaisSelector from './PaisSelector';
-import './Header.css';
+import { usePais } from '../context/PaisContext';
+import '../styles/publico.css';
+
+const Logo = () => (
+  <svg className="logo-mk" viewBox="0 0 40 40" fill="none">
+    <path d="M20 3 33.86 11v18L20 37 6.14 29V11z" stroke="#16e08a" strokeWidth="2.3" />
+    <path d="M13.5 13.5h3.5a8 6.5 0 0 1 0 13h-3.5z" stroke="#16e08a" strokeWidth="2.3" strokeLinejoin="round" />
+    <path d="M27 14.5a7 7 0 1 0 0 11" stroke="#f3f3f5" strokeWidth="2.3" strokeLinecap="round" />
+  </svg>
+);
 
 const Header = () => {
   const { usuario, estaAutenticado, cerrarSesion, esAdmin } = useAuth();
   const { items } = useCarrito();
+  const { paisSeleccionado, setPaisSeleccionado, paises, obtenerPaisActual } = usePais();
   const navigate = useNavigate();
-  const [menuAbierto, setMenuAbierto] = useState(false);
-  const [userMenuAbierto, setUserMenuAbierto] = useState(false);
+  const { pathname } = useLocation();
 
-  const handleCerrarSesion = () => {
-    cerrarSesion();
-    navigate('/');
-    setMenuAbierto(false);
-    setUserMenuAbierto(false);
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [countryOpen, setCountryOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
 
-  const cerrarMenu = () => {
-    setMenuAbierto(false);
+  const paisActual = obtenerPaisActual();
+  const cartCount = Array.isArray(items) ? items.length : 0;
+  const inicial = (usuario?.nombre || 'U').charAt(0).toUpperCase();
+
+  const ir = (ruta) => {
+    navigate(ruta);
+    setMenuOpen(false); setCountryOpen(false); setUserOpen(false);
   };
+  const logout = () => { cerrarSesion(); ir('/'); };
+  const navCls = (ruta) => `navlink ${pathname === ruta ? 'on' : ''}`;
 
   return (
-    <header className="header">
-      <div className="container header-container">
-        {/* Logo */}
-        <Link to="/" className="logo" onClick={cerrarMenu}>
-          <div className="logo-icon">
-            <img src="/images/dtcisotipo.webp" alt="DTC" />
-          </div>
-          <img src="/images/letras_y_eslogan.webp" alt="Detodo" className="logo-text-img" />
-        </Link>
+    <header className="pub-hdr">
+      <div className="shell hdr-in">
+        <button className="logo" onClick={() => ir('/')}>
+          <Logo />
+          <span className="logo-tx"><b>Detodo</b><i>Cursos</i></span>
+        </button>
 
-        {/* Navegación principal (desktop) */}
-        <nav className="nav nav-desktop">
-          <Link to="/" className="nav-link">
-            Inicio
-          </Link>
-          <Link to="/cursos" className="nav-link">
-            Cursos
-          </Link>
-          <Link to="/productos" className="nav-link">
-            Productos
-          </Link>
+        <nav className="nav">
+          <button className={navCls('/')} onClick={() => ir('/')}>Inicio</button>
+          <button className={navCls('/cursos')} onClick={() => ir('/cursos')}>Cursos</button>
+          <button className={navCls('/productos')} onClick={() => ir('/productos')}>Productos</button>
         </nav>
 
-        {/* Acciones del header (desktop) */}
-        <div className="header-actions header-actions-desktop">
-          {/* Selector de país */}
-          <PaisSelector />
-
-          {estaAutenticado ? (
-            <>
-              {/* Botón Admin (si es admin) */}
-              {esAdmin() && (
-                <Link to="/admin" className="btn-admin-header">
-                  <Shield size={18} />
-                  <span>Admin</span>
-                </Link>
-              )}
-
-              {/* Carrito */}
-              <Link to="/carrito" className="btn-carrito">
-                <ShoppingCart size={20} />
-                {items.length > 0 && (
-                  <span className="carrito-count">{items.length}</span>
-                )}
-              </Link>
-
-              {/* Menú de usuario */}
-              <div className="user-menu-wrapper">
-                <button 
-                  className="user-btn"
-                  onClick={() => setUserMenuAbierto(!userMenuAbierto)}
-                >
-                  <div className="user-avatar">
-                    {usuario?.nombre?.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="user-name">{usuario?.nombre}</span>
-                  <ChevronDown size={16} className={`chevron ${userMenuAbierto ? 'rotado' : ''}`} />
-                </button>
-
-                {userMenuAbierto && (
-                  <div className="user-dropdown">
-                    <div className="user-dropdown-header">
-                      <strong>{usuario?.nombre}</strong>
-                      <span>{usuario?.email}</span>
-                    </div>
-                    <div className="user-dropdown-divider"></div>
-                    <Link 
-                      to="/mis-cursos-aprender" 
-                      className="dropdown-item"
-                      onClick={() => setUserMenuAbierto(false)}
-                    >
-                      <BookOpen size={18} />
-                      <span>Mis Cursos</span>
-                    </Link>
-                    <Link 
-                      to="/mis-compras" 
-                      className="dropdown-item"
-                      onClick={() => setUserMenuAbierto(false)}
-                    >
-                      <Package size={18} />
-                      <span>Mis Compras</span>
-                    </Link>
-                    <div className="user-dropdown-divider"></div>
-                    <button className="dropdown-item logout" onClick={handleCerrarSesion}>
-                      <LogOut size={18} />
-                      <span>Cerrar Sesión</span>
-                    </button>
-                  </div>
-                )}
+        <div className="hdr-r">
+          <div className="ctry">
+            <button className="ctry-btn" onClick={() => { setCountryOpen(!countryOpen); setUserOpen(false); }}>
+              <Globe className="ic" />
+              <span className="ctry-fl">{paisActual?.bandera}</span>
+              <span className="ctry-name">{paisActual?.nombre}</span>
+            </button>
+            {countryOpen && (
+              <div className="ctry-menu">
+                {paises.map((p) => (
+                  <button
+                    key={p.codigo}
+                    className={`ctry-item ${p.codigo === paisSeleccionado ? 'on' : ''}`}
+                    onClick={() => { setPaisSeleccionado(p.codigo); setCountryOpen(false); }}
+                  >
+                    <span className="ctry-fl">{p.bandera}</span>
+                    <span>{p.nombre}</span>
+                    <span className="muted xs" style={{ marginLeft: 'auto' }}>{p.moneda}</span>
+                  </button>
+                ))}
               </div>
+            )}
+          </div>
+
+          <button className="icbtn" onClick={() => ir('/carrito')} aria-label="Carrito">
+            <ShoppingCart className="ic" />
+            {cartCount > 0 && <span className="cart-n">{cartCount}</span>}
+          </button>
+
+          {!estaAutenticado ? (
+            <>
+              <button className="btn btng" onClick={() => ir('/login')}>Ingresar</button>
+              <button className="btn btno" onClick={() => ir('/registro')}>Registrarse</button>
             </>
           ) : (
-            <>
-              {/* Carrito (usuario no autenticado) */}
-              <Link to="/carrito" className="btn-carrito">
-                <ShoppingCart size={20} />
-                {items.length > 0 && (
-                  <span className="carrito-count">{items.length}</span>
-                )}
-              </Link>
-
-              {/* Botones de autenticación */}
-              <Link to="/login" className="btn-login">
-                Ingresar
-              </Link>
-              <Link to="/registro" className="btn-registro">
-                Registrarse
-              </Link>
-            </>
+            <div className="ctry">
+              <button className="uav" onClick={() => { setUserOpen(!userOpen); setCountryOpen(false); }}>
+                <span className="uav-c">{inicial}</span>
+                <span>Mi cuenta</span>
+                <ChevronDown className="ic ic-s" />
+              </button>
+              {userOpen && (
+                <div className="umenu">
+                  <button onClick={() => ir('/mis-cursos-aprender')}><GraduationCap className="ic ic-s" />Mis Cursos</button>
+                  <button onClick={() => ir('/mis-compras')}><Package className="ic ic-s" />Mis Compras</button>
+                  {esAdmin() && <button onClick={() => ir('/admin')}><Shield className="ic ic-s" />Panel Admin</button>}
+                  <button onClick={logout}><LogOut className="ic ic-s" />Cerrar sesión</button>
+                </div>
+              )}
+            </div>
           )}
-        </div>
 
-        {/* Acciones móvil (solo carrito + hamburguesa) */}
-        <div className="header-actions header-actions-mobile">
-          <Link to="/carrito" className="btn-carrito">
-            <ShoppingCart size={20} />
-            {items.length > 0 && (
-              <span className="carrito-count">{items.length}</span>
-            )}
-          </Link>
-
-          <button 
-            className="menu-toggle"
-            onClick={() => setMenuAbierto(!menuAbierto)}
-          >
-            {menuAbierto ? <X size={24} /> : <Menu size={24} />}
+          <button className="burger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menú">
+            <Menu className="ic" />
           </button>
         </div>
       </div>
 
-      {/* Menú móvil fullscreen */}
-      {menuAbierto && (
-        <div className="menu-mobile-overlay">
-          <nav className="menu-mobile-content">
-            {/* Links de navegación */}
-            <div className="menu-mobile-section">
-              <Link to="/" className="menu-mobile-link" onClick={cerrarMenu}>
-                Inicio
-              </Link>
-              <Link to="/cursos" className="menu-mobile-link" onClick={cerrarMenu}>
-                Cursos
-              </Link>
-              <Link to="/productos" className="menu-mobile-link" onClick={cerrarMenu}>
-                Productos
-              </Link>
-            </div>
-
-            <div className="menu-mobile-divider"></div>
-
-            {/* Selector de país en móvil */}
-            <div className="menu-mobile-section">
-              <div className="menu-mobile-label">
-                <Globe size={18} />
-                <span>País y Moneda</span>
-              </div>
-              <PaisSelector />
-            </div>
-
-            {estaAutenticado ? (
-              <>
-                <div className="menu-mobile-divider"></div>
-
-                {/* Usuario autenticado */}
-                <div className="menu-mobile-section">
-                  <div className="menu-mobile-user-info">
-                    <div className="user-avatar-mobile">
-                      {usuario?.nombre?.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <strong>{usuario?.nombre}</strong>
-                      <span>{usuario?.email}</span>
-                    </div>
-                  </div>
-
-                  <Link to="/mis-cursos-aprender" className="menu-mobile-link" onClick={cerrarMenu}>
-                    <BookOpen size={18} />
-                    <span>Mis Cursos</span>
-                  </Link>
-
-                  <Link to="/mis-compras" className="menu-mobile-link" onClick={cerrarMenu}>
-                    <Package size={18} />
-                    <span>Mis Compras</span>
-                  </Link>
-
-                  {esAdmin() && (
-                    <Link to="/admin" className="menu-mobile-link admin" onClick={cerrarMenu}>
-                      <Shield size={18} />
-                      <span>Panel Admin</span>
-                    </Link>
-                  )}
-
-                  <button className="menu-mobile-link logout" onClick={handleCerrarSesion}>
-                    <LogOut size={18} />
-                    <span>Cerrar Sesión</span>
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="menu-mobile-divider"></div>
-
-                {/* Botones de autenticación */}
-                <div className="menu-mobile-section menu-mobile-auth">
-                  <Link to="/login" className="btn-mobile-login" onClick={cerrarMenu}>
-                    Ingresar
-                  </Link>
-                  <Link to="/registro" className="btn-mobile-registro" onClick={cerrarMenu}>
-                    Registrarse
-                  </Link>
-                </div>
-              </>
-            )}
-          </nav>
+      {menuOpen && (
+        <div className="mnav">
+          <a onClick={() => ir('/')}>Inicio</a>
+          <a onClick={() => ir('/cursos')}>Cursos</a>
+          <a onClick={() => ir('/productos')}>Productos</a>
+          <a onClick={() => ir('/carrito')}>Carrito</a>
+          {!estaAutenticado ? (
+            <>
+              <a onClick={() => ir('/login')}>Ingresar</a>
+              <a onClick={() => ir('/registro')}>Registrarse</a>
+            </>
+          ) : (
+            <>
+              <a onClick={() => ir('/mis-cursos-aprender')}>Mis Cursos</a>
+              <a onClick={() => ir('/mis-compras')}>Mis Compras</a>
+              {esAdmin() && <a onClick={() => ir('/admin')}>Panel Admin</a>}
+              <a onClick={logout}>Cerrar sesión</a>
+            </>
+          )}
         </div>
       )}
     </header>
