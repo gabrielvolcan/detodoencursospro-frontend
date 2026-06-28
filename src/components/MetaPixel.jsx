@@ -15,8 +15,6 @@ const MetaPixel = () => {
     // Inicializar con tu Pixel ID
     window.fbq('init', '1521742272217152');
     window.fbq('track', 'PageView');
-    
-    console.log('✅ Meta Pixel cargado correctamente');
   }, []);
 
   return null;

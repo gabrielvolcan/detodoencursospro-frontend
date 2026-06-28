@@ -6,10 +6,8 @@ import { usePais } from '../context/PaisContext';
 import './ProductoCard.css';
 
 const ProductoCard = ({ producto }) => {
-  const { obtenerPaisActual, convertirPrecio } = usePais();
-  
-  // ✅ CORRECCIÓN: Obtener país actual y precio convertido correctamente
-  const paisActual = obtenerPaisActual();
+  const { convertirPrecio } = usePais();
+
   const precioData = convertirPrecio(producto.precioUSD);
   
   // Icono según tipo

@@ -41,10 +41,6 @@ export const CarritoProvider = ({ children }) => {
   }, [items]);
 
   const agregarAlCarrito = (producto) => {
-    console.log('📦 agregarAlCarrito llamado con:', producto);
-    console.log('📦 items actuales:', items);
-    console.log('📦 items es array?', Array.isArray(items));
-    
     // ✅ VALIDAR QUE ITEMS SEA UN ARRAY
     if (!Array.isArray(items)) {
       console.error('❌ items no es un array!', items);
@@ -62,12 +58,10 @@ export const CarritoProvider = ({ children }) => {
     const yaExiste = items.find(item => item._id === producto._id);
     
     if (!yaExiste) {
-      console.log('✅ Agregando producto al carrito');
       setItems([...items, producto]);
       return true;
     }
-    
-    console.log('ℹ️ Producto ya está en el carrito');
+
     return false;
   };
 

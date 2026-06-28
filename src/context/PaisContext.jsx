@@ -117,18 +117,6 @@ export const PaisProvider = ({ children }) => {
     return pais?.moneda || 'USD';
   };
 
-  const normalizarCodigoPais = (codigo) => {
-    const conversion = {
-      'USD': 'internacional',
-      'PE': 'peru',
-      'CL': 'chile',
-      'AR': 'argentina',
-      'VE': 'venezuela',
-      'UY': 'uruguay'
-    };
-    return conversion[codigo] || codigo;
-  };
-
   const value = {
     paisSeleccionado,
     setPaisSeleccionado,
@@ -137,9 +125,7 @@ export const PaisProvider = ({ children }) => {
     formatearMonto,
     obtenerPaisActual,
     obtenerMoneda,
-    normalizarCodigoPais,
-    paises: PAISES,
-    tasasConversion: TASAS_CONVERSION
+    paises: PAISES
   };
 
   return <PaisContext.Provider value={value}>{children}</PaisContext.Provider>;

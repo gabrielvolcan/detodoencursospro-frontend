@@ -108,8 +108,6 @@ const ProductoDetalle = () => {
   // 🛒 MANEJO DE COMPRA (MISMO FLUJO QUE CURSOS)
   // ========================================
   const handleAgregarCarrito = () => {
-    console.log('🛒 Agregar al Carrito clickeado');
-    
     if (!estaAutenticado) {
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;
@@ -123,8 +121,6 @@ const ProductoDetalle = () => {
   };
 
   const handleComprarAhora = () => {
-    console.log('💳 Comprar Ahora clickeado');
-    
     if (!estaAutenticado) {
       navigate('/login', { state: { from: `/producto/${id}` } });
       return;

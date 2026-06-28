@@ -107,7 +107,6 @@ const Registro = () => {
 
     // 🆕 OBTENER CURSO GRATUITO SI EXISTE
     const cursoGratuitoId = localStorage.getItem('cursoGratuitoId');
-    console.log('🔍 Curso gratuito en localStorage:', cursoGratuitoId);
 
     const { confirmarPassword, ...datosRegistro } = formData;
     

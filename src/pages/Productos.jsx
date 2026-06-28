@@ -52,11 +52,7 @@ const Productos = () => {
     try {
       setCargando(true);
       const response = await productosAPI.obtenerTodos();
-      
-      // 🔍 Debug: ver qué estructura devuelve el backend
-      console.log('Respuesta completa:', response);
-      console.log('Response.data:', response.data);
-      
+
       // ✅ CORRECCIÓN: Asegurarse de que siempre sea un array
       let productosData = [];
       
