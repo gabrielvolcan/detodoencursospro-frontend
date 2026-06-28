@@ -1,21 +1,28 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Package, Clock, CheckCircle, XCircle, Eye } from 'lucide-react';
+import {
+  Package, Clock, CheckCircle, XCircle, Eye, FileText, Download, BookOpen, ArrowRight,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getComprobanteUrl, pagosAPI } from '../services/api';
-import './MisCompras.css';
+import '../styles/publico.css';
+
+const ESTADOS = {
+  pendiente: { texto: 'Pendiente', pill: 'st-pend', icono: Clock },
+  en_revision: { texto: 'En Revisión', pill: 'st-pend', icono: Eye },
+  aprobado: { texto: 'Aprobado', pill: 'st-aprob', icono: CheckCircle },
+  rechazado: { texto: 'Rechazado', pill: 'st-rech', icono: XCircle },
+};
 
 const MisCompras = () => {
   const { estaAutenticado } = useAuth();
   const navigate = useNavigate();
   const [compras, setCompras] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [comprobanteCargando, setComprobanteCargando] = useState(null);
 
   useEffect(() => {
-    if (!estaAutenticado) {
-      navigate('/login');
-      return;
-    }
+    if (!estaAutenticado) { navigate('/login'); return; }
     cargarCompras();
   }, [estaAutenticado]);
 
@@ -30,14 +37,11 @@ const MisCompras = () => {
     }
   };
 
-  const [comprobanteCargando, setComprobanteCargando] = useState(null);
-
   const verComprobante = async (compraId) => {
     try {
       setComprobanteCargando(compraId);
       const url = await getComprobanteUrl(compraId);
       window.open(url, '_blank', 'noopener,noreferrer');
-      // Liberar el object URL pasado un tiempo prudencial para que la pestaña lo cargue
       setTimeout(() => URL.revokeObjectURL(url), 60000);
     } catch (error) {
       console.error('Error cargando comprobante:', error);
@@ -47,223 +51,133 @@ const MisCompras = () => {
     }
   };
 
-  const getEstadoBadge = (estado) => {
-    const estados = {
-      pendiente: { texto: 'Pendiente', clase: 'pendiente', icono: <Clock size={16} /> },
-      en_revision: { texto: 'En Revisión', clase: 'revision', icono: <Eye size={16} /> },
-      aprobado: { texto: 'Aprobado', clase: 'aprobado', icono: <CheckCircle size={16} /> },
-      rechazado: { texto: 'Rechazado', clase: 'rechazado', icono: <XCircle size={16} /> }
-    };
-    return estados[estado] || estados.pendiente;
-  };
-
   if (cargando) {
     return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Cargando tus compras...</p>
-      </div>
+      <div className="pub"><section className="sec" style={{ paddingTop: 80 }}><div className="shell tc">
+        <p className="muted">Cargando tus compras...</p>
+      </div></section></div>
     );
   }
 
   return (
-    <div className="mis-compras-page">
-      <div className="container py-4">
-        <div className="page-header">
-          <div>
-            <h1>Mis Compras</h1>
-            <p>Historial completo de tus pedidos</p>
-          </div>
-          <div className="header-stats">
-            <div className="stat">
-              <strong>{compras.length}</strong>
-              <span>Total</span>
-            </div>
-            <div className="stat">
-              <strong>{compras.filter(c => c.estadoPago === 'aprobado').length}</strong>
-              <span>Aprobadas</span>
-            </div>
-            <div className="stat">
-              <strong>{compras.filter(c => c.estadoPago === 'en_revision').length}</strong>
-              <span>En Revisión</span>
-            </div>
-          </div>
-        </div>
+    <div className="pub">
+      <div className="pagehead"><div className="hero-bg"></div><div className="shell">
+        <h1 className="h1">Mis Compras</h1>
+        <p className="lead" style={{ marginTop: 12 }}>Historial completo de tus pedidos</p>
+      </div></div>
 
-        {compras.length === 0 ? (
-          <div className="sin-compras">
-            <Package size={64} />
-            <h2>No tienes compras aún</h2>
-            <p>Explora nuestro catálogo y comienza a aprender</p>
-            <button className="btn-primary" onClick={() => navigate('/cursos')}>
-              Ver Cursos
-            </button>
-          </div>
-        ) : (
-          <div className="compras-lista">
-            {compras.map(compra => {
-              const estadoInfo = getEstadoBadge(compra.estadoPago);
+      <section className="sec" style={{ paddingTop: 40 }}>
+        <div className="shell">
+          {compras.length === 0 ? (
+            <div className="empty">
+              <div className="empty-ic"><Package className="ic ic-lg" /></div>
+              <h2 className="h3">No tienes compras aún</h2>
+              <p className="muted" style={{ margin: '8px 0 22px' }}>Explora nuestro catálogo y comienza a aprender</p>
+              <button className="btn btnp btn-lg" onClick={() => navigate('/cursos')}>Ver Cursos</button>
+            </div>
+          ) : (
+            compras.map((compra) => {
+              const est = ESTADOS[compra.estadoPago] || ESTADOS.pendiente;
+              const EstIcon = est.icono;
+              const tieneCursos = compra.cursos?.length > 0;
+              const tieneProductos = compra.productos?.length > 0;
               return (
-                <div key={compra._id} className="compra-card">
-                  <div className="compra-header">
-                    <div className="compra-info">
-                      <h3>Orden #{compra._id.slice(-8).toUpperCase()}</h3>
-                      <p className="compra-fecha">
-                        {new Date(compra.createdAt).toLocaleDateString('es', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </p>
+                <div key={compra._id} className="card" style={{ padding: 24, marginBottom: 16 }}>
+                  {/* header */}
+                  <div className="fx ac jb wrap gap12" style={{ marginBottom: 16 }}>
+                    <div>
+                      <div className="fw7" style={{ fontSize: 17 }}>Orden #{compra._id.slice(-8).toUpperCase()}</div>
+                      <div className="muted xs" style={{ marginTop: 4 }}>
+                        {new Date(compra.createdAt).toLocaleDateString('es', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </div>
                     </div>
-                    <div className="compra-estado">
-                      <span className={`estado-badge ${estadoInfo.clase}`}>
-                        {estadoInfo.icono}
-                        {estadoInfo.texto}
-                      </span>
-                    </div>
+                    <span className={`pill ${est.pill}`}><EstIcon className="ic ic-s" />{est.texto}</span>
                   </div>
 
-                  <div className="compra-detalles">
-                    <div className="detalle-item">
-                      <span className="label">Método de pago:</span>
-                      <span className="value">{compra.metodoPago?.nombre}</span>
-                    </div>
-                    <div className="detalle-item">
-                      <span className="label">País:</span>
-                      <span className="value">{compra.metodoPago?.pais}</span>
-                    </div>
-                    <div className="detalle-item">
-                      <span className="label">Total:</span>
-                      <span className="value total">${compra.total.toFixed(2)} {compra.moneda}</span>
-                    </div>
+                  {/* detalles */}
+                  <div className="fx wrap gap12" style={{ paddingBottom: 16, marginBottom: 16, borderBottom: '1px solid var(--bd)' }}>
+                    <span className="muted sm">Método: <span className="fw6" style={{ color: 'var(--ink)' }}>{compra.metodoPago?.nombre || '—'}</span></span>
+                    <span className="muted sm">País: <span className="fw6" style={{ color: 'var(--ink)' }}>{compra.metodoPago?.pais || '—'}</span></span>
+                    <span className="muted sm">Total: <span className="fw8 green">${compra.total.toFixed(2)} {compra.moneda}</span></span>
                   </div>
 
-                  {compra.cursos?.length > 0 && (
-                    <div className="compra-cursos">
-                      <h4>Cursos:</h4>
-                      {compra.cursos.map(item => (
-                        <div key={item._id} className="curso-item">
-                          <img src={item.curso?.imagen} alt={item.curso?.titulo} />
-                          <div className="curso-info">
-                            <strong>{item.curso?.titulo}</strong>
-                            <span>${item.precio}</span>
-                          </div>
+                  {/* cursos */}
+                  {tieneCursos && (
+                    <div style={{ marginBottom: 12 }}>
+                      <p className="fw7 sm" style={{ margin: '0 0 8px' }}>Cursos</p>
+                      {compra.cursos.map((item) => (
+                        <div key={item._id} className="fx ac gap12" style={{ padding: '8px 0' }}>
+                          <img src={item.curso?.imagen} alt={item.curso?.titulo} style={{ width: 52, height: 34, objectFit: 'cover', borderRadius: 8 }} />
+                          <span className="fw6 sm" style={{ flex: 1 }}>{item.curso?.titulo}</span>
+                          <span className="muted sm">${item.precio}</span>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {compra.productos?.length > 0 && (
-                    <div className="compra-cursos">
-                      <h4>Productos:</h4>
-                      {compra.productos.map(item => (
-                        <div key={item._id} className="curso-item">
-                          <img src={item.producto?.imagen} alt={item.producto?.titulo} />
-                          <div className="curso-info">
-                            <strong>{item.producto?.titulo}</strong>
-                            <span>${item.precio}</span>
-                          </div>
+                  {/* productos */}
+                  {tieneProductos && (
+                    <div style={{ marginBottom: 12 }}>
+                      <p className="fw7 sm" style={{ margin: '0 0 8px' }}>Productos</p>
+                      {compra.productos.map((item) => (
+                        <div key={item._id} className="fx ac gap12 wrap" style={{ padding: '8px 0' }}>
+                          <img src={item.producto?.imagen} alt={item.producto?.titulo} style={{ width: 52, height: 34, objectFit: 'cover', borderRadius: 8 }} />
+                          <span className="fw6 sm" style={{ flex: 1 }}>{item.producto?.titulo}</span>
+                          <span className="muted sm">${item.precio}</span>
                           {compra.estadoPago === 'aprobado' && item.producto?._id && item.producto?.libro?.archivoId && (
-                            <button
-                              type="button"
-                              className="btn-ver-comprobante"
-                              onClick={() => navigate(`/leer/${item.producto._id}`)}
-                            >
-                              📖 Leer
-                            </button>
+                            <button className="btn btng btn-sm" onClick={() => navigate(`/leer/${item.producto._id}`)}><BookOpen className="ic ic-s" />Leer</button>
                           )}
                           {compra.estadoPago === 'aprobado' && item.producto?._id && !item.producto?.libro?.archivoId && (
-                            <button
-                              type="button"
-                              className="btn-ver-comprobante"
-                              onClick={() => navigate(`/producto/${item.producto._id}`)}
-                            >
-                              ⬇️ Descargar
-                            </button>
+                            <button className="btn btng btn-sm" onClick={() => navigate(`/producto/${item.producto._id}`)}><Download className="ic ic-s" />Descargar</button>
                           )}
                         </div>
                       ))}
                     </div>
                   )}
 
+                  {/* comprobante */}
                   {compra.comprobante?.url && (
-                    <div className="compra-comprobante">
-                      <strong>Comprobante:</strong>
-                      <button
-                        type="button"
-                        onClick={() => verComprobante(compra._id)}
-                        disabled={comprobanteCargando === compra._id}
-                        className="btn-ver-comprobante"
-                      >
-                        {comprobanteCargando === compra._id ? '⏳ Cargando...' : '📸 Ver Comprobante Subido'}
-                      </button>
-                    </div>
+                    <button className="btn btng btn-sm" onClick={() => verComprobante(compra._id)} disabled={comprobanteCargando === compra._id}>
+                      <FileText className="ic ic-s" />{comprobanteCargando === compra._id ? 'Cargando...' : 'Ver comprobante subido'}
+                    </button>
                   )}
 
+                  {/* estados */}
                   {compra.estadoPago === 'rechazado' && compra.notasAdmin && (
-                    <div className="compra-rechazo">
+                    <div className="alert alert-err" style={{ marginTop: 14, flexDirection: 'column', alignItems: 'flex-start' }}>
                       <strong>⚠️ Motivo del rechazo:</strong>
-                      <p>{compra.notasAdmin}</p>
-                      <button 
-                        className="btn-reintentar"
-                        onClick={() => navigate('/cursos')}
-                      >
-                        Volver a Intentar
-                      </button>
+                      <p style={{ margin: '6px 0 10px', fontWeight: 500 }}>{compra.notasAdmin}</p>
+                      <button className="btn btnp btn-sm" onClick={() => navigate('/cursos')}>Volver a intentar</button>
                     </div>
                   )}
 
-                  {compra.estadoPago === 'aprobado' && (() => {
-                    const tieneCursos = compra.cursos?.length > 0;
-                    const tieneProductos = compra.productos?.length > 0;
-                    return (
-                      <div className="compra-aprobada">
-                        <CheckCircle size={20} />
-                        <span>
-                          {tieneCursos && tieneProductos &&
-                            '¡Pago aprobado! Tus cursos están en "Mis Cursos", y tus libros/productos los leés o descargás con el botón de aquí arriba.'}
-                          {tieneCursos && !tieneProductos &&
-                            '¡Pago aprobado! Ya podés acceder a tus cursos.'}
-                          {!tieneCursos && tieneProductos &&
-                            '¡Pago aprobado! 📖 Ya podés leer o descargar lo que compraste con el botón de aquí arriba.'}
-                          {!tieneCursos && !tieneProductos &&
-                            '¡Pago aprobado!'}
-                        </span>
-                        {tieneCursos && (
-                          <button
-                            type="button"
-                            className="btn-ver-comprobante"
-                            onClick={() => navigate('/mis-cursos-aprender')}
-                          >
-                            Ir a Mis Cursos →
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })()}
+                  {compra.estadoPago === 'aprobado' && (
+                    <div className="alert alert-ok" style={{ marginTop: 14, justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                      <span className="mi"><CheckCircle className="ic ic-s" />
+                        {tieneCursos && tieneProductos && 'Pago aprobado. Tus cursos están en "Mis Cursos"; tus libros/productos los leés o descargás arriba.'}
+                        {tieneCursos && !tieneProductos && '¡Pago aprobado! Ya podés acceder a tus cursos.'}
+                        {!tieneCursos && tieneProductos && '¡Pago aprobado! Ya podés leer o descargar lo que compraste arriba.'}
+                        {!tieneCursos && !tieneProductos && '¡Pago aprobado!'}
+                      </span>
+                      {tieneCursos && (
+                        <button className="btn btnp btn-sm" onClick={() => navigate('/mis-cursos-aprender')}>Ir a Mis Cursos<ArrowRight className="ic ic-s" /></button>
+                      )}
+                    </div>
+                  )}
 
                   {compra.estadoPago === 'pendiente' && !compra.comprobante?.url && (
-                    <div className="compra-pendiente">
-                      <Clock size={20} />
-                      <span>Esperando que subas el comprobante de pago</span>
-                    </div>
+                    <div className="alert alert-warn" style={{ marginTop: 14 }}><Clock className="ic ic-s" />Esperando que subas el comprobante de pago</div>
                   )}
 
                   {compra.estadoPago === 'en_revision' && (
-                    <div className="compra-revision">
-                      <Eye size={20} />
-                      <span>Tu comprobante está siendo revisado. Te notificaremos por email.</span>
-                    </div>
+                    <div className="alert alert-warn" style={{ marginTop: 14 }}><Eye className="ic ic-s" />Tu comprobante está siendo revisado. Te notificaremos por email.</div>
                   )}
                 </div>
               );
-            })}
-          </div>
-        )}
-      </div>
+            })
+          )}
+        </div>
+      </section>
     </div>
   );
 };
