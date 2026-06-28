@@ -1,21 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Video, Users, Star, ArrowRight, Shield, Clock, Award, Headphones, TrendingUp,
+  Video, Users, Star, ArrowRight, Award, TrendingUp,
 } from 'lucide-react';
 import { cursosAPI, productosAPI } from '../services/api';
 import CursoCardPub from '../components/publico/CursoCardPub';
 import ProductoCardPub from '../components/publico/ProductoCardPub';
 import '../styles/publico.css';
-
-const FEATURES = [
-  { ic: Shield, t: 'Certificación Profesional', s: 'Reconocida' },
-  { ic: Clock, t: 'Acceso de por Vida', s: 'Sin límites de tiempo' },
-  { ic: Award, t: 'Instructores Expertos', s: 'Profesionales certificados' },
-  { ic: Video, t: 'Contenido Premium', s: 'Videos Full HD actualizados' },
-  { ic: Users, t: 'Comunidad Activa', s: '+1,500 estudiantes' },
-  { ic: Headphones, t: 'Soporte 24/7', s: 'Ayuda cuando la necesites' },
-];
 
 const BENEFITS = [
   { ic: Video, t: 'Contenido Práctico', p: 'Videos paso a paso con casos reales' },
@@ -64,14 +55,6 @@ const Home = () => {
               <button className="btn btnp btn-lg" onClick={() => navigate('/cursos')}>Ver Todos los Cursos<ArrowRight className="ic" /></button>
               <button className="btn btno btn-lg" onClick={() => navigate('/registro')}>Registrarse Gratis</button>
             </div>
-          </div>
-          <div className="feat-grid">
-            {FEATURES.map(({ ic: Ic, t, s }) => (
-              <div className="feat" key={t}>
-                <div className="feat-ic"><Ic className="ic" /></div>
-                <b>{t}</b><span>{s}</span>
-              </div>
-            ))}
           </div>
         </div>
       </section>
