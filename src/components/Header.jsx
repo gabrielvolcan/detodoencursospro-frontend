@@ -74,12 +74,12 @@ const Header = () => {
           </button>
 
           {!estaAutenticado ? (
-            <>
+            <span className="hdr-auth">
               <button className="btn btng" onClick={() => ir('/login')}>Ingresar</button>
               <button className="btn btno" onClick={() => ir('/registro')}>Registrarse</button>
-            </>
+            </span>
           ) : (
-            <div className="ctry">
+            <div className="ctry hdr-auth">
               <button className="uav" onClick={() => { setUserOpen(!userOpen); setCountryOpen(false); }}>
                 <span className="uav-c">{inicial}</span>
                 <span>Mi cuenta</span>
