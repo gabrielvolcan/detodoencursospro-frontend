@@ -106,7 +106,8 @@ export const pagosAPI = {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
   misCompras: () => axios.get('/pagos-manual/mis-compras'),
-  obtenerCompra: (id) => axios.get(`/pagos-manual/compra/${id}`)
+  obtenerCompra: (id) => axios.get(`/pagos-manual/compra/${id}`),
+  obtenerMetodosPago: (pais) => axios.get(`/pagos-manual/metodos-pago/${pais}`)
 };
 
 // ========================================

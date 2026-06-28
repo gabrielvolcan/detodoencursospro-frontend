@@ -4,7 +4,6 @@ import { Upload, Check, X, AlertCircle } from 'lucide-react';
 import { useCarrito } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
-import { obtenerMetodosPago } from '../config/metodosPago';
 import { pagosAPI } from '../services/api';
 import './CheckoutManual.css';
 
@@ -20,9 +19,22 @@ const CheckoutManual = () => {
   const [subiendo, setSubiendo] = useState(false);
   const [ordenCreada, setOrdenCreada] = useState(null);
   const [paso, setPaso] = useState(1);
+  const [metodosPais, setMetodosPais] = useState(null);
+  const [cargandoMetodos, setCargandoMetodos] = useState(true);
 
-  const metodosPais = obtenerMetodosPago(paisSeleccionado);
   const monedaPais = obtenerMoneda(paisSeleccionado);
+
+  // Los métodos de pago (datos sensibles) se piden al backend, ya no viven en el bundle.
+  useEffect(() => {
+    let activo = true;
+    setCargandoMetodos(true);
+    setMetodoSeleccionado(null);
+    pagosAPI.obtenerMetodosPago(paisSeleccionado)
+      .then(({ data }) => { if (activo) setMetodosPais(data); })
+      .catch(() => { if (activo) setMetodosPais(null); })
+      .finally(() => { if (activo) setCargandoMetodos(false); });
+    return () => { activo = false; };
+  }, [paisSeleccionado]);
 
   // ========================================
   // 💰 FUNCIÓN PARA OBTENER PRECIO (CURSOS Y PRODUCTOS)
@@ -142,7 +154,7 @@ const CheckoutManual = () => {
   // Formatear precio individual
   const formatearPrecioItem = (item) => {
     const precio = obtenerPrecio(item);
-    return formatearPrecio(precio);
+    return formatearMonto(precio, monedaPais);
   };
 
   if (paso === 3) {
@@ -201,6 +213,16 @@ const CheckoutManual = () => {
           {paso === 1 && (
             <div className="metodos-pago-section">
               <h2>Selecciona tu Método de Pago</h2>
+
+              {cargandoMetodos ? (
+                <p className="pais-seleccionado">Cargando métodos de pago...</p>
+              ) : !metodosPais || !metodosPais.metodos?.length ? (
+                <div className="instruccion-importante">
+                  <AlertCircle size={18} />
+                  <p>No se pudieron cargar los métodos de pago. Recarga la página o contáctanos.</p>
+                </div>
+              ) : (
+                <>
               <p className="pais-seleccionado">
                 📍 País: <strong>{metodosPais.nombre}</strong>
               </p>
@@ -231,6 +253,8 @@ const CheckoutManual = () => {
                   </div>
                 ))}
               </div>
+                </>
+              )}
 
               {metodoSeleccionado && (
                 <button
