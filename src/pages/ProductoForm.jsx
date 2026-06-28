@@ -17,9 +17,13 @@ const ProductoForm = () => {
   const [producto, setProducto] = useState({
     titulo: '',
     descripcion: '',
+    subtitulo: '',          // frase corta de gancho
+    descripcionLarga: '',   // contenido extenso para la preventa
     tipo: 'libro',
     categoria: '',
     imagen: '',
+    imagenes: [],           // galería: fotos adicionales del libro/producto
+    incluye: [],            // "Lo que incluye": lista de bullets
     precioUSD: 0,
     archivoURL: '', // ⭐ NUEVO: URL del archivo descargable
     archivoPeso: ''  // OPCIONAL: Tamaño del archivo (ej: "5 MB")
@@ -55,9 +59,13 @@ const ProductoForm = () => {
       setProducto({
         titulo: data.titulo || '',
         descripcion: data.descripcion || '',
+        subtitulo: data.subtitulo || '',
+        descripcionLarga: data.descripcionLarga || '',
         tipo: data.tipo || 'libro',
         categoria: data.categoria || '',
         imagen: data.imagen || '',
+        imagenes: Array.isArray(data.imagenes) ? data.imagenes : [],
+        incluye: Array.isArray(data.incluye) ? data.incluye.map((i) => (typeof i === 'string' ? i : (i?.texto || ''))).filter(Boolean) : [],
         precioUSD: data.precioUSD || 0,
         archivoURL: data.archivoURL || '',
         archivoPeso: data.archivoPeso || ''
@@ -70,6 +78,13 @@ const ProductoForm = () => {
       setCargando(false);
     }
   };
+
+  // Helpers para listas dinámicas (galería de imágenes, "lo que incluye")
+  const updateLista = (campo, idx, val) => setProducto((prev) => {
+    const arr = [...prev[campo]]; arr[idx] = val; return { ...prev, [campo]: arr };
+  });
+  const addLista = (campo) => setProducto((prev) => ({ ...prev, [campo]: [...prev[campo], ''] }));
+  const removeLista = (campo, idx) => setProducto((prev) => ({ ...prev, [campo]: prev[campo].filter((_, i) => i !== idx) }));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,9 +120,13 @@ const ProductoForm = () => {
       const datos = {
         titulo: producto.titulo.trim(),
         descripcion: producto.descripcion.trim(),
+        subtitulo: producto.subtitulo.trim(),
+        descripcionLarga: producto.descripcionLarga.trim(),
         tipo: producto.tipo,
         categoria: producto.categoria.trim(),
         imagen: producto.imagen.trim() || 'https://via.placeholder.com/400x300?text=Producto',
+        imagenes: (producto.imagenes || []).map((u) => u.trim()).filter(Boolean),
+        incluye: (producto.incluye || []).map((t) => t.trim()).filter(Boolean),
         precioUSD: parseFloat(producto.precioUSD) || 0,
         archivoURL: producto.archivoURL.trim(),
         archivoPeso: producto.archivoPeso.trim() || ''
@@ -299,6 +318,72 @@ const ProductoForm = () => {
                 <p className="preview-label">Vista previa de la portada</p>
               </div>
             )}
+
+            {/* GALERÍA: fotos adicionales del libro/producto */}
+            <div className="form-group">
+              <label>📸 Galería de fotos (adicionales a la portada)</label>
+              <small className="help-text" style={{ display: 'block', marginBottom: 10 }}>
+                Agregá 2 o más fotos (interior del libro, contraportada, detalles…) para dar más confianza al comprador.
+              </small>
+              {(producto.imagenes || []).map((url, i) => (
+                <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+                  {url ? <img src={url} alt={`Foto ${i + 1}`} style={{ width: 46, height: 46, objectFit: 'cover', borderRadius: 8, flex: 'none' }} /> : null}
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={(e) => updateLista('imagenes', i, e.target.value)}
+                    placeholder={`https://ejemplo.com/foto-${i + 1}.jpg`}
+                    style={{ flex: 1 }}
+                  />
+                  <button type="button" onClick={() => removeLista('imagenes', i)} className="btn-secundario" style={{ flex: 'none' }}>✕</button>
+                </div>
+              ))}
+              <button type="button" onClick={() => addLista('imagenes')} className="btn-secundario">+ Agregar foto</button>
+            </div>
+          </section>
+
+          {/* CONTENIDO DE PREVENTA */}
+          <section className="form-section">
+            <h2>📝 Contenido de la página de venta</h2>
+
+            <div className="form-group">
+              <label>Subtítulo / frase de gancho</label>
+              <input
+                type="text"
+                name="subtitulo"
+                value={producto.subtitulo}
+                onChange={handleChange}
+                placeholder="Ej: La guía definitiva para empezar hoy"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Descripción larga (detalles, qué aprenderás, para quién es…)</label>
+              <textarea
+                name="descripcionLarga"
+                value={producto.descripcionLarga}
+                onChange={handleChange}
+                rows={6}
+                placeholder="Contá de qué trata, qué incluye, beneficios, a quién está dirigido. Cuanto más completo, más vende."
+              />
+            </div>
+
+            <div className="form-group">
+              <label>✅ Lo que incluye (bullets)</label>
+              {(producto.incluye || []).map((txt, i) => (
+                <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+                  <input
+                    type="text"
+                    value={txt}
+                    onChange={(e) => updateLista('incluye', i, e.target.value)}
+                    placeholder="Ej: Acceso inmediato de por vida"
+                    style={{ flex: 1 }}
+                  />
+                  <button type="button" onClick={() => removeLista('incluye', i)} className="btn-secundario" style={{ flex: 'none' }}>✕</button>
+                </div>
+              ))}
+              <button type="button" onClick={() => addLista('incluye')} className="btn-secundario">+ Agregar ítem</button>
+            </div>
           </section>
 
           {/* PRECIO */}

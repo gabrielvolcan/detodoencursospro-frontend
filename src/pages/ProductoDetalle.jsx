@@ -30,6 +30,7 @@ const ProductoDetalle = () => {
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [yaComprado, setYaComprado] = useState(false);
+  const [imgActiva, setImgActiva] = useState(0);
 
   useEffect(() => { cargarProducto(); }, [id]);
 
@@ -140,6 +141,9 @@ const ProductoDetalle = () => {
   const enCarrito = estaEnCarrito(producto._id);
   const precioInfo = obtenerPrecio();
   const esDescargable = ['libro', 'ebook', 'plantilla', 'guia', 'recurso', 'software'].includes(producto.tipo);
+  // Galería: portada + imágenes adicionales (sin duplicados ni vacíos)
+  const galeria = [producto.imagen, ...(producto.imagenes || [])].filter((v, i, a) => v && a.indexOf(v) === i);
+  const imgPrincipal = galeria[imgActiva] || galeria[0];
 
   return (
     <div className="pub">
@@ -147,7 +151,24 @@ const ProductoDetalle = () => {
       <section className="cd-hero">
         <div className="hero-bg"></div>
         <div className="shell pd-in">
-          <PubThumb src={producto.imagen} alt={producto.titulo} icon={Package} className="pd-cover thumb" />
+          <div className="pd-gallery">
+            <PubThumb src={imgPrincipal} alt={producto.titulo} icon={Package} className="pd-cover thumb" />
+            {galeria.length > 1 && (
+              <div className="pd-thumbs">
+                {galeria.map((src, i) => (
+                  <button
+                    key={src}
+                    type="button"
+                    className={`pd-thumb ${i === imgActiva ? 'on' : ''}`}
+                    onClick={() => setImgActiva(i)}
+                    aria-label={`Foto ${i + 1}`}
+                  >
+                    <img src={src} alt={`${producto.titulo} ${i + 1}`} />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <div>
             <div className="fx ac gap10" style={{ marginBottom: 16 }}>
               <span className="muted fw6">{producto.categoria}</span>
