@@ -1,19 +1,34 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { PlayCircle, CheckCircle, Circle, ArrowLeft, Award, Clock, FileText, Copy, Check } from 'lucide-react';
+import {
+  PlayCircle, CheckCircle, Circle, ArrowLeft, Award, Clock, FileText, Copy, Check,
+  ChevronLeft, ChevronRight, X,
+} from 'lucide-react';
 import { cursosAPI } from '../services/api';
 import './AprendeCurso.css';
+
+// Lista plana de todas las lecciones del curso (para reanudar y navegar).
+const construirLecciones = (curso) => {
+  const out = [];
+  (curso?.temario || []).forEach((modulo, mi) => {
+    (modulo.temas || []).forEach((tema, ti) => {
+      out.push({ moduloIndex: mi, temaIndex: ti, temaId: `${mi}-${ti}`, moduloTitulo: modulo.titulo, tema });
+    });
+  });
+  return out;
+};
 
 const AprendeCurso = () => {
   const { cursoId } = useParams();
   const navigate = useNavigate();
-  
+
   const [curso, setCurso] = useState(null);
   const [progreso, setProgreso] = useState({ videosVistos: [], completado: false, porcentaje: 0 });
   const [videoActual, setVideoActual] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
-  const [copiado, setCopiado] = useState(false); // 🆕 Para el botón de copiar
+  const [copiado, setCopiado] = useState(false);
+  const [reanudado, setReanudado] = useState(false); // mostró "continuar donde lo dejaste"
 
   useEffect(() => {
     cargarCurso();
@@ -21,26 +36,22 @@ const AprendeCurso = () => {
 
   const cargarCurso = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const { data } = await cursosAPI.obtenerParaAprender(cursoId, token);
-      
+      const { data } = await cursosAPI.obtenerParaAprender(cursoId);
       setCurso(data.curso);
       setProgreso(data.progreso);
-      
-      // Establecer primer video si no hay progreso
-      if (data.curso.temario && data.curso.temario.length > 0) {
-        const primerModulo = data.curso.temario[0];
-        if (primerModulo.temas && primerModulo.temas.length > 0) {
-          setVideoActual({
-            ...primerModulo.temas[0],
-            moduloTitulo: primerModulo.titulo,
-            temaId: `${0}-${0}` // moduloIndex-temaIndex
-          });
-        }
+
+      // 🆕 REANUDAR: abrir la primera lección NO vista (donde se quedó)
+      const lecciones = construirLecciones(data.curso);
+      const vistos = data.progreso?.videosVistos || [];
+      const idxNoVisto = lecciones.findIndex((l) => !vistos.includes(l.temaId));
+      const inicio = idxNoVisto >= 0 ? lecciones[idxNoVisto] : lecciones[0];
+      if (inicio) {
+        setVideoActual({ ...inicio.tema, moduloTitulo: inicio.moduloTitulo, temaId: inicio.temaId });
+        setReanudado(vistos.length > 0 && idxNoVisto > 0);
       }
-    } catch (error) {
-      console.error('Error:', error);
-      setError(error.response?.data?.mensaje || 'No tienes acceso a este curso');
+    } catch (err) {
+      console.error('Error:', err);
+      setError(err.response?.data?.mensaje || 'No tienes acceso a este curso');
       setTimeout(() => navigate('/mis-cursos-aprender'), 2000);
     } finally {
       setCargando(false);
@@ -49,31 +60,35 @@ const AprendeCurso = () => {
 
   const marcarComoVisto = async (temaId, marcar = true) => {
     try {
-      const token = localStorage.getItem('token');
-      
-      if (marcar) {
-        const { data } = await cursosAPI.marcarVideoVisto(cursoId, temaId, token);
-        setProgreso(data.progreso);
-      } else {
-        const { data } = await cursosAPI.desmarcarVideoVisto(cursoId, temaId, token);
-        setProgreso(data.progreso);
-      }
-    } catch (error) {
-      console.error('Error actualizando progreso:', error);
+      const { data } = marcar
+        ? await cursosAPI.marcarVideoVisto(cursoId, temaId)
+        : await cursosAPI.desmarcarVideoVisto(cursoId, temaId);
+      setProgreso(data.progreso);
+    } catch (err) {
+      console.error('Error actualizando progreso:', err);
     }
   };
 
   const seleccionarVideo = (tema, moduloTitulo, moduloIndex, temaIndex) => {
-    const temaId = `${moduloIndex}-${temaIndex}`;
-    setVideoActual({
-      ...tema,
-      moduloTitulo,
-      temaId
-    });
-    setCopiado(false); // 🆕 Resetear estado de copiado
+    setReanudado(false);
+    setVideoActual({ ...tema, moduloTitulo, temaId: `${moduloIndex}-${temaIndex}` });
+    setCopiado(false);
   };
 
-  // 🆕 FUNCIÓN PARA COPIAR TEXTO
+  // 🆕 Navegar entre lecciones. Avanza al instante y marca la actual en segundo plano.
+  const irLeccion = (delta) => {
+    const lecciones = construirLecciones(curso);
+    const idx = lecciones.findIndex((l) => l.temaId === videoActual?.temaId);
+    const sig = lecciones[idx + delta];
+    if (!sig) return;
+    if (delta > 0 && videoActual && !progreso.videosVistos.includes(videoActual.temaId)) {
+      marcarComoVisto(videoActual.temaId, true); // sin await: no traba la navegación
+    }
+    setReanudado(false);
+    setVideoActual({ ...sig.tema, moduloTitulo: sig.moduloTitulo, temaId: sig.temaId });
+    setCopiado(false);
+  };
+
   const copiarTexto = () => {
     if (videoActual?.descripcion) {
       navigator.clipboard.writeText(videoActual.descripcion);
@@ -82,38 +97,25 @@ const AprendeCurso = () => {
     }
   };
 
-  // ========================================
-  // 🎥 EXTRAE ID DE YOUTUBE O GOOGLE DRIVE
-  // ========================================
   const extraerVideoInfo = (url) => {
     if (!url) return { tipo: null, id: null };
-    
-    // Detectar YouTube
     const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const youtubeMatch = url.match(youtubeRegExp);
     if (youtubeMatch && youtubeMatch[2].length === 11) {
       return { tipo: 'youtube', id: youtubeMatch[2] };
     }
-    
-    // Detectar Google Drive
     const driveRegExp = /\/file\/d\/([a-zA-Z0-9_-]+)/;
     const driveMatch = url.match(driveRegExp);
     if (driveMatch && driveMatch[1]) {
       return { tipo: 'drive', id: driveMatch[1] };
     }
-    
-    // Si es directamente un ID de Drive (33 caracteres aprox)
     if (url.length > 20 && url.length < 50 && !url.includes('/')) {
       return { tipo: 'drive', id: url };
     }
-    
     return { tipo: null, id: null };
   };
 
-  // 🆕 DETECTAR SI ES CONTENIDO DE SOLO TEXTO
-  const esContenidoTexto = (tema) => {
-    return !tema?.videoUrl || tema.videoUrl.trim() === '';
-  };
+  const esContenidoTexto = (tema) => !tema?.videoUrl || tema.videoUrl.trim() === '';
 
   if (cargando) {
     return (
@@ -136,11 +138,14 @@ const AprendeCurso = () => {
   if (!curso) return null;
 
   const videoInfo = videoActual?.videoUrl ? extraerVideoInfo(videoActual.videoUrl) : { tipo: null, id: null };
-  const mostrarVistaTexto = esContenidoTexto(videoActual); // 🆕 Determinar qué vista mostrar
+  const mostrarVistaTexto = esContenidoTexto(videoActual);
+  const lecciones = construirLecciones(curso);
+  const idxActual = lecciones.findIndex((l) => l.temaId === videoActual?.temaId);
+  const hayAnterior = idxActual > 0;
+  const haySiguiente = idxActual >= 0 && idxActual < lecciones.length - 1;
 
   return (
     <div className="aprender-curso">
-      {/* Header */}
       <div className="aprender-header">
         <button onClick={() => navigate('/mis-cursos-aprender')} className="btn-back">
           <ArrowLeft size={20} />
@@ -150,12 +155,9 @@ const AprendeCurso = () => {
           <h1>{curso.titulo}</h1>
           <div className="progreso-header">
             <div className="progreso-barra">
-              <div 
-                className="progreso-fill" 
-                style={{ width: `${progreso.porcentaje}%` }}
-              ></div>
+              <div className="progreso-fill" style={{ width: `${progreso.porcentaje}%` }}></div>
             </div>
-            <span className="progreso-texto">{progreso.porcentaje}% completado</span>
+            <span className="progreso-texto">{Math.round(progreso.porcentaje)}% completado</span>
             {progreso.completado && (
               <Link to={`/certificado/${cursoId}`} className="btn-certificado">
                 <Award size={18} />
@@ -167,25 +169,21 @@ const AprendeCurso = () => {
       </div>
 
       <div className="aprender-contenido">
-        {/* Sidebar - Lista de módulos */}
         <aside className="aprender-sidebar">
           <div className="sidebar-header">
             <h3>Contenido del Curso</h3>
             <p>{progreso.videosVistos.length} / {contarTotalTemas(curso)} lecciones</p>
           </div>
-          
+
           <div className="modulos-lista">
             {curso.temario.map((modulo, moduloIndex) => (
               <div key={moduloIndex} className="modulo">
-                <h4 className="modulo-titulo">
-                  {modulo.titulo}
-                </h4>
+                <h4 className="modulo-titulo">{modulo.titulo}</h4>
                 <div className="temas-lista">
                   {modulo.temas.map((tema, temaIndex) => {
                     const temaId = `${moduloIndex}-${temaIndex}`;
                     const estaVisto = progreso.videosVistos.includes(temaId);
                     const esActivo = videoActual?.temaId === temaId;
-                    
                     return (
                       <div
                         key={temaIndex}
@@ -193,19 +191,12 @@ const AprendeCurso = () => {
                         onClick={() => seleccionarVideo(tema, modulo.titulo, moduloIndex, temaIndex)}
                       >
                         <div className="tema-icon">
-                          {estaVisto ? (
-                            <CheckCircle size={20} className="check-icon" />
-                          ) : (
-                            <Circle size={20} />
-                          )}
+                          {estaVisto ? <CheckCircle size={20} className="check-icon" /> : <Circle size={20} />}
                         </div>
                         <div className="tema-info">
                           <p className="tema-titulo">{tema.titulo}</p>
                           {tema.duracion && (
-                            <span className="tema-duracion">
-                              <Clock size={14} />
-                              {tema.duracion}
-                            </span>
+                            <span className="tema-duracion"><Clock size={14} />{tema.duracion}</span>
                           )}
                         </div>
                       </div>
@@ -217,15 +208,20 @@ const AprendeCurso = () => {
           </div>
         </aside>
 
-        {/* 🆕 VISTA CONDICIONAL: TEXTO O VIDEO */}
         <main className="aprender-reproductor">
+          {reanudado && videoActual && (
+            <div className="reanudar-banner">
+              <span>📍 Continuaste donde lo dejaste: <strong>{videoActual.titulo}</strong></span>
+              <button onClick={() => setReanudado(false)} aria-label="Cerrar"><X size={16} /></button>
+            </div>
+          )}
+
           {!videoActual ? (
             <div className="no-video">
               <PlayCircle size={64} />
               <p>Selecciona una lección para comenzar</p>
             </div>
           ) : mostrarVistaTexto ? (
-            /* 🆕 VISTA DE TEXTO PARA PROMPTS */
             <div className="vista-texto">
               <div className="texto-container">
                 <div className="texto-header">
@@ -234,11 +230,7 @@ const AprendeCurso = () => {
                     <h2 className="texto-titulo">{videoActual.titulo}</h2>
                   </div>
                   <div className="texto-acciones">
-                    <button 
-                      className="btn-copiar"
-                      onClick={copiarTexto}
-                      title="Copiar contenido"
-                    >
+                    <button className="btn-copiar" onClick={copiarTexto} title="Copiar contenido">
                       {copiado ? <Check size={20} /> : <Copy size={20} />}
                       {copiado ? 'Copiado' : 'Copiar'}
                     </button>
@@ -254,9 +246,7 @@ const AprendeCurso = () => {
                 </div>
 
                 <div className="texto-contenido">
-                  <div className="texto-icono">
-                    <FileText size={48} />
-                  </div>
+                  <div className="texto-icono"><FileText size={48} /></div>
                   <div className="texto-body">
                     {videoActual.descripcion ? (
                       <pre className="texto-pre">{videoActual.descripcion}</pre>
@@ -268,7 +258,6 @@ const AprendeCurso = () => {
               </div>
             </div>
           ) : videoInfo.id ? (
-            /* VISTA DE VIDEO ORIGINAL */
             <>
               <div className="video-container">
                 {videoInfo.tipo === 'youtube' && (
@@ -280,7 +269,6 @@ const AprendeCurso = () => {
                     allowFullScreen
                   ></iframe>
                 )}
-                
                 {videoInfo.tipo === 'drive' && (
                   <iframe
                     src={`https://drive.google.com/file/d/${videoInfo.id}/preview`}
@@ -291,7 +279,7 @@ const AprendeCurso = () => {
                   ></iframe>
                 )}
               </div>
-              
+
               <div className="video-info">
                 <div className="video-header">
                   <div>
@@ -315,17 +303,29 @@ const AprendeCurso = () => {
               <p>Selecciona un video para comenzar</p>
             </div>
           )}
+
+          {/* 🆕 Navegación entre lecciones */}
+          {videoActual && lecciones.length > 1 && (
+            <div className="leccion-nav">
+              <button className="nav-btn" onClick={() => irLeccion(-1)} disabled={!hayAnterior}>
+                <ChevronLeft size={18} /> Anterior
+              </button>
+              <span className="nav-pos">Lección {idxActual + 1} de {lecciones.length}</span>
+              <button className="nav-btn primary" onClick={() => irLeccion(1)} disabled={!haySiguiente}>
+                Siguiente <ChevronRight size={18} />
+              </button>
+            </div>
+          )}
         </main>
       </div>
     </div>
   );
 };
 
-// Función auxiliar
 function contarTotalTemas(curso) {
   let total = 0;
   if (curso.temario) {
-    curso.temario.forEach(modulo => {
+    curso.temario.forEach((modulo) => {
       if (modulo.temas) total += modulo.temas.length;
     });
   }
