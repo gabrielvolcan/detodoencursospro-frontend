@@ -40,7 +40,6 @@ const Footer = () => {
           <a href="mailto:contacto@detodoencursos.com">
             <Mail size={15} /> contacto@detodoencursos.com
           </a>
-          {/* TODO: completar con tu WhatsApp e Instagram reales */}
         </div>
       </div>
 

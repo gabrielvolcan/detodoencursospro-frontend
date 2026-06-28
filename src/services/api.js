@@ -24,9 +24,17 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('usuario');
-      window.location.href = '/login';
+      // No redirigir en intentos de login/registro: deja que la página muestre el error
+      const url = error.config?.url || '';
+      const esIntentoAuth = url.includes('/auth/login') || url.includes('/auth/registro');
+      if (!esIntentoAuth) {
+        // Sesión expirada o token inválido en una ruta protegida
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      }
     }
     return Promise.reject(error);
   }
