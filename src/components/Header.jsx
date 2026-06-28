@@ -8,14 +8,6 @@ import { useCarrito } from '../context/CarritoContext';
 import { usePais } from '../context/PaisContext';
 import '../styles/publico.css';
 
-const Logo = () => (
-  <svg className="logo-mk" viewBox="0 0 40 40" fill="none">
-    <path d="M20 3 33.86 11v18L20 37 6.14 29V11z" stroke="#16e08a" strokeWidth="2.3" />
-    <path d="M13.5 13.5h3.5a8 6.5 0 0 1 0 13h-3.5z" stroke="#16e08a" strokeWidth="2.3" strokeLinejoin="round" />
-    <path d="M27 14.5a7 7 0 1 0 0 11" stroke="#f3f3f5" strokeWidth="2.3" strokeLinecap="round" />
-  </svg>
-);
-
 const Header = () => {
   const { usuario, estaAutenticado, cerrarSesion, esAdmin } = useAuth();
   const { items } = useCarrito();
@@ -42,8 +34,8 @@ const Header = () => {
     <header className="pub-hdr">
       <div className="shell hdr-in">
         <button className="logo" onClick={() => ir('/')}>
-          <Logo />
-          <span className="logo-tx"><b>Detodo</b><i>Cursos</i></span>
+          <img className="logo-mk" src="/images/dtcisotipo.webp" alt="Detodo en Cursos" />
+          <img className="logo-tx-img" src="/images/letras_y_eslogan.webp" alt="Detodo en Cursos" />
         </button>
 
         <nav className="nav">

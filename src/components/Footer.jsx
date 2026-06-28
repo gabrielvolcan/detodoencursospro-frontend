@@ -1,5 +1,5 @@
 import { useLocation, Link } from 'react-router-dom';
-import { BookOpen, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import '../styles/publico.css';
 
 const Footer = () => {
@@ -13,7 +13,7 @@ const Footer = () => {
         <div className="ft-grid">
           <div>
             <div className="ft-brand">
-              <BookOpen className="ic ic-lg green" />
+              <img src="/images/dtcisotipo.webp" alt="Detodo en Cursos" style={{ width: 34, height: 34, objectFit: 'contain' }} />
               <b className="green" style={{ fontSize: 17 }}>Detodo en Cursos</b>
             </div>
             <p className="muted sm" style={{ maxWidth: 300, lineHeight: 1.6, margin: 0 }}>
