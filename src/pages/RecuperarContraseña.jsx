@@ -1,20 +1,19 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import { authAPI } from '../services/api';
-import './Auth.css';
+import '../styles/publico.css';
 
 const RecuperarContraseña = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [enviado, setEnviado] = useState(false);
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setError('');
-    setCargando(true);
-
+    setError(''); setCargando(true);
     try {
       await authAPI.recuperarContrasena(email);
       setEnviado(true);
@@ -25,111 +24,41 @@ const RecuperarContraseña = () => {
     }
   };
 
-  if (enviado) {
-    return (
-      <div className="auth-page">
-        <div className="auth-container">
-          <div className="auth-box">
-            <div className="auth-header">
-              <CheckCircle size={64} className="auth-icon" style={{ color: '#00ff88' }} />
-              <h1>Revisa tu Email</h1>
-              <p>Te enviamos instrucciones para recuperar tu contraseña</p>
-            </div>
-
-            <div className="email-enviado-content">
-              <div className="info-box">
-                <h3>📧 Email enviado a:</h3>
-                <p className="email-destacado">{email}</p>
-              </div>
-
-              <div className="instrucciones-box">
-                <h4>Pasos a seguir:</h4>
-                <ol>
-                  <li>Abre tu bandeja de entrada</li>
-                  <li>Busca el email de "Detodo en Cursos Pro"</li>
-                  <li>Haz click en el enlace de recuperación</li>
-                  <li>Crea tu nueva contraseña</li>
-                </ol>
-              </div>
-
-              <div className="notas-box">
-                <p><strong>💡 Notas importantes:</strong></p>
-                <ul>
-                  <li>El enlace expira en 1 hora</li>
-                  <li>Revisa tu carpeta de spam si no lo encuentras</li>
-                  <li>Solo puedes usar el enlace una vez</li>
-                </ul>
-              </div>
-
-              <Link to="/login" className="btn-volver">
-                <ArrowLeft size={18} />
-                Volver al Login
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="auth-page">
-      <div className="auth-container">
-        <div className="auth-box">
-          <div className="auth-header">
-            <Mail size={48} className="auth-icon" />
-            <h1>Recuperar Contraseña</h1>
-            <p>Ingresa tu email y te enviaremos instrucciones</p>
+    <div className="pub">
+      <section className="auth">
+        <div className="auth-bg"></div>
+        {enviado ? (
+          <div className="auth-card tc">
+            <div className="auth-ic"><CheckCircle className="ic ic-lg" /></div>
+            <h1 className="h2">Revisa tu Email</h1>
+            <p className="muted" style={{ margin: '10px 0 20px' }}>Te enviamos instrucciones para recuperar tu contraseña a:</p>
+            <p className="green fw7" style={{ marginBottom: 22 }}>{email}</p>
+            <div className="note" style={{ textAlign: 'left', marginBottom: 24 }}>
+              El enlace expira en 1 hora · Revisa tu carpeta de spam si no lo encuentras · Solo puedes usarlo una vez.
+            </div>
+            <button className="btn btnp btn-lg" onClick={() => navigate('/login')}><ArrowLeft className="ic ic-s" />Volver al Login</button>
           </div>
+        ) : (
+          <form className="auth-card" onSubmit={submit}>
+            <div className="auth-ic"><Mail className="ic ic-lg" /></div>
+            <h1 className="h2 tc">Recuperar Contraseña</h1>
+            <p className="muted tc" style={{ margin: '8px 0 30px' }}>Ingresa tu email y te enviaremos instrucciones</p>
 
-          {error && (
-            <div className="alert alert-error">
-              {error}
+            {error && <div className="alert alert-err">{error}</div>}
+
+            <label className="field" style={{ marginBottom: 26 }}>
+              <span className="lbl"><Mail className="ic ic-s" />Email</span>
+              <input className="inp" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="tu@email.com" autoComplete="email" />
+            </label>
+            <button type="submit" className="btn btnp btn-block btn-lg" disabled={cargando}>{cargando ? 'Enviando...' : 'Enviar Instrucciones'}</button>
+            <div className="rule" style={{ margin: '24px 0' }}></div>
+            <div className="tc">
+              <button type="button" className="green fw7 pointer fx ac jc gap8" style={{ background: 'none', border: 0, margin: '0 auto' }} onClick={() => navigate('/login')}><ArrowLeft className="ic ic-s" />Volver al login</button>
             </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="auth-form">
-            <div className="form-group">
-              <label htmlFor="email">
-                <Mail size={18} />
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="tu@email.com"
-                autoComplete="email"
-              />
-            </div>
-
-            <button 
-              type="submit" 
-              className="btn-submit"
-              disabled={cargando}
-            >
-              {cargando ? (
-                <>
-                  <div className="spinner-small"></div>
-                  Enviando...
-                </>
-              ) : (
-                'Enviar Instrucciones'
-              )}
-            </button>
           </form>
-
-          <div className="auth-footer">
-            <Link to="/login" className="link-volver">
-              <ArrowLeft size={16} />
-              Volver al login
-            </Link>
-          </div>
-        </div>
-      </div>
+        )}
+      </section>
     </div>
   );
 };

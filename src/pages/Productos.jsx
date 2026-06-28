@@ -1,308 +1,103 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import ProductoCard from '../components/ProductoCard';
+import { useSearchParams } from 'react-router-dom';
+import { Search, Package, BookOpen, FileText, Palette, Code } from 'lucide-react';
 import { productosAPI } from '../services/api';
-import { 
-  Search, Filter, SlidersHorizontal, Grid, List,
-  BookOpen, FileText, Package, Download, Palette, Code
-} from 'lucide-react';
-import './Productos.css';
+import ProductoCardPub from '../components/publico/ProductoCardPub';
+import '../styles/publico.css';
+
+const TIPOS = [
+  { valor: 'todos', label: 'Todos', ic: Package },
+  { valor: 'curso', label: 'Cursos', ic: BookOpen },
+  { valor: 'libro', label: 'Libros', ic: FileText },
+  { valor: 'ebook', label: 'Ebooks', ic: BookOpen },
+  { valor: 'plantilla', label: 'Plantillas', ic: Palette },
+  { valor: 'guia', label: 'Guías', ic: FileText },
+  { valor: 'software', label: 'Software', ic: Code },
+  { valor: 'recurso', label: 'Recursos', ic: Package },
+];
 
 const Productos = () => {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
   const [productos, setProductos] = useState([]);
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState('');
-  
-  // Filtros
   const [busqueda, setBusqueda] = useState('');
-  const [tipoSeleccionado, setTipoSeleccionado] = useState(searchParams.get('tipo') || 'todos');
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todas');
-  const [ordenamiento, setOrdenamiento] = useState('recientes');
-  const [vistaGrid, setVistaGrid] = useState(true);
-  const [mostrarFiltros, setMostrarFiltros] = useState(false);
-
-  // Categorías disponibles
-  const [categorias, setCategorias] = useState([]);
-  
-  // Tipos de productos
-  const tiposProducto = [
-    { valor: 'todos', label: 'Todos los productos', icono: Package },
-    { valor: 'curso', label: 'Cursos', icono: BookOpen },
-    { valor: 'libro', label: 'Libros PDF', icono: FileText },
-    { valor: 'ebook', label: 'Ebooks', icono: BookOpen },
-    { valor: 'plantilla', label: 'Plantillas', icono: Palette },
-    { valor: 'guia', label: 'Guías', icono: FileText },
-    { valor: 'software', label: 'Software', icono: Code },
-    { valor: 'recurso', label: 'Recursos', icono: Package }
-  ];
+  const [tipo, setTipo] = useState(searchParams.get('tipo') || 'todos');
+  const [orden, setOrden] = useState('recientes');
 
   useEffect(() => {
-    cargarProductos();
+    setCargando(true);
+    productosAPI.obtenerTodos()
+      .then(({ data }) => {
+        const lista = Array.isArray(data) ? data : (data?.productos || data?.data || []);
+        setProductos(lista.filter((p) => p && p._id));
+      })
+      .catch(() => setProductos([]))
+      .finally(() => setCargando(false));
   }, []);
 
-  useEffect(() => {
-    filtrarProductos();
-  }, [productos, busqueda, tipoSeleccionado, categoriaSeleccionada, ordenamiento]);
-
-  const cargarProductos = async () => {
-    try {
-      setCargando(true);
-      const response = await productosAPI.obtenerTodos();
-
-      // ✅ CORRECCIÓN: Asegurarse de que siempre sea un array
-      let productosData = [];
-      
-      if (Array.isArray(response.data)) {
-        // Si response.data ya es un array
-        productosData = response.data;
-      } else if (response.data && Array.isArray(response.data.productos)) {
-        // Si viene como { productos: [...] }
-        productosData = response.data.productos;
-      } else if (response.data && Array.isArray(response.data.data)) {
-        // Si viene como { data: [...] }
-        productosData = response.data.data;
-      } else {
-        // Si no es ninguno de los casos anteriores
-        console.warn('Formato de respuesta inesperado:', response.data);
-        productosData = [];
-      }
-      
-      setProductos(productosData);
-      
-      // Extraer categorías únicas
-      const categoriasUnicas = [...new Set(productosData.map(p => p.categoria))].filter(Boolean);
-      setCategorias(categoriasUnicas);
-      
-    } catch (error) {
-      console.error('Error cargando productos:', error);
-      setError('Error al cargar productos');
-      setProductos([]); // ✅ Asegurar que sea array vacío en caso de error
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  const filtrarProductos = () => {
-    let resultado = [...productos];
-
-    // Filtrar por búsqueda
+  let lista = productos.filter((p) => {
+    if (tipo !== 'todos' && p.tipo !== tipo) return false;
     if (busqueda.trim()) {
-      resultado = resultado.filter(p => 
-        p.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
-        p.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
-        p.categoria?.toLowerCase().includes(busqueda.toLowerCase())
-      );
+      const q = busqueda.toLowerCase();
+      return (p.titulo || '').toLowerCase().includes(q) || (p.descripcion || '').toLowerCase().includes(q);
     }
+    return true;
+  });
+  lista = [...lista].sort((a, b) => {
+    if (orden === 'precio-asc') return (a.precioUSD || 0) - (b.precioUSD || 0);
+    if (orden === 'precio-desc') return (b.precioUSD || 0) - (a.precioUSD || 0);
+    if (orden === 'antiguos') return new Date(a.createdAt) - new Date(b.createdAt);
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
 
-    // Filtrar por tipo
-    if (tipoSeleccionado !== 'todos') {
-      resultado = resultado.filter(p => p.tipo === tipoSeleccionado);
-    }
-
-    // Filtrar por categoría
-    if (categoriaSeleccionada !== 'todas') {
-      resultado = resultado.filter(p => p.categoria === categoriaSeleccionada);
-    }
-
-    // Ordenar
-    switch (ordenamiento) {
-      case 'recientes':
-        resultado.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        break;
-      case 'antiguos':
-        resultado.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        break;
-      case 'precio-asc':
-        resultado.sort((a, b) => a.precioUSD - b.precioUSD);
-        break;
-      case 'precio-desc':
-        resultado.sort((a, b) => b.precioUSD - a.precioUSD);
-        break;
-      case 'populares':
-        resultado.sort((a, b) => (b.estudiantes || 0) - (a.estudiantes || 0));
-        break;
-      case 'valoracion':
-        resultado.sort((a, b) => (b.valoracion?.promedio || 0) - (a.valoracion?.promedio || 0));
-        break;
-      default:
-        break;
-    }
-
-    setProductosFiltrados(resultado);
-  };
-
-  const cambiarTipo = (tipo) => {
-    setTipoSeleccionado(tipo);
-    setSearchParams({ tipo: tipo });
-  };
-
-  if (cargando) {
-    return (
-      <div className="productos-loading">
-        <div className="spinner"></div>
-        <p>Cargando productos...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="productos-error">
-        <p>{error}</p>
-        <button onClick={cargarProductos}>Reintentar</button>
-      </div>
-    );
-  }
+  const cambiarTipo = (t) => { setTipo(t); setSearchParams(t === 'todos' ? {} : { tipo: t }); };
 
   return (
-    <div className="productos-page">
-      {/* ========================================
-          HERO SECTION
-      ======================================== */}
-      <section className="productos-hero">
-        <div className="container">
-          <h1>Productos Digitales</h1>
-          <p>Cursos, libros, plantillas y más recursos para ti</p>
+    <div className="pub">
+      <div className="pagehead">
+        <div className="hero-bg"></div>
+        <div className="shell">
+          <h1 className="h1">Productos Digitales</h1>
+          <p className="lead" style={{ marginTop: 12 }}>Cursos, libros, plantillas y más recursos para ti</p>
         </div>
-      </section>
+      </div>
 
-      {/* ========================================
-          FILTROS Y BÚSQUEDA
-      ======================================== */}
-      <section className="productos-controles">
-        <div className="container">
-          {/* Barra de búsqueda */}
-          <div className="buscador">
-            <Search size={20} />
-            <input
-              type="text"
-              placeholder="Buscar productos..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-            />
+      <section className="sec" style={{ paddingTop: 40 }}>
+        <div className="shell">
+          <div className="searchbar" style={{ maxWidth: 760, margin: '0 auto 24px' }}>
+            <Search className="ic" />
+            <input placeholder="Buscar productos..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
           </div>
 
-          {/* Filtros rápidos por tipo */}
-          <div className="tipos-filtros">
-            {tiposProducto.map(tipo => {
-              const Icono = tipo.icono;
-              return (
-                <button
-                  key={tipo.valor}
-                  className={`tipo-btn ${tipoSeleccionado === tipo.valor ? 'activo' : ''}`}
-                  onClick={() => cambiarTipo(tipo.valor)}
-                >
-                  <Icono size={18} />
-                  <span>{tipo.label}</span>
-                </button>
-              );
-            })}
+          <div className="chips jc" style={{ justifyContent: 'center', marginBottom: 24 }}>
+            {TIPOS.map(({ valor, label, ic: Ic }) => (
+              <button key={valor} className={`chip ${tipo === valor ? 'on' : ''}`} onClick={() => cambiarTipo(valor)}>
+                <Ic className="ic ic-s" />{label}
+              </button>
+            ))}
           </div>
 
-          {/* Controles adicionales */}
-          <div className="controles-adicionales">
-            <button 
-              className="btn-filtros"
-              onClick={() => setMostrarFiltros(!mostrarFiltros)}
-            >
-              <SlidersHorizontal size={18} />
-              Filtros
-            </button>
-
-            <select 
-              value={ordenamiento}
-              onChange={(e) => setOrdenamiento(e.target.value)}
-              className="select-orden"
-            >
+          <div className="fx ac jb wrap gap12" style={{ paddingBottom: 18, marginBottom: 26, borderBottom: '1px solid var(--bd)' }}>
+            <select className="sel" value={orden} onChange={(e) => setOrden(e.target.value)}>
               <option value="recientes">Más recientes</option>
               <option value="antiguos">Más antiguos</option>
               <option value="precio-asc">Precio: menor a mayor</option>
               <option value="precio-desc">Precio: mayor a menor</option>
-              <option value="populares">Más populares</option>
-              <option value="valoracion">Mejor valorados</option>
             </select>
-
-            <div className="vista-toggle">
-              <button 
-                className={vistaGrid ? 'activo' : ''}
-                onClick={() => setVistaGrid(true)}
-              >
-                <Grid size={18} />
-              </button>
-              <button 
-                className={!vistaGrid ? 'activo' : ''}
-                onClick={() => setVistaGrid(false)}
-              >
-                <List size={18} />
-              </button>
-            </div>
+            <span className="muted sm">{lista.length} productos encontrados</span>
           </div>
 
-          {/* Panel de filtros avanzados */}
-          {mostrarFiltros && (
-            <div className="filtros-avanzados">
-              <div className="filtro-grupo">
-                <label>Categoría</label>
-                <select 
-                  value={categoriaSeleccionada}
-                  onChange={(e) => setCategoriaSeleccionada(e.target.value)}
-                >
-                  <option value="todas">Todas las categorías</option>
-                  {categorias.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
-
-              <button 
-                className="btn-limpiar-filtros"
-                onClick={() => {
-                  setBusqueda('');
-                  setTipoSeleccionado('todos');
-                  setCategoriaSeleccionada('todas');
-                  setOrdenamiento('recientes');
-                }}
-              >
-                Limpiar filtros
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ========================================
-          RESULTADOS
-      ======================================== */}
-      <section className="productos-resultados">
-        <div className="container">
-          <div className="resultados-info">
-            <p>
-              {productosFiltrados.length} producto{productosFiltrados.length !== 1 ? 's' : ''} encontrado{productosFiltrados.length !== 1 ? 's' : ''}
-            </p>
-          </div>
-
-          {productosFiltrados.length === 0 ? (
-            <div className="sin-resultados">
-              <Package size={64} />
-              <h3>No se encontraron productos</h3>
-              <p>Intenta cambiar los filtros o la búsqueda</p>
-              <button onClick={() => {
-                setBusqueda('');
-                setTipoSeleccionado('todos');
-                setCategoriaSeleccionada('todas');
-              }}>
-                Ver todos los productos
-              </button>
+          {cargando ? (
+            <p className="muted">Cargando productos...</p>
+          ) : lista.length > 0 ? (
+            <div className="cards-3">
+              {lista.map((p, i) => <ProductoCardPub key={p._id} producto={p} index={i} />)}
             </div>
           ) : (
-            <div className={`productos-grid ${vistaGrid ? 'grid' : 'lista'}`}>
-              {productosFiltrados.map(producto => (
-                <ProductoCard key={producto._id} producto={producto} />
-              ))}
+            <div className="empty">
+              <div className="empty-ic"><Package className="ic ic-lg" /></div>
+              <h2 className="h3">No se encontraron productos</h2>
+              <p className="muted" style={{ marginTop: 8 }}>Intenta cambiar los filtros o la búsqueda</p>
             </div>
           )}
         </div>

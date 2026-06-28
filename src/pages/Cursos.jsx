@@ -1,189 +1,86 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { cursosAPI } from '../services/api';
-import CursoCard from '../components/CursoCard';
-import './Cursos.css';
+import CursoCardPub from '../components/publico/CursoCardPub';
+import '../styles/publico.css';
 
 const Cursos = () => {
   const [cursos, setCursos] = useState([]);
   const [cargando, setCargando] = useState(true);
-  const [categorias, setCategorias] = useState([]);
-  const [niveles, setNiveles] = useState([]);
-  
-  const [filtros, setFiltros] = useState({
-    categoria: 'Todos',
-    nivel: 'Todos',
-    busqueda: ''
-  });
-
-  const [mostrarFiltros, setMostrarFiltros] = useState(false);
+  const [categorias, setCategorias] = useState(['Todos']);
+  const [niveles, setNiveles] = useState(['Todos']);
+  const [filtros, setFiltros] = useState({ categoria: 'Todos', nivel: 'Todos', busqueda: '' });
 
   useEffect(() => {
-    cargarMetadata();
+    Promise.all([cursosAPI.obtenerCategorias(), cursosAPI.obtenerNiveles()])
+      .then(([c, n]) => { setCategorias(['Todos', ...c.data]); setNiveles(['Todos', ...n.data]); })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
-    cargarCursos();
+    setCargando(true);
+    const params = {};
+    if (filtros.categoria !== 'Todos') params.categoria = filtros.categoria;
+    if (filtros.nivel !== 'Todos') params.nivel = filtros.nivel;
+    if (filtros.busqueda) params.busqueda = filtros.busqueda;
+    cursosAPI.obtenerTodos(params)
+      .then(({ data }) => setCursos((data || []).filter((c) => c && c._id)))
+      .catch(() => setCursos([]))
+      .finally(() => setCargando(false));
   }, [filtros]);
 
-  const cargarMetadata = async () => {
-    try {
-      const [categoriasRes, nivelesRes] = await Promise.all([
-        cursosAPI.obtenerCategorias(),
-        cursosAPI.obtenerNiveles()
-      ]);
-      setCategorias(['Todos', ...categoriasRes.data]);
-      setNiveles(['Todos', ...nivelesRes.data]);
-    } catch (error) {
-      console.error('Error cargando metadata:', error);
-    }
-  };
-
-  const cargarCursos = async () => {
-    setCargando(true);
-    try {
-      const params = {};
-      if (filtros.categoria !== 'Todos') params.categoria = filtros.categoria;
-      if (filtros.nivel !== 'Todos') params.nivel = filtros.nivel;
-      if (filtros.busqueda) params.busqueda = filtros.busqueda;
-
-      const { data } = await cursosAPI.obtenerTodos(params);
-      
-      // ========================================
-      // 🛡️ FILTRAR CURSOS NULL O INVÁLIDOS
-      // ========================================
-      const cursosValidos = (data || []).filter(curso => curso && curso._id);
-      setCursos(cursosValidos);
-    } catch (error) {
-      console.error('Error cargando cursos:', error);
-      setCursos([]); // Set array vacío en caso de error
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  const handleBusqueda = (e) => {
-    setFiltros({ ...filtros, busqueda: e.target.value });
-  };
-
-  const handleFiltro = (tipo, valor) => {
-    setFiltros({ ...filtros, [tipo]: valor });
-  };
-
-  const limpiarFiltros = () => {
-    setFiltros({
-      categoria: 'Todos',
-      nivel: 'Todos',
-      busqueda: ''
-    });
-  };
-
-  const hayFiltrosActivos = filtros.categoria !== 'Todos' || 
-                            filtros.nivel !== 'Todos' || 
-                            filtros.busqueda !== '';
+  const set = (k, v) => setFiltros((f) => ({ ...f, [k]: v }));
 
   return (
-    <div className="cursos-page">
-      <div className="cursos-header">
-        <div className="container">
-          <h1>Catálogo de Cursos</h1>
-          <p>Encuentra el curso perfecto para tu nivel y objetivos</p>
+    <div className="pub">
+      <div className="pagehead">
+        <div className="hero-bg"></div>
+        <div className="shell">
+          <h1 className="h1">Catálogo de Cursos</h1>
+          <p className="lead" style={{ marginTop: 12 }}>Encuentra el curso perfecto para tu nivel y objetivos</p>
         </div>
       </div>
 
-      <div className="container py-4">
-        {/* Barra de búsqueda y filtros */}
-        <div className="filtros-container">
-          <div className="busqueda-box">
-            <Search size={20} />
-            <input
-              type="text"
-              placeholder="Buscar cursos..."
-              value={filtros.busqueda}
-              onChange={handleBusqueda}
-              className="input-busqueda"
-            />
-          </div>
-
-          <button 
-            className="btn-filtros-mobile"
-            onClick={() => setMostrarFiltros(!mostrarFiltros)}
-          >
-            <Filter size={20} />
-            Filtros
-          </button>
-
-          <div className={`filtros-panel ${mostrarFiltros ? 'mostrar' : ''}`}>
-            <div className="filtro-grupo">
-              <label>Categoría</label>
-              <div className="filtro-opciones">
-                {categorias.map(cat => (
-                  <button
-                    key={cat}
-                    className={`filtro-btn ${filtros.categoria === cat ? 'activo' : ''}`}
-                    onClick={() => handleFiltro('categoria', cat)}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
+      <section className="sec" style={{ paddingTop: 40 }}>
+        <div className="shell">
+          <div className="fpanel">
+            <div className="searchbar">
+              <Search className="ic" />
+              <input placeholder="Buscar cursos..." value={filtros.busqueda} onChange={(e) => set('busqueda', e.target.value)} />
             </div>
-
-            <div className="filtro-grupo">
-              <label>Nivel</label>
-              <div className="filtro-opciones">
-                {niveles.map(nivel => (
-                  <button
-                    key={nivel}
-                    className={`filtro-btn ${filtros.nivel === nivel ? 'activo' : ''}`}
-                    onClick={() => handleFiltro('nivel', nivel)}
-                  >
-                    {nivel}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {hayFiltrosActivos && (
-              <button className="btn-limpiar" onClick={limpiarFiltros}>
-                <X size={18} />
-                Limpiar Filtros
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Resultados */}
-        <div className="cursos-resultados">
-          <div className="resultados-header">
-            <h2>{cursos.length} {cursos.length === 1 ? 'Curso' : 'Cursos'} Encontrado{cursos.length !== 1 ? 's' : ''}</h2>
-          </div>
-
-          {cargando ? (
-            <div className="loading-container">
-              <div className="spinner"></div>
-              <p>Cargando cursos...</p>
-            </div>
-          ) : cursos.length > 0 ? (
-            <div className="grid grid-3">
-              {cursos.map(curso => (
-                <CursoCard key={curso._id} curso={curso} />
+            <p className="flbl">Categoría</p>
+            <div className="chips" style={{ marginBottom: 20 }}>
+              {categorias.map((cat) => (
+                <button key={cat} className={`chip ${filtros.categoria === cat ? 'on' : ''}`} onClick={() => set('categoria', cat)}>{cat}</button>
               ))}
             </div>
+            <p className="flbl">Nivel</p>
+            <div className="chips">
+              {niveles.map((nv) => (
+                <button key={nv} className={`chip ${filtros.nivel === nv ? 'on' : ''}`} onClick={() => set('nivel', nv)}>{nv}</button>
+              ))}
+            </div>
+          </div>
+
+          <h2 className="h2" style={{ margin: '38px 0 22px' }}>
+            {cursos.length} {cursos.length === 1 ? 'Curso Encontrado' : 'Cursos Encontrados'}
+          </h2>
+
+          {cargando ? (
+            <p className="muted">Cargando cursos...</p>
+          ) : cursos.length > 0 ? (
+            <div className="cards-4">
+              {cursos.map((c, i) => <CursoCardPub key={c._id} curso={c} index={i} />)}
+            </div>
           ) : (
-            <div className="no-resultados">
-              <Search size={64} />
-              <h3>No se encontraron cursos</h3>
-              <p>Intenta ajustar los filtros o buscar con otros términos</p>
-              {hayFiltrosActivos && (
-                <button className="btn-primary mt-3" onClick={limpiarFiltros}>
-                  Ver Todos los Cursos
-                </button>
-              )}
+            <div className="empty">
+              <div className="empty-ic"><Search className="ic ic-lg" /></div>
+              <h2 className="h3">No se encontraron cursos</h2>
+              <p className="muted" style={{ marginTop: 8 }}>Intenta ajustar los filtros o buscar con otros términos</p>
             </div>
           )}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

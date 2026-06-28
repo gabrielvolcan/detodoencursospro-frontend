@@ -1,298 +1,131 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Shield, Award, Users, TrendingUp, ArrowRight, Video, Clock, Star } from 'lucide-react';
-import { cursosAPI } from '../services/api';
-import CursoCard from '../components/CursoCard';
-import './Home.css';
+import { useNavigate } from 'react-router-dom';
+import {
+  Video, Users, Star, ArrowRight, Shield, Clock, Award, Headphones, TrendingUp,
+} from 'lucide-react';
+import { cursosAPI, productosAPI } from '../services/api';
+import CursoCardPub from '../components/publico/CursoCardPub';
+import ProductoCardPub from '../components/publico/ProductoCardPub';
+import '../styles/publico.css';
+
+const FEATURES = [
+  { ic: Shield, t: 'Certificación Profesional', s: 'Reconocida' },
+  { ic: Clock, t: 'Acceso de por Vida', s: 'Sin límites de tiempo' },
+  { ic: Award, t: 'Instructores Expertos', s: 'Profesionales certificados' },
+  { ic: Video, t: 'Contenido Premium', s: 'Videos Full HD actualizados' },
+  { ic: Users, t: 'Comunidad Activa', s: '+1,500 estudiantes' },
+  { ic: Headphones, t: 'Soporte 24/7', s: 'Ayuda cuando la necesites' },
+];
+
+const BENEFITS = [
+  { ic: Video, t: 'Contenido Práctico', p: 'Videos paso a paso con casos reales' },
+  { ic: Users, t: 'Soporte Continuo', p: 'Comunidad activa y respuesta a tus dudas' },
+  { ic: Award, t: 'Certificación', p: 'Certificado oficial al completar cada curso' },
+  { ic: TrendingUp, t: 'Actualización Constante', p: 'Nuevas tecnologías y tendencias del mercado' },
+];
 
 const Home = () => {
-  const [cursosDestacados, setCursosDestacados] = useState([]);
-  const [cargando, setCargando] = useState(true);
+  const navigate = useNavigate();
+  const [cursos, setCursos] = useState([]);
+  const [productos, setProductos] = useState([]);
 
   useEffect(() => {
-    cargarCursosDestacados();
-    
-    // Intersection Observer para animaciones al hacer scroll
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-in');
-        }
-      });
-    }, observerOptions);
-
-    // Observar elementos con clase animate-on-scroll
-    const elements = document.querySelectorAll('.animate-on-scroll');
-    elements.forEach(el => observer.observe(el));
-
-    return () => observer.disconnect();
+    cursosAPI.obtenerTodos({ destacados: 'true' })
+      .then(({ data }) => setCursos((data || []).filter((c) => c && c._id).slice(0, 3)))
+      .catch(() => setCursos([]));
+    productosAPI.obtenerTodos()
+      .then(({ data }) => {
+        const lista = Array.isArray(data) ? data : (data?.productos || []);
+        setProductos(lista.filter((p) => p && p._id).slice(0, 3));
+      })
+      .catch(() => setProductos([]));
   }, []);
 
-  const cargarCursosDestacados = async () => {
-    try {
-      const { data } = await cursosAPI.obtenerTodos({ destacados: 'true' });
-      
-      // ========================================
-      // 🛡️ FILTRAR CURSOS NULL O INVÁLIDOS
-      // ========================================
-      const cursosValidos = (data || [])
-        .filter(curso => curso && curso._id)
-        .slice(0, 3);
-      
-      setCursosDestacados(cursosValidos);
-    } catch (error) {
-      console.error('Error cargando cursos:', error);
-      setCursosDestacados([]); // Set array vacío en caso de error
-    } finally {
-      setCargando(false);
-    }
-  };
-
   return (
-    <div className="home">
-      {/* Hero Section */}
+    <div className="pub">
+      {/* HERO */}
       <section className="hero">
         <div className="hero-bg"></div>
-        <div className="container hero-content">
-          <div className="hero-text">
-            <h1 className="hero-titulo">
-              Aprende Nuevas Habilidades
-              <span className="gradient-text"> Transforma tu Futuro</span>
-            </h1>
-            <p className="hero-descripcion">
-              Accede a cursos profesionales en diversas áreas. Certificaciones reconocidas, 
-              instructores expertos y contenido actualizado para impulsar tu carrera.
+        <div className="hero-grid"></div>
+        <div className="shell hero-in">
+          <div>
+            <h1 className="display">Aprende Nuevas Habilidades<br /><span className="green">Transforma tu Futuro</span></h1>
+            <p className="lead" style={{ marginTop: 22, maxWidth: 480 }}>
+              Accede a cursos profesionales en diversas áreas. Certificaciones reconocidas, instructores expertos y contenido actualizado para impulsar tu carrera.
             </p>
-            <div className="hero-stats">
-              <div className="stat">
-                <Video size={24} />
-                <div>
-                  <strong>+50</strong>
-                  <span>Horas de Video</span>
-                </div>
-              </div>
-              <div className="stat">
-                <Users size={24} />
-                <div>
-                  <strong>+1,500</strong>
-                  <span>Estudiantes</span>
-                </div>
-              </div>
-              <div className="stat">
-                <Star size={24} />
-                <div>
-                  <strong>4.9/5</strong>
-                  <span>Calificación</span>
-                </div>
-              </div>
+            <div className="stats">
+              <div className="stat"><Video className="ic" /><div><b>+50</b><span>Horas de Video</span></div></div>
+              <div className="stat"><Users className="ic" /><div><b>+1,500</b><span>Estudiantes</span></div></div>
+              <div className="stat"><Star className="ic star" /><div><b>4.9/5</b><span>Calificación</span></div></div>
             </div>
-            <div className="hero-actions">
-              <Link to="/cursos" className="btn-primary">
-                Ver Todos los Cursos
-                <ArrowRight size={20} />
-              </Link>
-              <Link to="/registro" className="btn-secondary">
-                Registrarse Gratis
-              </Link>
+            <div className="fx ac gap12 wrap">
+              <button className="btn btnp btn-lg" onClick={() => navigate('/cursos')}>Ver Todos los Cursos<ArrowRight className="ic" /></button>
+              <button className="btn btno btn-lg" onClick={() => navigate('/registro')}>Registrarse Gratis</button>
             </div>
           </div>
-          
-          {/* Grid simétrico de características - NUEVO */}
-          <div className="hero-visual">
-            <div className="features-grid">
-              <div className="feature-card feature-1">
-                <div className="feature-icon">
-                  <Shield size={32} />
-                </div>
-                <h4>Certificación Profesional</h4>
-                <p>Reconocida internacionalmente</p>
+          <div className="feat-grid">
+            {FEATURES.map(({ ic: Ic, t, s }) => (
+              <div className="feat" key={t}>
+                <div className="feat-ic"><Ic className="ic" /></div>
+                <b>{t}</b><span>{s}</span>
               </div>
-              
-              <div className="feature-card feature-2">
-                <div className="feature-icon">
-                  <Clock size={32} />
-                </div>
-                <h4>Acceso de por Vida</h4>
-                <p>Sin límites de tiempo</p>
-              </div>
-              
-              <div className="feature-card feature-3">
-                <div className="feature-icon">
-                  <Award size={32} />
-                </div>
-                <h4>Instructores Expertos</h4>
-                <p>Profesionales certificados</p>
-              </div>
-              
-              <div className="feature-card feature-4">
-                <div className="feature-icon">
-                  <Video size={32} />
-                </div>
-                <h4>Contenido Premium</h4>
-                <p>Videos Full HD actualizados</p>
-              </div>
-              
-              <div className="feature-card feature-5">
-                <div className="feature-icon">
-                  <Users size={32} />
-                </div>
-                <h4>Comunidad Activa</h4>
-                <p>+1,500 estudiantes</p>
-              </div>
-              
-              <div className="feature-card feature-6">
-                <div className="feature-icon">
-                  <TrendingUp size={32} />
-                </div>
-                <h4>Soporte 24/7</h4>
-                <p>Ayuda cuando la necesites</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Características */}
-      <section className="caracteristicas py-5">
-        <div className="container">
-          <div className="grid grid-4">
-            <div className="caracteristica">
-              <div className="caracteristica-icon">
-                <Video />
+      {/* BENEFICIOS */}
+      <div className="bene-band">
+        <div className="shell">
+          <div className="bene-grid">
+            {BENEFITS.map(({ ic: Ic, t, p }) => (
+              <div className="bene" key={t}>
+                <div className="bene-ic"><Ic className="ic ic-lg" /></div>
+                <h3 className="h3">{t}</h3>
+                <p>{p}</p>
               </div>
-              <h3>Contenido Práctico</h3>
-              <p>Videos paso a paso con casos reales de instalación</p>
-            </div>
-            <div className="caracteristica">
-              <div className="caracteristica-icon">
-                <Users />
-              </div>
-              <h3>Soporte Continuo</h3>
-              <p>Comunidad activa y respuesta a tus dudas</p>
-            </div>
-            <div className="caracteristica">
-              <div className="caracteristica-icon">
-                <Award />
-              </div>
-              <h3>Certificación</h3>
-              <p>Certificado oficial al completar cada curso</p>
-            </div>
-            <div className="caracteristica">
-              <div className="caracteristica-icon">
-                <TrendingUp />
-              </div>
-              <h3>Actualización Constante</h3>
-              <p>Nuevas tecnologías y tendencias del mercado</p>
-            </div>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Cursos Destacados */}
-      {cursosDestacados.length > 0 && (
-        <section className="cursos-destacados py-5">
-          <div className="container">
-            <div className="section-header text-center mb-4">
-              <h2>Cursos Destacados</h2>
-              <p>Los más populares entre nuestros estudiantes</p>
+      {/* CURSOS DESTACADOS */}
+      {cursos.length > 0 && (
+        <section className="sec">
+          <div className="shell">
+            <div className="sec-h"><h2 className="h2">Cursos Destacados</h2><p className="muted" style={{ margin: 0 }}>Los más populares entre nuestros estudiantes</p></div>
+            <div className="rule" style={{ marginBottom: 26 }}></div>
+            <div className="cards-3">
+              {cursos.map((c, i) => <CursoCardPub key={c._id} curso={c} index={i} />)}
             </div>
-            
-            <div className="grid grid-3">
-              {cursosDestacados.map(curso => (
-                <CursoCard key={curso._id} curso={curso} />
-              ))}
-            </div>
-
-            <div className="text-center mt-4">
-              <Link to="/cursos" className="btn-ver-mas">
-                Ver Todos los Cursos
-                <ArrowRight size={20} />
-              </Link>
+            <div className="fx jc" style={{ marginTop: 36 }}>
+              <button className="btn btno btn-lg" onClick={() => navigate('/cursos')}>Ver Todos los Cursos<ArrowRight className="ic" /></button>
             </div>
           </div>
         </section>
       )}
 
-      {/* Por qué elegirnos - CON LOGO Y ANIMACIONES BRUTALES */}
-      <section className="por-que py-5">
-        <div className="container">
-          <div className="por-que-content">
-            <div className="por-que-imagen animate-on-scroll">
-              <div className="imagen-placeholder">
-                {/* Logo con animaciones brutales */}
-                <div className="logo-animated-container">
-                  <img 
-                    src="/images/dtcisotipo.webp" 
-                    alt="Logo" 
-                    className="logo-brutal"
-                  />
-                  <div className="glow-ring ring-1"></div>
-                  <div className="glow-ring ring-2"></div>
-                  <div className="glow-ring ring-3"></div>
-                  <div className="particles">
-                    {[...Array(12)].map((_, i) => (
-                      <div key={i} className={`particle particle-${i + 1}`}></div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="por-que-texto animate-on-scroll">
-              <h2>¿Por qué Elegirnos?</h2>
-              <ul className="beneficios">
-                <li className="beneficio-item" style={{ animationDelay: '0.1s' }}>
-                  <span className="check">✓</span>
-                  <div>
-                    <strong>Instructores Expertos</strong>
-                    <p>Profesionales con años de experiencia en cada área</p>
-                  </div>
-                </li>
-                <li className="beneficio-item" style={{ animationDelay: '0.2s' }}>
-                  <span className="check">✓</span>
-                  <div>
-                    <strong>Contenido Actualizado</strong>
-                    <p>Cursos adaptados a las últimas tendencias del mercado</p>
-                  </div>
-                </li>
-                <li className="beneficio-item" style={{ animationDelay: '0.3s' }}>
-                  <span className="check">✓</span>
-                  <div>
-                    <strong>Acceso Ilimitado</strong>
-                    <p>Estudia a tu ritmo, cuando y donde quieras</p>
-                  </div>
-                </li>
-                <li className="beneficio-item" style={{ animationDelay: '0.4s' }}>
-                  <span className="check">✓</span>
-                  <div>
-                    <strong>Certificación Profesional</strong>
-                    <p>Certificados reconocidos al completar cada curso</p>
-                  </div>
-                </li>
-              </ul>
-              <Link to="/cursos" className="btn-primary mt-3 btn-pulse">
-                Comenzar Ahora
-              </Link>
+      {/* PRODUCTOS */}
+      {productos.length > 0 && (
+        <section className="sec" style={{ paddingTop: 0 }}>
+          <div className="shell">
+            <div className="sec-h"><h2 className="h2">Productos Digitales</h2><p className="muted" style={{ margin: 0 }}>Libros y recursos para seguir creciendo</p></div>
+            <div className="rule" style={{ marginBottom: 26 }}></div>
+            <div className="cards-3">
+              {productos.map((p, i) => <ProductoCardPub key={p._id} producto={p} index={i} />)}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* CTA Final */}
-      <section className="cta-final py-5">
-        <div className="container text-center">
-          <h2>¿Listo para Impulsar tu Carrera?</h2>
-          <p>Únete a miles de estudiantes que ya están aprendiendo con nosotros</p>
-          <Link to="/registro" className="btn-cta">
-            Crear Cuenta Gratis
-            <ArrowRight size={22} />
-          </Link>
+      {/* CTA */}
+      <div className="cta-band">
+        <div className="shell" style={{ maxWidth: 680 }}>
+          <h2 className="h1">¿Listo para Impulsar tu Carrera?</h2>
+          <p className="lead" style={{ margin: '16px 0 30px' }}>Únete a miles de estudiantes que ya están aprendiendo con nosotros</p>
+          <button className="btn btnp btn-lg" onClick={() => navigate('/registro')}>Crear Cuenta Gratis<ArrowRight className="ic" /></button>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

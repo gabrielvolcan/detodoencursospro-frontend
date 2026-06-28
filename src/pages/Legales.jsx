@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import './Legales.css';
+import '../styles/publico.css';
 
 const ACTUALIZADO = 'Junio 2026';
 const MARCA = 'Detodo en Cursos';
@@ -111,29 +111,33 @@ const Legales = ({ documento }) => {
   }, [documento]);
 
   return (
-    <div className="legales-page">
-      <div className="legales-container">
-        <h1>{doc.titulo}</h1>
-        <p className="legales-fecha">Última actualización: {ACTUALIZADO}</p>
-        {doc.intro && <p className="legales-intro">{doc.intro}</p>}
+    <div className="pub">
+      <div className="legal">
+        <div className="shell">
+          <div className="legal-card">
+            <h1 className="h2">{doc.titulo}</h1>
+            <p className="muted sm" style={{ margin: '6px 0 22px' }}>Última actualización: {ACTUALIZADO}</p>
+            {doc.intro && <p className="lg-p">{doc.intro}</p>}
 
-        {doc.secciones.map((sec, i) => (
-          <section key={i} className="legales-seccion">
-            <h2>{sec.t}</h2>
-            {sec.p && sec.p.map((parrafo, j) => <p key={j}>{parrafo}</p>)}
-            {sec.lista && (
-              <ul>
-                {sec.lista.map((item, k) => <li key={k}>{item}</li>)}
-              </ul>
-            )}
-            {sec.pFin && sec.pFin.map((parrafo, j) => <p key={`f${j}`}>{parrafo}</p>)}
-          </section>
-        ))}
+            {doc.secciones.map((sec, i) => (
+              <section key={i}>
+                <h2 className="lg-h">{sec.t}</h2>
+                {sec.p && sec.p.map((parrafo, j) => <p key={j} className="lg-p">{parrafo}</p>)}
+                {sec.lista && (
+                  <ul className="lg-ul">
+                    {sec.lista.map((item, k) => <li key={k}>{item}</li>)}
+                  </ul>
+                )}
+                {sec.pFin && sec.pFin.map((parrafo, j) => <p key={`f${j}`} className="lg-p">{parrafo}</p>)}
+              </section>
+            ))}
 
-        <p className="legales-aviso">
-          Este documento es un marco general informativo y no constituye asesoramiento legal.
-          Te recomendamos revisarlo con un profesional y completar los datos de tu empresa y jurisdicción.
-        </p>
+            <p className="muted sm" style={{ marginTop: 28, fontStyle: 'italic' }}>
+              Este documento es un marco general informativo y no constituye asesoramiento legal.
+              Te recomendamos revisarlo con un profesional y completar los datos de tu empresa y jurisdicción.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
