@@ -1,11 +1,13 @@
-// frontend/src/pages/admin/GestionProductos.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Plus, Star, Lock, Unlock, Edit2, Trash2 } from 'lucide-react';
 import { productosAPI } from '../../services/api';
+import { useConfirm } from '../../hooks/useConfirm';
 import '../Admin.css';
 
 const GestionProductos = () => {
   const navigate = useNavigate();
+  const { confirm, confirmUI } = useConfirm();
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mensaje, setMensaje] = useState({ tipo: '', texto: '' });
@@ -13,6 +15,11 @@ const GestionProductos = () => {
   useEffect(() => {
     cargarProductos();
   }, []);
+
+  const flash = (tipo, texto) => {
+    setMensaje({ tipo, texto });
+    setTimeout(() => setMensaje({ tipo: '', texto: '' }), 3000);
+  };
 
   const cargarProductos = async () => {
     try {
@@ -30,8 +37,7 @@ const GestionProductos = () => {
   const toggleDestacado = async (id, destacadoActual) => {
     try {
       await productosAPI.actualizar(id, { destacado: !destacadoActual });
-      setMensaje({ tipo: 'exito', texto: 'Producto actualizado' });
-      setTimeout(() => setMensaje({ tipo: '', texto: '' }), 3000);
+      flash('exito', 'Producto actualizado');
       cargarProductos();
     } catch (error) {
       console.error('Error:', error);
@@ -42,8 +48,7 @@ const GestionProductos = () => {
   const toggleActivo = async (id, activoActual) => {
     try {
       await productosAPI.actualizar(id, { activo: !activoActual });
-      setMensaje({ tipo: 'exito', texto: 'Estado actualizado' });
-      setTimeout(() => setMensaje({ tipo: '', texto: '' }), 3000);
+      flash('exito', 'Estado actualizado');
       cargarProductos();
     } catch (error) {
       console.error('Error:', error);
@@ -52,12 +57,10 @@ const GestionProductos = () => {
   };
 
   const eliminarProducto = async (id) => {
-    if (!window.confirm('¿Estás seguro de eliminar este producto?')) return;
-    
+    if (!(await confirm({ title: 'Eliminar producto', message: '¿Estás seguro de eliminar este producto?', confirmText: 'Eliminar', danger: true }))) return;
     try {
       await productosAPI.eliminar(id);
-      setMensaje({ tipo: 'exito', texto: 'Producto eliminado correctamente' });
-      setTimeout(() => setMensaje({ tipo: '', texto: '' }), 3000);
+      flash('exito', 'Producto eliminado correctamente');
       cargarProductos();
     } catch (error) {
       console.error('Error:', error);
@@ -66,37 +69,21 @@ const GestionProductos = () => {
   };
 
   if (loading) {
-    return (
-      <div style={{ padding: '40px', textAlign: 'center', color: 'var(--gris-claro)' }}>
-        Cargando productos...
-      </div>
-    );
+    return <div className="admin-cargando">Cargando productos...</div>;
   }
 
   return (
     <div className="gestion-cursos">
       <div className="cursos-header">
         <h1>Gestión de Productos Digitales</h1>
-        <button 
-          className="btn-crear"
-          onClick={() => navigate('/admin/producto/nuevo')}
-        >
-          + Nuevo Producto
+        <button className="btn-crear" onClick={() => navigate('/admin/producto/nuevo')}>
+          <Plus size={20} />
+          Nuevo Producto
         </button>
       </div>
 
       {mensaje.texto && (
-        <div style={{
-          padding: '15px 20px',
-          marginBottom: '20px',
-          borderRadius: '8px',
-          background: mensaje.tipo === 'exito' ? 'rgba(0, 255, 136, 0.1)' : 'rgba(255, 68, 68, 0.1)',
-          border: `1px solid ${mensaje.tipo === 'exito' ? 'var(--acento)' : '#ff4444'}`,
-          color: mensaje.tipo === 'exito' ? 'var(--acento)' : '#ff4444',
-          fontWeight: '500'
-        }}>
-          {mensaje.texto}
-        </div>
+        <div className={`admin-mensaje ${mensaje.tipo}`}>{mensaje.texto}</div>
       )}
 
       <div className="cursos-tabla">
@@ -115,48 +102,24 @@ const GestionProductos = () => {
           <tbody>
             {productos.length === 0 ? (
               <tr>
-                <td colSpan="7" style={{ textAlign: 'center', padding: '40px', color: 'var(--gris-claro)' }}>
+                <td colSpan="7" className="tabla-vacia">
                   No hay productos registrados. Crea tu primer producto digital.
                 </td>
               </tr>
             ) : (
-              productos.map(producto => (
+              productos.map((producto) => (
                 <tr key={producto._id}>
                   <td>
                     <div className="curso-tabla-info">
-                      {producto.imagen && (
-                        <img
-                          src={producto.imagen}
-                          alt={producto.titulo}
-                          style={{ width: '60px', height: '45px', objectFit: 'cover', borderRadius: '6px' }}
-                        />
-                      )}
+                      {producto.imagen && <img src={producto.imagen} alt={producto.titulo} />}
                       <div>
                         <strong>{producto.titulo}</strong>
-                        <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--gris-claro)', marginTop: '4px' }}>
-                          {producto.descripcion?.substring(0, 50)}...
-                        </span>
+                        <span>{producto.descripcion?.substring(0, 50)}...</span>
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <span style={{
-                      background: 'var(--gris-oscuro)',
-                      padding: '4px 12px',
-                      borderRadius: '20px',
-                      fontSize: '0.85rem',
-                      fontWeight: '600',
-                      color: 'var(--acento)',
-                      textTransform: 'capitalize'
-                    }}>
-                      {producto.tipo}
-                    </span>
-                  </td>
-                  <td>
-                    <span style={{ color: 'var(--blanco)', fontWeight: '600' }}>
-                      ${producto.precioUSD}
-                    </span>
-                  </td>
+                  <td><span className="tipo-badge">{producto.tipo}</span></td>
+                  <td>${producto.precioUSD}</td>
                   <td>
                     <span className={`estado-badge ${producto.gratis ? 'activo' : 'inactivo'}`}>
                       {producto.gratis ? 'GRATIS' : 'PAGO'}
@@ -164,17 +127,11 @@ const GestionProductos = () => {
                   </td>
                   <td>
                     <button
-                      className="btn-icon"
+                      className={`btn-icon ${producto.destacado ? 'destacado-activo' : ''}`}
                       onClick={() => toggleDestacado(producto._id, producto.destacado)}
-                      style={{
-                        background: producto.destacado ? 'var(--acento)' : 'var(--gris-oscuro)',
-                        color: producto.destacado ? 'var(--negro)' : 'var(--gris-claro)',
-                        fontSize: '1.2rem',
-                        padding: '8px 12px'
-                      }}
                       title={producto.destacado ? 'Quitar destacado' : 'Destacar producto'}
                     >
-                      {producto.destacado ? '★' : '☆'}
+                      <Star size={18} fill={producto.destacado ? 'currentColor' : 'none'} />
                     </button>
                   </td>
                   <td>
@@ -184,26 +141,26 @@ const GestionProductos = () => {
                   </td>
                   <td>
                     <div className="acciones">
-                      <button 
+                      <button
                         className="btn-icon"
                         onClick={() => toggleActivo(producto._id, producto.activo)}
                         title={producto.activo ? 'Desactivar' : 'Activar'}
                       >
-                        {producto.activo ? '🔒' : '🔓'}
+                        {producto.activo ? <Lock size={18} /> : <Unlock size={18} />}
                       </button>
-                      <button 
+                      <button
                         className="btn-icon"
                         onClick={() => navigate(`/admin/producto/${producto._id}/editar`)}
                         title="Editar producto"
                       >
-                        ✏️
+                        <Edit2 size={18} />
                       </button>
-                      <button 
+                      <button
                         className="btn-icon eliminar"
                         onClick={() => eliminarProducto(producto._id)}
                         title="Eliminar producto"
                       >
-                        🗑️
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   </td>
@@ -213,6 +170,8 @@ const GestionProductos = () => {
           </tbody>
         </table>
       </div>
+
+      {confirmUI}
     </div>
   );
 };

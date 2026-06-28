@@ -1801,3 +1801,97 @@ td {
     font-size: 0.9rem;
   }
 }
+
+/* ===== Gestión de Productos / consistencia admin ===== */
+.admin-cargando {
+  padding: 40px;
+  text-align: center;
+  color: var(--gris-claro);
+}
+
+.tabla-vacia {
+  text-align: center;
+  padding: 40px;
+  color: var(--gris-claro);
+}
+
+.admin-mensaje {
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+.admin-mensaje.exito {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--acento);
+  color: var(--acento);
+}
+.admin-mensaje.error {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid #ff4444;
+  color: #ff4444;
+}
+
+.tipo-badge {
+  background: var(--gris-oscuro);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--acento);
+  text-transform: capitalize;
+}
+
+.btn-icon.destacado-activo {
+  background: var(--acento);
+  color: var(--negro);
+}
+
+/* ===== ConfirmDialog ===== */
+.confirm-message {
+  color: var(--gris-claro);
+  margin: 4px 0 20px;
+  line-height: 1.5;
+}
+.btn-peligro {
+  background: #ff4444;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-peligro:hover { background: #e23b3b; }
+
+/* ===== Toasts de acción (pila arriba-derecha) ===== */
+.toast-stack {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1100;
+}
+.admin-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 240px;
+  max-width: 360px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-weight: 500;
+  color: #fff;
+  background: #1e1e1e;
+  border-left: 4px solid var(--acento);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  animation: toast-in 0.25s ease;
+}
+.admin-toast.error { border-left-color: #ff4444; }
+.admin-toast.exito { border-left-color: var(--acento); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
