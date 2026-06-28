@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Video, Users, Star, ArrowRight, Shield, Clock, Award, Headphones, TrendingUp, ShoppingCart, BookOpen, Package,
+  Video, Users, Star, ArrowRight, Shield, Clock, Award, Headphones, TrendingUp,
 } from 'lucide-react';
 import { cursosAPI, productosAPI } from '../services/api';
-import { usePais } from '../context/PaisContext';
-import { useCarrito } from '../context/CarritoContext';
-import PubThumb from '../components/publico/PubThumb';
+import CursoCardPub from '../components/publico/CursoCardPub';
+import ProductoCardPub from '../components/publico/ProductoCardPub';
 import '../styles/publico.css';
 
 const FEATURES = [
@@ -27,8 +26,6 @@ const BENEFITS = [
 
 const Home = () => {
   const navigate = useNavigate();
-  const { precioDeItem } = usePais();
-  const { agregarAlCarrito } = useCarrito();
   const [cursos, setCursos] = useState([]);
   const [productos, setProductos] = useState([]);
 
@@ -43,8 +40,6 @@ const Home = () => {
       })
       .catch(() => setProductos([]));
   }, []);
-
-  const precioLabel = (item) => (item.esGratuito || item.gratis ? 'GRATIS' : precioDeItem(item).formatted);
 
   return (
     <div className="pub">
@@ -101,30 +96,7 @@ const Home = () => {
             <div className="sec-h"><h2 className="h2">Cursos Destacados</h2><p className="muted" style={{ margin: 0 }}>Los más populares entre nuestros estudiantes</p></div>
             <div className="rule" style={{ marginBottom: 26 }}></div>
             <div className="cards-3">
-              {cursos.map((c, i) => {
-                const free = c.esGratuito || c.precioUSD === 0;
-                return (
-                  <article className="card card-h ccard" key={c._id}>
-                    <PubThumb src={c.imagen} alt={c.titulo} index={i} icon={BookOpen} className="thumb pointer" />
-                    <div className="ccard-bd">
-                      <span className="pill pill-d upper xs" style={{ alignSelf: 'flex-start' }}>{c.categoria}</span>
-                      <h3 className="h3 pointer" style={{ margin: '14px 0 9px' }} onClick={() => navigate(`/curso/${c._id}`)}>{c.titulo}</h3>
-                      <p className="muted sm" style={{ lineHeight: 1.55, margin: '0 0 16px' }}>{c.descripcionCorta || ''}</p>
-                      <div className="ccard-meta">
-                        <span className="mi"><Users className="ic ic-s" />{c.estudiantes || 0} estudiantes</span>
-                        {c.nivel && <span className="mi"><Award className="ic ic-s" />{c.nivel}</span>}
-                      </div>
-                      <div className="rule" style={{ margin: '16px 0' }}></div>
-                      <div className="fx ac jb" style={{ marginTop: 'auto', gap: 10 }}>
-                        <span className={free ? 'price-free' : 'price'}>{precioLabel(c)}</span>
-                        {free
-                          ? <button className="btn btnp btn-sm" onClick={() => navigate(`/curso/${c._id}`)}>Inscribirme</button>
-                          : <button className="btn btnp btn-sm" onClick={() => agregarAlCarrito(c)}><ShoppingCart className="ic ic-s" />Agregar</button>}
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
+              {cursos.map((c, i) => <CursoCardPub key={c._id} curso={c} index={i} />)}
             </div>
             <div className="fx jc" style={{ marginTop: 36 }}>
               <button className="btn btno btn-lg" onClick={() => navigate('/cursos')}>Ver Todos los Cursos<ArrowRight className="ic" /></button>
@@ -140,21 +112,7 @@ const Home = () => {
             <div className="sec-h"><h2 className="h2">Productos Digitales</h2><p className="muted" style={{ margin: 0 }}>Libros y recursos para seguir creciendo</p></div>
             <div className="rule" style={{ marginBottom: 26 }}></div>
             <div className="cards-3">
-              {productos.map((p, i) => (
-                <article className="card card-h ccard" key={p._id}>
-                  <PubThumb src={p.imagen} alt={p.titulo} index={i + 3} icon={Package} className="thumb pointer" />
-                  <div className="ccard-bd">
-                    <span className="pill pill-d upper xs" style={{ alignSelf: 'flex-start' }}>{p.tipo || 'Producto'}</span>
-                    <h3 className="h3 pointer" style={{ margin: '14px 0 9px' }} onClick={() => navigate(`/producto/${p._id}`)}>{p.titulo}</h3>
-                    <p className="muted sm" style={{ lineHeight: 1.55, margin: '0 0 16px' }}>{(p.descripcion || '').substring(0, 90)}</p>
-                    <div className="rule" style={{ margin: '0 0 16px' }}></div>
-                    <div className="fx ac jb" style={{ marginTop: 'auto', gap: 10 }}>
-                      <span className="price">{precioLabel(p)}</span>
-                      <button className="btn btnp btn-sm" onClick={() => navigate(`/producto/${p._id}`)}>Ver detalles</button>
-                    </div>
-                  </div>
-                </article>
-              ))}
+              {productos.map((p, i) => <ProductoCardPub key={p._id} producto={p} index={i} />)}
             </div>
           </div>
         </section>
