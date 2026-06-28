@@ -11,28 +11,19 @@ export const useCarrito = () => {
 };
 
 export const CarritoProvider = ({ children }) => {
-  const [items, setItems] = useState([]);
-
-  useEffect(() => {
+  // Inicialización lazy desde localStorage: evita la race en la que el efecto
+  // de persistencia (abajo) pisaba el carrito guardado al montar con items=[].
+  const [items, setItems] = useState(() => {
     try {
       const carritoGuardado = localStorage.getItem('carrito');
-      if (carritoGuardado) {
-        const parsed = JSON.parse(carritoGuardado);
-        // ✅ VALIDAR QUE SEA UN ARRAY
-        if (Array.isArray(parsed)) {
-          setItems(parsed);
-        } else {
-          console.warn('Carrito en localStorage no es un array, limpiando...');
-          localStorage.removeItem('carrito');
-          setItems([]);
-        }
-      }
+      const parsed = carritoGuardado ? JSON.parse(carritoGuardado) : [];
+      return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
       console.error('Error al cargar carrito desde localStorage:', error);
       localStorage.removeItem('carrito');
-      setItems([]);
+      return [];
     }
-  }, []);
+  });
 
   useEffect(() => {
     if (Array.isArray(items)) {
