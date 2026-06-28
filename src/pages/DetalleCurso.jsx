@@ -21,7 +21,7 @@ const DetalleCurso = () => {
   
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
   const { usuario } = useAuth();
-  const { convertirPrecio } = usePais();
+  const { precioDeItem } = usePais();
 
   useEffect(() => {
     cargarCurso();
@@ -78,7 +78,6 @@ const DetalleCurso = () => {
     if (!usuario) {
       // 🆕 Guardar el ID del curso para inscripción automática después del registro
       localStorage.setItem('cursoGratuitoId', id);
-      console.log('✅ Curso gratuito guardado para registro:', id);
       navigate('/registro');
       return;
     }
@@ -106,39 +105,12 @@ const DetalleCurso = () => {
   const obtenerPrecio = () => {
     if (!curso) return { formatted: '$0', simbolo: '$', precio: 0 };
 
-    // 🆕 DEBUG: Ver qué valores tiene el curso
-    console.log('DEBUG DETALLE - Curso:', curso.titulo);
-    console.log('DEBUG DETALLE - esGratuito:', curso.esGratuito);
-    console.log('DEBUG DETALLE - precioUSD:', curso.precioUSD);
-
-    // 🆕 SI ES GRATUITO (por campo o por precio 0), MOSTRAR "TOTALMENTE GRATIS"
+    // SI ES GRATUITO (por campo o por precio 0), MOSTRAR "TOTALMENTE GRATIS"
     if (curso.esGratuito === true || curso.precioUSD === 0) {
-      console.log('✅ DETALLE - Detectado como GRATUITO');
-      return {
-        precio: 0,
-        moneda: 'USD',
-        simbolo: '',
-        formatted: 'TOTALMENTE GRATIS',
-        esGratuito: true
-      };
+      return { precio: 0, moneda: 'USD', simbolo: '', formatted: 'TOTALMENTE GRATIS', esGratuito: true };
     }
-
-    // Usamos convertirPrecio del contexto
-    if (curso.precioUSD && !isNaN(curso.precioUSD)) {
-      return convertirPrecio(parseFloat(curso.precioUSD));
-    }
-
-    // Fallback
-    if (curso.precio && !isNaN(curso.precio)) {
-      return {
-        precio: parseFloat(curso.precio),
-        moneda: 'USD',
-        simbolo: '$',
-        formatted: `$${parseFloat(curso.precio).toFixed(2)}`
-      };
-    }
-
-    return { formatted: 'Consultar precio', simbolo: '$', precio: 0 };
+    // Precio según el país desde la fuente única del contexto (mismo valor que cobra el checkout)
+    return precioDeItem(curso);
   };
 
   if (cargando) {

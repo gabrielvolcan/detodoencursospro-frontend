@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Play, Award, Clock, Sparkles, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { usePais } from '../context/PaisContext';
 import axios from '../services/api';
 import './MisCursos.css';
 
 const MisCursos = () => {
   const { estaAutenticado, usuario } = useAuth();
-  const { obtenerPrecio } = usePais();
   const navigate = useNavigate();
   const [cursos, setCursos] = useState([]);
   const [todosLosCursos, setTodosLosCursos] = useState([]);
@@ -26,7 +24,6 @@ const MisCursos = () => {
     try {
       // Cargar mis cursos
       const { data: misCursosData } = await axios.get('/auth/usuarios/mis-cursos');
-      console.log('✅ Cursos cargados:', misCursosData);
       setCursos(misCursosData);
 
       // Cargar todos los cursos para la recomendación

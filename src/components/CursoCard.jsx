@@ -17,7 +17,7 @@ const CursoCard = ({ curso }) => {
 
   const { agregarAlCarrito, estaEnCarrito } = useCarrito();
   const { usuario } = useAuth();
-  const { convertirPrecio } = usePais();
+  const { precioDeItem } = usePais();
   const navigate = useNavigate();
 
   // ========================================
@@ -107,46 +107,12 @@ const CursoCard = ({ curso }) => {
   // ========================================
   
   const obtenerPrecio = () => {
-    // 🆕 DEBUG: Ver qué valores tiene el curso
-    console.log('DEBUG - Curso:', curso.titulo);
-    console.log('DEBUG - esGratuito:', curso.esGratuito);
-    console.log('DEBUG - precioUSD:', curso.precioUSD);
-
-    // 🆕 SI ES GRATUITO (por campo o por precio 0), MOSTRAR "GRATIS"
+    // SI ES GRATUITO (por campo o por precio 0), MOSTRAR "GRATIS"
     if (curso.esGratuito === true || curso.precioUSD === 0) {
-      console.log('✅ Detectado como GRATUITO');
-      return {
-        precio: 0,
-        moneda: 'USD',
-        simbolo: '',
-        formatted: 'GRATIS',
-        esGratuito: true
-      };
+      return { precio: 0, moneda: 'USD', simbolo: '', formatted: 'GRATIS', esGratuito: true };
     }
-
-    // Si el curso tiene precioUSD, usamos convertirPrecio del contexto
-    if (curso.precioUSD && !isNaN(curso.precioUSD)) {
-      return convertirPrecio(parseFloat(curso.precioUSD));
-    }
-    
-    // Fallback: precio antiguo sin conversión
-    if (curso.precio && !isNaN(curso.precio)) {
-      return {
-        precio: parseFloat(curso.precio),
-        moneda: 'USD',
-        simbolo: '$',
-        formatted: `$${parseFloat(curso.precio).toFixed(2)}`
-      };
-    }
-    
-    // Error: no hay precio válido
-    console.warn('⚠️ Precio no disponible para:', curso.titulo);
-    return {
-      precio: 0,
-      moneda: 'USD',
-      simbolo: '$',
-      formatted: 'Precio no disponible'
-    };
+    // Precio según el país desde la fuente única del contexto (mismo valor que cobra el checkout)
+    return precioDeItem(curso);
   };
 
   const precioInfo = obtenerPrecio();

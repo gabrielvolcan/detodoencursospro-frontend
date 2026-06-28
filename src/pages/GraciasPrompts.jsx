@@ -7,7 +7,7 @@ import './GraciasPrompts.css';
 
 const GraciasPrompts = () => {
   const navigate = useNavigate();
-  const { obtenerPrecio } = usePais();
+  const { precioDeItem } = usePais();
   const [cursoIA, setCursoIA] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -19,10 +19,9 @@ const GraciasPrompts = () => {
     try {
       // Buscar el curso de IA (ajusta el título según tu curso real)
       const { data } = await cursosAPI.obtenerTodos();
-      const curso = data.find(c => 
+      const curso = data.find(c =>
         c.titulo.toLowerCase().includes('inteligencia artificial') ||
-        c.titulo.toLowerCase().includes('ia') ||
-        c._id === 'TU_ID_DEL_CURSO_IA' // Reemplaza con el ID real si lo tienes
+        c.titulo.toLowerCase().includes('ia')
       );
       setCursoIA(curso);
     } catch (error) {
@@ -101,7 +100,7 @@ const GraciasPrompts = () => {
                 <div className="curso-footer">
                   <div className="precio-info">
                     <span className="precio-actual">
-                      {obtenerPrecio(cursoIA.precioUSD, cursoIA.precios)}
+                      {precioDeItem(cursoIA).formatted}
                     </span>
                     <span className="texto-precio">Inversión única</span>
                   </div>
