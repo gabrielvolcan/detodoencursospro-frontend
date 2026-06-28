@@ -1,9 +1,50 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot, User, Mail } from 'lucide-react';
+import { cursosAPI, productosAPI } from '../services/api';
 import './ChatbotFAQ.css';
+
+// Convierte **texto** en negrita real al renderizar una línea del chat.
+const renderLinea = (linea) => linea.split(/(\*\*[^*]+\*\*)/g).map((seg, i) => (
+  seg.startsWith('**') && seg.endsWith('**')
+    ? <strong key={i}>{seg.slice(2, -2)}</strong>
+    : seg
+));
 
 const ChatbotFAQ = () => {
   const [abierto, setAbierto] = useState(false);
+  // Catálogo real desde la API: el chatbot responde con lo que hay en la plataforma.
+  const [catalogo, setCatalogo] = useState({ cursos: [], productos: [], cargado: false });
+
+  useEffect(() => {
+    let activo = true;
+    Promise.allSettled([cursosAPI.obtenerTodos(), productosAPI.obtenerTodos()])
+      .then(([rc, rp]) => {
+        if (!activo) return;
+        const cursos = rc.status === 'fulfilled'
+          ? (Array.isArray(rc.value.data) ? rc.value.data : (rc.value.data?.cursos || [])).filter((c) => c && c._id && c.activo !== false)
+          : [];
+        const pdata = rp.status === 'fulfilled' ? rp.value.data : [];
+        const productos = (Array.isArray(pdata) ? pdata : (pdata?.productos || pdata?.data || [])).filter((p) => p && p._id);
+        setCatalogo({ cursos, productos, cargado: true });
+      });
+    return () => { activo = false; };
+  }, []);
+
+  // Genera la respuesta del catálogo a partir de los datos reales cargados.
+  const respuestaCatalogo = () => {
+    const { cursos, productos } = catalogo;
+    if (!cursos.length && !productos.length) {
+      return '📚 **Catálogo:**\n\nTenemos cursos profesionales y productos digitales (libros y ebooks). 👉 Mirá todo en las secciones **Cursos** y **Productos** del menú.';
+    }
+    const cats = [...new Set(cursos.map((c) => c.categoria).filter(Boolean))];
+    const titulos = cursos.slice(0, 6).map((c) => `• ${c.titulo}`).join('\n');
+    let r = `📚 **Nuestro catálogo (${cursos.length} ${cursos.length === 1 ? 'curso' : 'cursos'}):**\n\n`;
+    if (cats.length) r += `Áreas disponibles: ${cats.join(', ')}.\n\n`;
+    if (titulos) r += `Algunos cursos:\n${titulos}\n\n`;
+    if (productos.length) r += `También ${productos.length} ${productos.length === 1 ? 'producto digital' : 'productos digitales'} (libros y ebooks).\n\n`;
+    r += '👉 Mirá todo en las secciones **Cursos** y **Productos**. Cada curso incluye videos HD, material descargable y certificado.';
+    return r;
+  };
   const [mensajes, setMensajes] = useState([
     {
       role: 'assistant',
@@ -42,9 +83,6 @@ const ChatbotFAQ = () => {
     },
 
     // Contenido y soporte
-    'curso|cursos|que enseñan|temas|contenido': {
-      respuesta: '📚 **Nuestros cursos:**\n\nOfrecemos cursos profesionales de:\n\n🎥 Cámaras de seguridad (CCTV)\n🔧 Instalación y mantenimiento\n🌐 Sistemas de redes\n💻 Tecnología y monitoreo\n⚙️ Configuración avanzada\n\nCada curso incluye videos HD, material descargable y soporte.'
-    },
     'soporte|ayuda|contacto|problema|error': {
       respuesta: '💬 **Soporte y contacto:**\n\n📧 Email: contacto@detodoencursos.com\n⏰ Respondemos en menos de 24 horas\n🌎 Soporte en toda América Latina\n\n¿Tienes un problema específico? Envíanos un email con:\n- Tu nombre\n- Curso afectado\n- Descripción del problema\n\n¡Te ayudaremos lo antes posible!'
     },
@@ -76,7 +114,13 @@ const ChatbotFAQ = () => {
 
   const buscarRespuesta = (mensaje) => {
     const mensajeLower = mensaje.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    
+
+    // Cat\u00e1logo en vivo: responde con los cursos/productos reales de la plataforma
+    const catalogoKeywords = ['curso', 'cursos', 'que ense\u00f1an', 'que ensenan', 'temas', 'catalogo', 'que hay', 'que ofrecen', 'categoria', 'categorias', 'libro', 'libros', 'ebook', 'producto', 'productos'];
+    if (catalogoKeywords.some((k) => mensajeLower.includes(k))) {
+      return respuestaCatalogo();
+    }
+
     // Buscar en la base de conocimiento
     for (const [keywords, data] of Object.entries(FAQ_BASE)) {
       const patterns = keywords.split('|');
@@ -186,7 +230,7 @@ const ChatbotFAQ = () => {
                 </div>
                 <div className="chatbot-mensaje-contenido">
                   {mensaje.content.split('\n').map((linea, i) => (
-                    <p key={i}>{linea}</p>
+                    <p key={i}>{renderLinea(linea)}</p>
                   ))}
                 </div>
               </div>

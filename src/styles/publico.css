@@ -298,8 +298,3 @@
   .pub .mc-row { flex-direction: column; align-items: stretch; }
   .pub .mc-thumb { width: 100%; }
 }
-
-/* FAQ flotante */
-.pub-faq { position: fixed; right: 26px; bottom: 26px; z-index: 40; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; pointer-events: none; }
-.pub-faq .faq-pill { background: #15151a; border: 1px solid #1d1d22; color: #f3f3f5; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 999px; margin-right: 6px; font-family: 'Plus Jakarta Sans', sans-serif; }
-.pub-faq .faq-btn { width: 58px; height: 58px; border-radius: 50%; background: #16e08a; color: #06130c; border: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; box-shadow: 0 0 40px -4px rgba(22,224,138,.75); }
