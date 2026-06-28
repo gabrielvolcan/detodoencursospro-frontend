@@ -45,8 +45,10 @@ const Home = () => {
     <div className="pub">
       {/* HERO */}
       <section className="hero">
-        <div className="hero-bg"></div>
-        <div className="hero-grid"></div>
+        <video className="hero-video" autoPlay muted loop playsInline preload="auto" poster="/images/hero-bg-poster.jpg">
+          <source src="/images/hero-bg.mp4" type="video/mp4" />
+        </video>
+        <div className="hero-ov"></div>
         <div className="shell hero-in">
           <div>
             <h1 className="display">Aprende Nuevas Habilidades<br /><span className="green">Transforma tu Futuro</span></h1>
