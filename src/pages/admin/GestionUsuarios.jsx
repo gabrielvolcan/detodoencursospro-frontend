@@ -1,75 +1,51 @@
 import { Edit2, Trash2 } from 'lucide-react';
 
 const GestionUsuarios = ({ usuarios, onCambiarRol, onEditar, onEliminar }) => (
-  <div className="gestion-usuarios">
-    <h1>Gestión de Usuarios</h1>
+  <section>
+    <h1 className="h1">Gestión de Usuarios</h1>
 
-    <div className="usuarios-stats">
-      <div className="stat-mini">
-        <h3>{usuarios.length}</h3>
-        <p>Total Usuarios</p>
+    <div className="statgrid3">
+      <div className="statcard center">
+        <div className="sval">{usuarios.length}</div>
+        <div className="slabel">Total Usuarios</div>
       </div>
-      <div className="stat-mini">
-        <h3>{usuarios.filter((u) => u.rol === 'admin').length}</h3>
-        <p>Administradores</p>
+      <div className="statcard center">
+        <div className="sval">{usuarios.filter((u) => u.rol === 'admin').length}</div>
+        <div className="slabel">Administradores</div>
       </div>
-      <div className="stat-mini">
-        <h3>{usuarios.filter((u) => u.cursosComprados.length > 0).length}</h3>
-        <p>Con Cursos</p>
+      <div className="statcard center">
+        <div className="sval">{usuarios.filter((u) => u.cursosComprados.length > 0).length}</div>
+        <div className="slabel">Con Cursos</div>
       </div>
     </div>
 
-    <div className="usuarios-tabla">
-      <table>
+    <div className="tblwrap" style={{ marginTop: 22 }}>
+      <table className="tbl">
         <thead>
           <tr>
-            <th>Usuario</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Cursos Comprados</th>
-            <th>Rol</th>
-            <th>Registro</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th>Usuario</th><th>Email</th><th>Teléfono</th><th>Cursos Comprados</th>
+            <th>Rol</th><th>Registro</th><th>Estado</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {usuarios.map((usuario) => (
-            <tr key={usuario._id}>
+          {usuarios.map((u) => (
+            <tr key={u._id}>
+              <td><b style={{ color: '#fff' }}>{u.nombre}</b></td>
+              <td className="muted">{u.email}</td>
+              <td className="muted">{u.telefono || '-'}</td>
+              <td><span className="pill-green">{u.cursosComprados.length} cursos</span></td>
               <td>
-                <div className="usuario-info">
-                  <strong>{usuario.nombre}</strong>
-                </div>
-              </td>
-              <td>{usuario.email}</td>
-              <td>{usuario.telefono || '-'}</td>
-              <td>
-                <span className="badge-cursos">{usuario.cursosComprados.length} cursos</span>
-              </td>
-              <td>
-                <select
-                  value={usuario.rol}
-                  onChange={(e) => onCambiarRol(usuario._id, e.target.value)}
-                  className="select-rol"
-                >
+                <select className="rolesel" value={u.rol} onChange={(e) => onCambiarRol(u._id, e.target.value)}>
                   <option value="usuario">Usuario</option>
                   <option value="admin">Admin</option>
                 </select>
               </td>
-              <td>{new Date(usuario.createdAt).toLocaleDateString()}</td>
+              <td className="muted">{new Date(u.createdAt).toLocaleDateString()}</td>
+              <td><span className={`badge ${u.activo ? 'on' : 'off'}`}>{u.activo ? 'Activo' : 'Inactivo'}</span></td>
               <td>
-                <span className={`estado-badge ${usuario.activo ? 'activo' : 'inactivo'}`}>
-                  {usuario.activo ? 'Activo' : 'Inactivo'}
-                </span>
-              </td>
-              <td>
-                <div className="acciones">
-                  <button className="btn-icon" onClick={() => onEditar(usuario)} title="Editar">
-                    <Edit2 size={18} />
-                  </button>
-                  <button className="btn-icon eliminar" onClick={() => onEliminar(usuario._id)} title="Eliminar">
-                    <Trash2 size={18} />
-                  </button>
+                <div className="acts">
+                  <button className="abtn" onClick={() => onEditar(u)} title="Editar"><Edit2 size={17} /></button>
+                  <button className="abtn del" onClick={() => onEliminar(u._id)} title="Eliminar"><Trash2 size={17} /></button>
                 </div>
               </td>
             </tr>
@@ -77,7 +53,7 @@ const GestionUsuarios = ({ usuarios, onCambiarRol, onEditar, onEliminar }) => (
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
 );
 
 export default GestionUsuarios;

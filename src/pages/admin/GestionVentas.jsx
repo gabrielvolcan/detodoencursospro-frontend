@@ -1,12 +1,18 @@
-import { ShoppingCart, TrendingUp, Activity, DollarSign, Eye, Trash2 } from 'lucide-react';
-import { obtenerBandera, formatUSD, formatMonto } from '../../utils/formato';
+import { ShoppingCart, TrendingUp, Activity, DollarSign, Eye, Check, Trash2 } from 'lucide-react';
+import { obtenerBandera, formatUSD } from '../../utils/formato';
 
 const FILTROS = [
   { key: 'todas', label: 'Todas' },
   { key: 'aprobado', label: '✓ Aprobadas' },
-  { key: 'pendiente', label: '⏱ Pendientes' },
-  { key: 'rechazado', label: '✗ Rechazadas' },
+  { key: 'pendiente', label: '◷ Pendientes' },
+  { key: 'rechazado', label: '✕ Rechazadas' },
 ];
+
+const ESTADO = {
+  aprobado: { cls: 'on', txt: '✓ Aprobado' },
+  pendiente: { cls: 'pend', txt: '◷ Pendiente' },
+  rechazado: { cls: 'off', txt: '✕ Rechazado' },
+};
 
 const GestionVentas = ({ todasCompras, filtroCompras, setFiltroCompras, onVerDetalle, onAprobar, onEliminar }) => {
   const aprobadas = todasCompras.filter((c) => c.estadoPago === 'aprobado');
@@ -14,141 +20,64 @@ const GestionVentas = ({ todasCompras, filtroCompras, setFiltroCompras, onVerDet
   const totalRecaudado = aprobadas.reduce((sum, c) => sum + c.total, 0);
 
   return (
-    <div className="gestion-ventas">
-      <div className="ventas-header-mejorado">
-        <h1>Todas las Ventas</h1>
-        <div className="filtros-ventas">
+    <section>
+      <div className="phead">
+        <h1 className="h1">Todas las Ventas</h1>
+        <div className="filters">
           {FILTROS.map((f) => (
-            <button
-              key={f.key}
-              className={`filtro-btn ${filtroCompras === f.key ? 'activo' : ''}`}
-              onClick={() => setFiltroCompras(f.key)}
-            >
+            <button key={f.key} className={`fbtn ${filtroCompras === f.key ? 'on' : ''}`} onClick={() => setFiltroCompras(f.key)}>
               {f.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ESTADÍSTICAS DE VENTAS */}
-      <div className="ventas-stats-grid">
-        <div className="venta-stat-card">
-          <div className="stat-icono" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-            <ShoppingCart size={24} />
-          </div>
-          <div className="stat-datos">
-            <span className="stat-numero">{todasCompras.length}</span>
-            <span className="stat-texto">Total Ventas</span>
-          </div>
-        </div>
-
-        <div className="venta-stat-card">
-          <div className="stat-icono" style={{ background: 'linear-gradient(135deg, var(--acento) 0%, #00cc6e 100%)' }}>
-            <TrendingUp size={24} />
-          </div>
-          <div className="stat-datos">
-            <span className="stat-numero">{aprobadas.length}</span>
-            <span className="stat-texto">Aprobadas</span>
-          </div>
-        </div>
-
-        <div className="venta-stat-card">
-          <div className="stat-icono" style={{ background: 'linear-gradient(135deg, #ffa500 0%, #ff8c00 100%)' }}>
-            <Activity size={24} />
-          </div>
-          <div className="stat-datos">
-            <span className="stat-numero">{pendientes.length}</span>
-            <span className="stat-texto">Pendientes</span>
-          </div>
-        </div>
-
-        <div className="venta-stat-card">
-          <div className="stat-icono" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
-            <DollarSign size={24} />
-          </div>
-          <div className="stat-datos">
-            <span className="stat-numero">{formatUSD(totalRecaudado)}</span>
-            <span className="stat-texto">Total Recaudado</span>
-          </div>
-        </div>
+      <div className="statgrid4">
+        <div className="statcard"><div className="sicon ico-purple"><ShoppingCart size={26} /></div><div><div className="sval">{todasCompras.length}</div><div className="slabel">Total Ventas</div></div></div>
+        <div className="statcard"><div className="sicon ico-green"><TrendingUp size={26} /></div><div><div className="sval">{aprobadas.length}</div><div className="slabel">Aprobadas</div></div></div>
+        <div className="statcard"><div className="sicon ico-orange"><Activity size={26} /></div><div><div className="sval">{pendientes.length}</div><div className="slabel">Pendientes</div></div></div>
+        <div className="statcard"><div className="sicon ico-pink"><DollarSign size={26} /></div><div><div className="sval">{formatUSD(totalRecaudado)}</div><div className="slabel">Total Recaudado</div></div></div>
       </div>
 
-      {/* TABLA DE VENTAS */}
-      <div className="ventas-tabla-mejorada">
-        <table>
+      <div className="tblwrap" style={{ marginTop: 22 }}>
+        <table className="tbl">
           <thead>
-            <tr>
-              <th>ID</th>
-              <th>Usuario</th>
-              <th>Total</th>
-              <th>Método</th>
-              <th>País</th>
-              <th>Fecha</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
+            <tr><th>ID</th><th>Usuario</th><th>Total</th><th>Método</th><th>País</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr>
           </thead>
           <tbody>
-            {todasCompras.length > 0 ? (
-              todasCompras.map((compra) => (
-                <tr key={compra._id} className={`fila-venta ${compra.estadoPago}`}>
-                  <td><span className="venta-id">#{compra._id.slice(-6)}</span></td>
+            {todasCompras.map((c) => {
+              const est = ESTADO[c.estadoPago] || { cls: 'off', txt: c.estadoPago };
+              return (
+                <tr key={c._id}>
+                  <td className="muted">#{c._id.slice(-6)}</td>
                   <td>
-                    <div className="usuario-venta">
-                      <strong>{compra.usuario?.nombre}</strong>
-                      <span className="email-venta">{compra.usuario?.email}</span>
-                    </div>
+                    <div className="uv-name">{c.usuario?.nombre}</div>
+                    <div className="lv" style={{ color: '#83848b', fontSize: 13, marginTop: 4 }}>{c.usuario?.email}</div>
                   </td>
+                  <td><b style={{ color: '#22e08a', fontSize: 16 }}>{formatUSD(c.total)}</b> <span className="muted">{c.moneda}</span></td>
+                  <td><span className="chip">{c.metodoPago?.nombre}</span></td>
+                  <td><span className="chip">{obtenerBandera(c.metodoPago?.pais || 'Internacional')} {c.metodoPago?.pais || 'N/A'}</span></td>
+                  <td className="muted">{new Date(c.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                  <td><span className={`badge ${est.cls}`}>{est.txt}</span></td>
                   <td>
-                    <span className="venta-monto">{formatUSD(compra.total)} <span className="moneda">{compra.moneda}</span></span>
-                  </td>
-                  <td><span className="metodo-badge">{compra.metodoPago?.nombre}</span></td>
-                  <td>
-                    <span className="pais-badge">
-                      {obtenerBandera(compra.metodoPago?.pais || 'Internacional')} {compra.metodoPago?.pais || 'N/A'}
-                    </span>
-                  </td>
-                  <td>
-                    <span className="fecha-venta">
-                      {new Date(compra.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`estado-badge-mejorado ${compra.estadoPago}`}>
-                      {compra.estadoPago === 'aprobado' && '✓ Aprobado'}
-                      {compra.estadoPago === 'pendiente' && '⏱ Pendiente'}
-                      {compra.estadoPago === 'rechazado' && '✗ Rechazado'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="acciones">
-                      <button className="btn-icon" onClick={() => onVerDetalle(compra)} title="Ver detalles">
-                        <Eye size={18} />
-                      </button>
-                      {compra.estadoPago === 'pendiente' && (
-                        <button className="btn-icon aprobar" onClick={() => onAprobar(compra._id)} title="Aprobar">
-                          ✓
-                        </button>
+                    <div className="acts">
+                      <button className="abtn" onClick={() => onVerDetalle(c)} title="Ver detalles"><Eye size={17} /></button>
+                      {c.estadoPago === 'pendiente' && (
+                        <button className="abtn" onClick={() => onAprobar(c._id)} title="Aprobar"><Check size={17} /></button>
                       )}
-                      <button className="btn-icon eliminar" onClick={() => onEliminar(compra._id)} title="Eliminar">
-                        <Trash2 size={18} />
-                      </button>
+                      <button className="abtn del" onClick={() => onEliminar(c._id)} title="Eliminar"><Trash2 size={17} /></button>
                     </div>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="8" className="sin-ventas">
-                  <ShoppingCart size={48} />
-                  <p>No hay ventas {filtroCompras !== 'todas' && `con estado "${filtroCompras}"`}</p>
-                </td>
-              </tr>
-            )}
+              );
+            })}
           </tbody>
         </table>
+        {todasCompras.length === 0 && (
+          <div className="empty-row">No hay ventas {filtroCompras !== 'todas' && `con estado "${filtroCompras}"`}</div>
+        )}
       </div>
-    </div>
+    </section>
   );
 };
 

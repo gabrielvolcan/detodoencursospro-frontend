@@ -1,7 +1,5 @@
-import { X } from 'lucide-react';
-
-// Diálogo de confirmación reutilizable. Reemplaza confirm()/prompt() nativos.
-// Si withInput=true, pide un texto (ej. motivo de rechazo) y lo devuelve en onConfirm.
+// Diálogo de confirmación reutilizable (estilo del panel admin).
+// Reemplaza confirm()/prompt() nativos. Si withInput=true pide un texto.
 const ConfirmDialog = ({
   title, message, confirmText = 'Confirmar', cancelText = 'Cancelar',
   danger = false, withInput = false, inputLabel = '', defaultValue = '',
@@ -17,23 +15,24 @@ const ConfirmDialog = ({
   };
 
   return (
-    <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{title}</h2>
-          <button type="button" onClick={onCancel}><X size={24} /></button>
+    <div className="overlay" onClick={onCancel}>
+      <div className="modal sm" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-head">
+          <div className="modal-title">{title}</div>
+          <button type="button" className="xbtn" onClick={onCancel}>×</button>
         </div>
+        <div className="modal-hr"></div>
         <form onSubmit={handleSubmit}>
-          {message && <p className="confirm-message">{message}</p>}
+          {message && <div className="confirm-msg">{message}</div>}
           {withInput && (
-            <div className="form-group">
+            <div className="field">
               <label>{inputLabel}</label>
-              <input name="valor" type="text" defaultValue={defaultValue} autoFocus />
+              <input className="input" name="valor" type="text" defaultValue={defaultValue} autoFocus />
             </div>
           )}
           <div className="modal-actions">
-            <button type="button" onClick={onCancel} className="btn-cancelar">{cancelText}</button>
-            <button type="submit" className={danger ? 'btn-peligro' : 'btn-guardar'}>{confirmText}</button>
+            <button type="button" className="btn-ghost" onClick={onCancel}>{cancelText}</button>
+            <button type="submit" className={danger ? 'btn-danger' : 'btn-green'}>{confirmText}</button>
           </div>
         </form>
       </div>

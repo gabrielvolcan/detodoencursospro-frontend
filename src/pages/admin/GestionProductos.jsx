@@ -1,25 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Star, Lock, Unlock, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Star, Edit2, Trash2 } from 'lucide-react';
 import { productosAPI } from '../../services/api';
 import { useConfirm } from '../../hooks/useConfirm';
-import '../Admin.css';
+import { useToast } from '../../hooks/useToast';
+import ToastContainer from '../../components/ToastContainer';
+import Thumb from './components/Thumb';
 
 const GestionProductos = () => {
   const navigate = useNavigate();
   const { confirm, confirmUI } = useConfirm();
+  const { toasts, showToast } = useToast();
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [mensaje, setMensaje] = useState({ tipo: '', texto: '' });
 
   useEffect(() => {
     cargarProductos();
   }, []);
-
-  const flash = (tipo, texto) => {
-    setMensaje({ tipo, texto });
-    setTimeout(() => setMensaje({ tipo: '', texto: '' }), 3000);
-  };
 
   const cargarProductos = async () => {
     try {
@@ -28,7 +25,7 @@ const GestionProductos = () => {
       setProductos(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error al cargar productos:', error);
-      setMensaje({ tipo: 'error', texto: 'Error al cargar productos' });
+      showToast('Error al cargar productos', 'error');
     } finally {
       setLoading(false);
     }
@@ -37,22 +34,22 @@ const GestionProductos = () => {
   const toggleDestacado = async (id, destacadoActual) => {
     try {
       await productosAPI.actualizar(id, { destacado: !destacadoActual });
-      flash('exito', 'Producto actualizado');
+      showToast('Producto actualizado');
       cargarProductos();
     } catch (error) {
       console.error('Error:', error);
-      setMensaje({ tipo: 'error', texto: 'Error al actualizar' });
+      showToast('Error al actualizar', 'error');
     }
   };
 
   const toggleActivo = async (id, activoActual) => {
     try {
       await productosAPI.actualizar(id, { activo: !activoActual });
-      flash('exito', 'Estado actualizado');
+      showToast('Estado actualizado');
       cargarProductos();
     } catch (error) {
       console.error('Error:', error);
-      setMensaje({ tipo: 'error', texto: 'Error al actualizar' });
+      showToast('Error al actualizar', 'error');
     }
   };
 
@@ -60,11 +57,11 @@ const GestionProductos = () => {
     if (!(await confirm({ title: 'Eliminar producto', message: '¿Estás seguro de eliminar este producto?', confirmText: 'Eliminar', danger: true }))) return;
     try {
       await productosAPI.eliminar(id);
-      flash('exito', 'Producto eliminado correctamente');
+      showToast('Producto eliminado correctamente');
       cargarProductos();
     } catch (error) {
       console.error('Error:', error);
-      setMensaje({ tipo: 'error', texto: 'Error al eliminar producto' });
+      showToast('Error al eliminar producto', 'error');
     }
   };
 
@@ -73,95 +70,48 @@ const GestionProductos = () => {
   }
 
   return (
-    <div className="gestion-cursos">
-      <div className="cursos-header">
-        <h1>Gestión de Productos Digitales</h1>
-        <button className="btn-crear" onClick={() => navigate('/admin/producto/nuevo')}>
-          <Plus size={20} />
-          Nuevo Producto
-        </button>
+    <section>
+      <div className="phead">
+        <h1 className="h1">Gestión de Productos Digitales</h1>
+        <button className="btn-green" onClick={() => navigate('/admin/producto/nuevo')}><Plus size={18} /> Nuevo Producto</button>
       </div>
+      <div className="divider-green"></div>
 
-      {mensaje.texto && (
-        <div className={`admin-mensaje ${mensaje.tipo}`}>{mensaje.texto}</div>
-      )}
-
-      <div className="cursos-tabla">
-        <table>
+      <div className="tblwrap">
+        <table className="tbl">
           <thead>
             <tr>
-              <th>Producto</th>
-              <th>Tipo</th>
-              <th>Precio USD</th>
-              <th>Estado</th>
-              <th>Destacado</th>
-              <th>Activo</th>
-              <th>Acciones</th>
+              <th>Producto</th><th>Tipo</th><th>Precio USD</th><th>Estado</th><th>Destacado</th><th>Activo</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {productos.length === 0 ? (
-              <tr>
-                <td colSpan="7" className="tabla-vacia">
-                  No hay productos registrados. Crea tu primer producto digital.
-                </td>
-              </tr>
+              <tr><td colSpan="7" className="tabla-vacia">No hay productos registrados. Crea tu primer producto digital.</td></tr>
             ) : (
-              productos.map((producto) => (
-                <tr key={producto._id}>
+              productos.map((p, i) => (
+                <tr key={p._id}>
                   <td>
-                    <div className="curso-tabla-info">
-                      {producto.imagen && <img src={producto.imagen} alt={producto.titulo} />}
+                    <div className="tcourse">
+                      <Thumb src={p.imagen} title={p.titulo} index={i + 2} />
                       <div>
-                        <strong>{producto.titulo}</strong>
-                        <span>{producto.descripcion?.substring(0, 50)}...</span>
+                        <div className="nm">{p.titulo}</div>
+                        <div className="lv">{p.descripcion?.substring(0, 50)}{p.descripcion?.length > 50 ? '…' : ''}</div>
                       </div>
                     </div>
                   </td>
-                  <td><span className="tipo-badge">{producto.tipo}</span></td>
-                  <td>${producto.precioUSD}</td>
+                  <td><span className="pill-green">{p.tipo}</span></td>
+                  <td className="muted">${p.precioUSD}</td>
+                  <td><span className={`badge ${p.gratis ? 'on' : 'pago'}`}>{p.gratis ? 'GRATIS' : 'PAGO'}</span></td>
                   <td>
-                    <span className={`estado-badge ${producto.gratis ? 'activo' : 'inactivo'}`}>
-                      {producto.gratis ? 'GRATIS' : 'PAGO'}
-                    </span>
-                  </td>
-                  <td>
-                    <button
-                      className={`btn-icon ${producto.destacado ? 'destacado-activo' : ''}`}
-                      onClick={() => toggleDestacado(producto._id, producto.destacado)}
-                      title={producto.destacado ? 'Quitar destacado' : 'Destacar producto'}
-                    >
-                      <Star size={18} fill={producto.destacado ? 'currentColor' : 'none'} />
+                    <button className={`star ${p.destacado ? 'on' : ''}`} onClick={() => toggleDestacado(p._id, p.destacado)} title={p.destacado ? 'Quitar destacado' : 'Destacar'}>
+                      <Star size={18} fill={p.destacado ? 'currentColor' : 'none'} />
                     </button>
                   </td>
+                  <td><button className={`tgl ${p.activo ? 'on' : 'off'}`} onClick={() => toggleActivo(p._id, p.activo)}>{p.activo ? 'ACTIVO' : 'INACTIVO'}</button></td>
                   <td>
-                    <span className={`estado-badge ${producto.activo ? 'activo' : 'inactivo'}`}>
-                      {producto.activo ? 'ACTIVO' : 'INACTIVO'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="acciones">
-                      <button
-                        className="btn-icon"
-                        onClick={() => toggleActivo(producto._id, producto.activo)}
-                        title={producto.activo ? 'Desactivar' : 'Activar'}
-                      >
-                        {producto.activo ? <Lock size={18} /> : <Unlock size={18} />}
-                      </button>
-                      <button
-                        className="btn-icon"
-                        onClick={() => navigate(`/admin/producto/${producto._id}/editar`)}
-                        title="Editar producto"
-                      >
-                        <Edit2 size={18} />
-                      </button>
-                      <button
-                        className="btn-icon eliminar"
-                        onClick={() => eliminarProducto(producto._id)}
-                        title="Eliminar producto"
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                    <div className="acts">
+                      <button className="abtn" onClick={() => navigate(`/admin/producto/${p._id}/editar`)} title="Editar"><Edit2 size={17} /></button>
+                      <button className="abtn del" onClick={() => eliminarProducto(p._id)} title="Eliminar"><Trash2 size={17} /></button>
                     </div>
                   </td>
                 </tr>
@@ -172,7 +122,8 @@ const GestionProductos = () => {
       </div>
 
       {confirmUI}
-    </div>
+      <ToastContainer toasts={toasts} />
+    </section>
   );
 };
 

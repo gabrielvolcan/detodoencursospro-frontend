@@ -1,19 +1,17 @@
 import {
   DollarSign, Users, BookOpen, TrendingUp, Globe, CreditCard, BarChart3,
-  Activity, Mail, Clock, ArrowUp, ArrowDown,
+  Activity, Mail, Clock,
 } from 'lucide-react';
 import { formatUSD } from '../../utils/formato';
 import { tendencia, calcularTicketPromedio, calcularTasaConversion } from '../../utils/adminMetrics';
+import Thumb from './components/Thumb';
 
-// Tarjeta de tendencia (flecha + %) reutilizable
-const Tendencia = ({ actual, anterior, texto }) => {
+const Trend = ({ actual, anterior, texto }) => {
   const t = tendencia(actual, anterior);
   return (
-    <span className={`stat-trend ${t.signo}`}>
-      {t.signo === 'up' && <ArrowUp size={13} />}
-      {t.signo === 'down' && <ArrowDown size={13} />}
-      {t.pct}% {texto}
-    </span>
+    <div className={`ssub ${t.signo === 'down' ? 'down' : ''}`}>
+      {t.signo === 'up' ? '↑' : t.signo === 'down' ? '↓' : '•'} {t.pct}% {texto}
+    </div>
   );
 };
 
@@ -21,217 +19,162 @@ const DashboardAdmin = ({
   estadisticas, ventasPorPais, ventasSerie, metodosPago, cursosIngresos,
   productosIngresos, rangoDias, setRangoDias, onIrPagos, onEmailMasivo,
 }) => {
-  const stats = estadisticas?.estadisticas;
+  const s = estadisticas?.estadisticas || {};
+  const maxSerie = Math.max(...ventasSerie.map((d) => d.total), 1);
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-header-con-boton">
-        <h1>Dashboard</h1>
-        <button onClick={onEmailMasivo} className="btn-email-masivo">
-          <Mail size={20} />
-          Email Masivo
-        </button>
+    <section>
+      <div className="phead">
+        <h1 className="h1">Dashboard</h1>
+        <button className="btn-green" onClick={onEmailMasivo}><Mail size={18} /> Email Masivo</button>
       </div>
 
-      {/* MÉTRICAS PRINCIPALES */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon ico-verde"><DollarSign size={28} /></div>
-          <div className="stat-info">
-            <span className="stat-label">Ingresos Totales</span>
-            <span className="stat-value">{formatUSD(stats?.ingresosTotal)}</span>
-            <Tendencia actual={stats?.ingresosMesTotal} anterior={stats?.ingresosMesAnterior} texto="este mes vs anterior" />
+      <div className="statgrid4">
+        <div className="statcard">
+          <div className="sicon ico-green"><DollarSign size={26} /></div>
+          <div>
+            <div className="slabel">Ingresos Totales</div>
+            <div className="sval">{formatUSD(s.ingresosTotal)}</div>
+            <Trend actual={s.ingresosMesTotal} anterior={s.ingresosMesAnterior} texto="este mes vs anterior" />
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon ico-azul"><Users size={28} /></div>
-          <div className="stat-info">
-            <span className="stat-label">Total Usuarios</span>
-            <span className="stat-value">{stats?.totalUsuarios || 0}</span>
-            <Tendencia actual={stats?.usuariosMes} anterior={stats?.usuariosMesAnterior} texto="nuevos vs mes anterior" />
+        <div className="statcard">
+          <div className="sicon ico-blue"><Users size={26} /></div>
+          <div>
+            <div className="slabel">Total Usuarios</div>
+            <div className="sval">{s.totalUsuarios || 0}</div>
+            <Trend actual={s.usuariosMes} anterior={s.usuariosMesAnterior} texto="nuevos vs mes anterior" />
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon ico-violeta"><BookOpen size={28} /></div>
-          <div className="stat-info">
-            <span className="stat-label">Total Cursos</span>
-            <span className="stat-value">{stats?.totalCursos || 0}</span>
+        <div className="statcard">
+          <div className="sicon ico-purple"><BookOpen size={26} /></div>
+          <div>
+            <div className="slabel">Total Cursos</div>
+            <div className="sval">{s.totalCursos || 0}</div>
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon ico-cyan"><TrendingUp size={28} /></div>
-          <div className="stat-info">
-            <span className="stat-label">Ventas Completadas</span>
-            <span className="stat-value">{stats?.ventasCompletadas || 0}</span>
-          </div>
-        </div>
-
-        {/* Pagos pendientes — acceso rápido a aprobar */}
-        <button
-          type="button"
-          className={`stat-card stat-card-accion ${(stats?.pagosPendientes || 0) > 0 ? 'pendiente-activo' : ''}`}
-          onClick={onIrPagos}
-        >
-          <div className="stat-icon ico-ambar"><Clock size={28} /></div>
-          <div className="stat-info">
-            <span className="stat-label">Pagos Pendientes</span>
-            <span className="stat-value">{stats?.pagosPendientes || 0}</span>
-            <span className="stat-trend accion">Revisar y aprobar →</span>
-          </div>
-        </button>
-
-        <div className="stat-card">
-          <div className="stat-icon ico-ambar"><Activity size={28} /></div>
-          <div className="stat-info">
-            <span className="stat-label">Ticket Promedio</span>
-            <span className="stat-value">${calcularTicketPromedio(estadisticas?.ultimasVentas)}</span>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon ico-rosa"><BarChart3 size={28} /></div>
-          <div className="stat-info">
-            <span className="stat-label">Tasa de Conversión</span>
-            <span className="stat-value">{calcularTasaConversion(estadisticas)}%</span>
+        <div className="statcard">
+          <div className="sicon ico-teal"><TrendingUp size={26} /></div>
+          <div>
+            <div className="slabel">Ventas Completadas</div>
+            <div className="sval">{s.ventasCompletadas || 0}</div>
           </div>
         </div>
       </div>
 
-      {/* GRID DE 3 COLUMNAS */}
-      <div className="dashboard-grid-mejorado">
-        {/* VENTAS POR PAÍS */}
-        <div className="dashboard-card">
-          <h2><Globe size={24} /> Ventas por País</h2>
-          <div className="ventas-pais-lista">
-            {ventasPorPais.length > 0 ? (
-              ventasPorPais.map((item, index) => (
-                <div key={index} className="venta-pais-item">
-                  <div className="pais-info">
-                    <span className="bandera">{item.bandera}</span>
-                    <span className="pais-nombre">{item.pais}</span>
-                  </div>
-                  <div className="pais-stats">
-                    <span className="pais-total">{formatUSD(item.total)}</span>
-                    <span className="pais-porcentaje">{item.porcentaje}%</span>
-                  </div>
-                  <div className="pais-barra">
-                    <div className="pais-barra-fill" style={{ width: `${item.porcentaje}%` }}></div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="sin-datos">No hay ventas registradas aún</p>
-            )}
+      <div className="statgrid3">
+        <button type="button" className="statcard clickable" onClick={onIrPagos}>
+          <div className="sicon ico-gold"><Clock size={26} /></div>
+          <div>
+            <div className="slabel">Pagos Pendientes</div>
+            <div className="sval">{s.pagosPendientes || 0}</div>
+            <div className="slink">Revisar y aprobar →</div>
+          </div>
+        </button>
+        <div className="statcard">
+          <div className="sicon ico-gold"><Activity size={26} /></div>
+          <div>
+            <div className="slabel">Ticket Promedio</div>
+            <div className="sval">${calcularTicketPromedio(estadisticas?.ultimasVentas)}</div>
           </div>
         </div>
+        <div className="statcard">
+          <div className="sicon ico-pink"><BarChart3 size={26} /></div>
+          <div>
+            <div className="slabel">Tasa de Conversión</div>
+            <div className="sval">{calcularTasaConversion(estadisticas)}%</div>
+          </div>
+        </div>
+      </div>
 
-        {/* VENTAS (rango seleccionable) */}
-        <div className="dashboard-card">
-          <div className="dashboard-card-head">
-            <h2><TrendingUp size={24} /> Ventas (últimos {rangoDias} días)</h2>
-            <div className="rango-selector">
+      <div className="pgrid3">
+        <div className="panel">
+          <div className="panel-h"><Globe size={20} /> Ventas por País</div>
+          <div className="phr"></div>
+          {ventasPorPais.length > 0 ? ventasPorPais.map((item, i) => (
+            <div className="country-row" key={i}>
+              <div className="cr-top">{item.bandera} {item.pais}</div>
+              <div className="cr-amt"><b>{formatUSD(item.total)}</b><span>{item.porcentaje}%</span></div>
+              <div className="bar"><i style={{ width: `${item.porcentaje}%` }}></i></div>
+            </div>
+          )) : <p className="sin-datos">No hay ventas registradas aún</p>}
+        </div>
+
+        <div className="panel">
+          <div className="chart-head">
+            <div className="chart-title"><TrendingUp size={20} /> Ventas (últimos {rangoDias} días)</div>
+            <div className="seg">
               {[7, 14, 30].map((d) => (
-                <button key={d} type="button" className={rangoDias === d ? 'activo' : ''} onClick={() => setRangoDias(d)}>
-                  {d}d
-                </button>
+                <button key={d} className={rangoDias === d ? 'on' : ''} onClick={() => setRangoDias(d)}>{d}d</button>
               ))}
             </div>
           </div>
-          <div className="grafico-ventas">
-            {ventasSerie.map((dia, index) => {
-              const maxTotal = Math.max(...ventasSerie.map((d) => d.total), 1);
-              const altura = (dia.total / maxTotal) * 100;
+          <div className="chart">
+            {ventasSerie.map((dia, i) => {
+              const esMax = dia.total === maxSerie && dia.total > 0;
               return (
-                <div key={index} className="dia-barra">
-                  <div className="barra-container">
-                    <div className="barra-fill" style={{ height: `${altura}%` }} title={`${formatUSD(dia.total)} (${dia.cantidad} ventas)`}>
-                      <span className="barra-valor">${dia.total.toFixed(0)}</span>
-                    </div>
-                  </div>
-                  <span className="dia-label">{dia.fecha}</span>
+                <div className={`cbar ${esMax ? 'hi' : ''}`} key={i}>
+                  {esMax && <span className="v">${dia.total.toFixed(0)}</span>}
+                  <i style={{ height: `${Math.max((dia.total / maxSerie) * 100, dia.total > 0 ? 4 : 2)}%` }} title={`${formatUSD(dia.total)} (${dia.cantidad} ventas)`}></i>
+                  <small>{dia.fecha}</small>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* MÉTODOS DE PAGO */}
-        <div className="dashboard-card">
-          <h2><CreditCard size={24} /> Métodos de Pago</h2>
-          <div className="metodos-pago-lista">
-            {metodosPago.length > 0 ? (
-              metodosPago.map((item, index) => (
-                <div key={index} className="metodo-item">
-                  <span className="metodo-nombre">{item.metodo}</span>
-                  <span className="metodo-cantidad">{item.cantidad} ventas</span>
-                </div>
-              ))
-            ) : (
-              <p className="sin-datos">No hay datos de métodos de pago</p>
-            )}
-          </div>
+        <div className="panel">
+          <div className="panel-h"><CreditCard size={20} /> Métodos de Pago</div>
+          <div className="phr"></div>
+          {metodosPago.length > 0 ? metodosPago.map((m, i) => (
+            <div className="mrow" key={i}><b>{m.metodo}</b><span>{m.cantidad} ventas</span></div>
+          )) : <p className="sin-datos">No hay datos de métodos de pago</p>}
         </div>
       </div>
 
-      {/* SECCIONES INFERIORES */}
-      <div className="dashboard-sections">
-        <div className="section">
-          <h2>Top Cursos por Ingresos</h2>
-          <div className="cursos-populares">
-            {cursosIngresos.length > 0 ? (
-              cursosIngresos.map((curso) => (
-                <div key={curso._id} className="curso-popular-item">
-                  <img src={curso.imagen} alt={curso.titulo} />
-                  <div>
-                    <h4>{curso.titulo}</h4>
-                    <p>{curso.estudiantes || 0} estudiantes • <strong>{formatUSD(curso.ingresos)} ingresos</strong></p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="sin-datos">No hay cursos con ventas aún</p>
-            )}
-          </div>
-        </div>
-
-        <div className="section">
-          <h2>Top Productos por Ingresos</h2>
-          <div className="cursos-populares">
-            {productosIngresos.length > 0 ? (
-              productosIngresos.map((prod) => (
-                <div key={prod._id} className="curso-popular-item">
-                  <img src={prod.imagen} alt={prod.titulo} />
-                  <div>
-                    <h4>{prod.titulo}</h4>
-                    <p>{prod.ventas || 0} ventas • <strong>{formatUSD(prod.ingresos)} ingresos</strong></p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="sin-datos">No hay productos vendidos aún</p>
-            )}
-          </div>
-        </div>
-
-        <div className="section">
-          <h2>Últimas Ventas</h2>
-          <div className="ultimas-ventas">
-            {estadisticas?.ultimasVentas?.slice(0, 5).map((venta) => (
-              <div key={venta._id} className="venta-item">
-                <div>
-                  <strong>{venta.usuario?.nombre}</strong>
-                  <p>{new Date(venta.createdAt).toLocaleDateString()}</p>
-                </div>
-                <span className="venta-total">{formatUSD(venta.total)}</span>
+      <div className="pgrid2">
+        <div className="panel">
+          <div className="panel-h">Top Cursos por Ingresos</div>
+          <div className="phr"></div>
+          {cursosIngresos.length > 0 ? cursosIngresos.map((c, i) => (
+            <div className="tl-row" key={c._id}>
+              <Thumb src={c.imagen} title={c.titulo} index={i} />
+              <div>
+                <div className="tl-name">{c.titulo}</div>
+                <div className="tl-sub">{c.estudiantes || 0} estudiantes · <b>{formatUSD(c.ingresos)} ingresos</b></div>
               </div>
-            ))}
-          </div>
+            </div>
+          )) : <p className="sin-datos">No hay cursos con ventas aún</p>}
+        </div>
+        <div className="panel">
+          <div className="panel-h">Top Productos por Ingresos</div>
+          <div className="phr"></div>
+          {productosIngresos.length > 0 ? productosIngresos.map((p, i) => (
+            <div className="tl-row" key={p._id}>
+              <Thumb src={p.imagen} title={p.titulo} index={i + 5} />
+              <div>
+                <div className="tl-name">{p.titulo}</div>
+                <div className="tl-sub">{p.ventas || 0} ventas · <b>{formatUSD(p.ingresos)} ingresos</b></div>
+              </div>
+            </div>
+          )) : <p className="sin-datos">No hay productos vendidos aún</p>}
         </div>
       </div>
-    </div>
+
+      <div className="panel" style={{ marginTop: 18 }}>
+        <div className="panel-h">Últimas Ventas</div>
+        <div className="phr"></div>
+        {estadisticas?.ultimasVentas?.slice(0, 5).map((v) => (
+          <div className="uv-row" key={v._id}>
+            <div>
+              <div className="uv-name">{v.usuario?.nombre}</div>
+              <div className="uv-date">{new Date(v.createdAt).toLocaleDateString()}</div>
+            </div>
+            <div className="uv-amt">{formatUSD(v.total)}</div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 };
 

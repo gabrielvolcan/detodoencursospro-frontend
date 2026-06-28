@@ -1,61 +1,43 @@
-import { Plus, Edit2, Trash2, Eye, DollarSign } from 'lucide-react';
+import { Plus, Eye, DollarSign, Edit2, Trash2 } from 'lucide-react';
+import Thumb from './components/Thumb';
 
 const GestionCursos = ({ cursos, onCrear, onVer, onEditarPrecios, onEditar, onEliminar }) => (
-  <div className="gestion-cursos">
-    <div className="cursos-header">
-      <h1>Gestión de Cursos</h1>
-      <button className="btn-crear" onClick={onCrear}>
-        <Plus size={20} />
-        Crear Curso
-      </button>
+  <section>
+    <div className="phead">
+      <h1 className="h1">Gestión de Cursos</h1>
+      <button className="btn-green" onClick={onCrear}><Plus size={18} /> Crear Curso</button>
     </div>
+    <div className="divider-green"></div>
 
-    <div className="cursos-tabla">
-      <table>
+    <div className="tblwrap">
+      <table className="tbl">
         <thead>
           <tr>
-            <th>Curso</th>
-            <th>Categoría</th>
-            <th>Precio (USD)</th>
-            <th>Estudiantes</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th>Curso</th><th>Categoría</th><th>Precio (USD)</th><th>Estudiantes</th><th>Estado</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {cursos.map((curso) => (
+          {cursos.map((curso, i) => (
             <tr key={curso._id}>
               <td>
-                <div className="curso-tabla-info">
-                  <img src={curso.imagen} alt={curso.titulo} />
+                <div className="tcourse">
+                  <Thumb src={curso.imagen} title={curso.titulo} index={i} />
                   <div>
-                    <strong>{curso.titulo}</strong>
-                    <span>{curso.nivel}</span>
+                    <div className="nm">{curso.titulo}</div>
+                    <div className="lv">{curso.nivel}</div>
                   </div>
                 </div>
               </td>
-              <td>{curso.categoria}</td>
-              <td>${curso.precioUSD || curso.precio || 0}</td>
-              <td>{curso.estudiantes || 0}</td>
+              <td className="muted">{curso.categoria}</td>
+              <td className="muted">${curso.precioUSD || curso.precio || 0}</td>
+              <td className="muted">{curso.estudiantes || 0}</td>
+              <td><span className={`badge ${curso.activo ? 'on' : 'off'}`}>{curso.activo ? 'Activo' : 'Inactivo'}</span></td>
               <td>
-                <span className={`estado-badge ${curso.activo ? 'activo' : 'inactivo'}`}>
-                  {curso.activo ? 'Activo' : 'Inactivo'}
-                </span>
-              </td>
-              <td>
-                <div className="acciones">
-                  <button className="btn-icon" onClick={() => onVer(curso._id)} title="Ver">
-                    <Eye size={18} />
-                  </button>
-                  <button className="btn-icon" onClick={() => onEditarPrecios(curso)} title="Editar Precios">
-                    <DollarSign size={18} />
-                  </button>
-                  <button className="btn-icon" onClick={() => onEditar(curso._id)} title="Editar">
-                    <Edit2 size={18} />
-                  </button>
-                  <button className="btn-icon eliminar" onClick={() => onEliminar(curso._id)} title="Eliminar">
-                    <Trash2 size={18} />
-                  </button>
+                <div className="acts">
+                  <button className="abtn" onClick={() => onVer(curso._id)} title="Ver"><Eye size={17} /></button>
+                  <button className="abtn" onClick={() => onEditarPrecios(curso)} title="Editar precios"><DollarSign size={17} /></button>
+                  <button className="abtn" onClick={() => onEditar(curso._id)} title="Editar"><Edit2 size={17} /></button>
+                  <button className="abtn del" onClick={() => onEliminar(curso._id)} title="Eliminar"><Trash2 size={17} /></button>
                 </div>
               </td>
             </tr>
@@ -63,7 +45,7 @@ const GestionCursos = ({ cursos, onCrear, onVer, onEditarPrecios, onEditar, onEl
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
 );
 
 export default GestionCursos;

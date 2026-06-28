@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, BookOpen, Package, Users, DollarSign, ShoppingCart, Bell, X } from 'lucide-react';
+import { TrendingUp, BookOpen, Package, Users, DollarSign, ShoppingCart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, getComprobanteUrl } from '../services/api';
 import { useNotificaciones } from '../hooks/useNotificaciones';
@@ -27,6 +27,8 @@ const NAV = [
   { key: 'cursos', label: 'Gestión de Cursos', icon: BookOpen },
   { key: 'productos', label: 'Gestión de Productos', icon: Package },
   { key: 'usuarios', label: 'Usuarios', icon: Users },
+  { key: 'pagos', label: 'Pagos Pendientes', icon: DollarSign },
+  { key: 'ventas', label: 'Todas las Ventas', icon: ShoppingCart },
 ];
 
 const Admin = () => {
@@ -47,11 +49,10 @@ const Admin = () => {
   const [modalDetalleVenta, setModalDetalleVenta] = useState(null);
   const [modalEditarPrecios, setModalEditarPrecios] = useState(null);
 
-  // Notificaciones
+  // Notificaciones (contador de pagos pendientes en el sidebar)
   const { contador, hayNuevas, marcarComoVistas } = useNotificaciones(true);
-  const [mostrarToast, setMostrarToast] = useState(false);
 
-  // Diálogos y toasts propios (reemplazan alert/confirm/prompt nativos)
+  // Diálogos y toasts propios
   const { confirm, confirmUI } = useConfirm();
   const { toasts, showToast } = useToast();
 
@@ -95,15 +96,6 @@ const Admin = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vista, filtroCompras]);
 
-  // Mostrar toast cuando hay nuevas notificaciones
-  useEffect(() => {
-    if (hayNuevas && vista !== 'pagos') {
-      setMostrarToast(true);
-      setTimeout(() => setMostrarToast(false), 5000);
-    }
-  }, [hayNuevas, vista]);
-
-  // Recalcular la serie del gráfico cuando cambian los datos o el rango
   useEffect(() => {
     setSerieVentas(serieGrafico(ventasPorDiaRaw, rangoDias));
   }, [ventasPorDiaRaw, rangoDias]);
@@ -145,8 +137,13 @@ const Admin = () => {
     }
   };
 
+  const irAVista = (key) => {
+    setVista(key);
+    if (key === 'pagos') marcarComoVistas();
+  };
+
   const eliminarCurso = async (id) => {
-    if (!(await confirm({ title: 'Eliminar curso', message: '¿Estás seguro de eliminar este curso?', confirmText: 'Eliminar', danger: true }))) return;
+    if (!(await confirm({ title: 'Eliminar curso', message: 'Esta acción no se puede deshacer.', confirmText: 'Eliminar', danger: true }))) return;
     try {
       await cursosAPI.eliminar(id);
       await cargarDatos();
@@ -276,34 +273,24 @@ const Admin = () => {
   }
 
   return (
-    <div className="admin-page">
-      <div className="admin-sidebar">
-        <h2>Panel Admin</h2>
-        <nav className="admin-nav">
+    <div className="admin-rd">
+      <aside className="sidebar">
+        <h2 className="side-h">Panel Admin</h2>
+        <div className="side-div"></div>
+        <nav className="navlist">
           {NAV.map(({ key, label, icon: Icon }) => (
-            <button key={key} className={vista === key ? 'activo' : ''} onClick={() => setVista(key)}>
-              <Icon size={18} />
+            <button key={key} className={`navitem ${vista === key ? 'on' : ''}`} onClick={() => irAVista(key)}>
+              <Icon size={20} />
               {label}
+              {key === 'pagos' && contador > 0 && (
+                <span className={`nav-badge ${hayNuevas ? 'pulse' : ''}`}>{contador}</span>
+              )}
             </button>
           ))}
-          <button
-            className={vista === 'pagos' ? 'activo' : ''}
-            onClick={() => { setVista('pagos'); marcarComoVistas(); }}
-          >
-            <DollarSign size={18} />
-            Pagos Pendientes
-            {contador > 0 && (
-              <span className={`badge-count ${hayNuevas ? 'badge-pulsante' : ''}`}>{contador}</span>
-            )}
-          </button>
-          <button className={vista === 'ventas' ? 'activo' : ''} onClick={() => setVista('ventas')}>
-            <ShoppingCart size={18} />
-            Todas las Ventas
-          </button>
         </nav>
-      </div>
+      </aside>
 
-      <div className="admin-content">
+      <main className="main">
         {vista === 'dashboard' && (
           <DashboardAdmin
             estadisticas={estadisticas}
@@ -314,7 +301,7 @@ const Admin = () => {
             productosIngresos={productosIngresos}
             rangoDias={rangoDias}
             setRangoDias={setRangoDias}
-            onIrPagos={() => setVista('pagos')}
+            onIrPagos={() => irAVista('pagos')}
             onEmailMasivo={() => navigate('/admin/email-masivo')}
           />
         )}
@@ -361,9 +348,8 @@ const Admin = () => {
             onEliminar={eliminarCompra}
           />
         )}
-      </div>
+      </main>
 
-      {/* MODALES */}
       {modalEditarUsuario && (
         <ModalEditarUsuario
           usuario={modalEditarUsuario}
@@ -385,25 +371,6 @@ const Admin = () => {
           onClose={() => setModalEditarPrecios(null)}
           onSubmit={guardarPrecios}
         />
-      )}
-
-      {mostrarToast && (
-        <div className="notification-toast">
-          <Bell size={20} />
-          <div className="toast-content">
-            <strong>Nueva compra pendiente</strong>
-            <p>Tienes {contador} {contador === 1 ? 'pago' : 'pagos'} pendiente{contador === 1 ? '' : 's'}</p>
-          </div>
-          <button
-            className="toast-btn"
-            onClick={() => { setVista('pagos'); setMostrarToast(false); marcarComoVistas(); }}
-          >
-            Ver ahora
-          </button>
-          <button className="toast-close" onClick={() => setMostrarToast(false)}>
-            <X size={18} />
-          </button>
-        </div>
       )}
 
       {confirmUI}

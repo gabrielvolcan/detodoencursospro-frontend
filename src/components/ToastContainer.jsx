@@ -1,14 +1,11 @@
-import { CheckCircle, AlertCircle } from 'lucide-react';
-
-// Pila de toasts (arriba a la derecha). Recibe la lista del hook useToast.
+// Pila de toasts (abajo-centro). Recibe la lista del hook useToast.
 const ToastContainer = ({ toasts }) => {
   if (!toasts.length) return null;
   return (
-    <div className="toast-stack">
+    <div className="admin-rd-toast-stack">
       {toasts.map((t) => (
-        <div key={t.id} className={`admin-toast ${t.tipo}`}>
-          {t.tipo === 'error' ? <AlertCircle size={18} /> : <CheckCircle size={18} />}
-          <span>{t.texto}</span>
+        <div key={t.id} className={`admin-rd-toast ${t.tipo === 'error' ? 'error' : ''}`}>
+          {t.texto}
         </div>
       ))}
     </div>

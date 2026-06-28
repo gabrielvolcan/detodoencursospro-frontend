@@ -1,49 +1,51 @@
-import { X } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { formatMonto } from '../../../utils/formato';
 
 const ModalDetalleVenta = ({ venta, onClose, comprobanteCargando, onVerComprobante }) => (
-  <div className="modal-overlay" onClick={onClose}>
-    <div className="modal-content-large" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-header">
-        <h2>Detalle de Venta #{venta._id.slice(-6)}</h2>
-        <button onClick={onClose}><X size={24} /></button>
+  <div className="overlay" onClick={onClose}>
+    <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-head">
+        <div className="modal-title">Detalle de Venta #{venta._id.slice(-6)}</div>
+        <button type="button" className="xbtn" onClick={onClose}>×</button>
       </div>
-      <div className="detalle-venta">
-        <div className="detalle-section">
-          <h3>Cliente</h3>
-          <p><strong>Nombre:</strong> {venta.usuario?.nombre}</p>
-          <p><strong>Email:</strong> {venta.usuario?.email}</p>
-          <p><strong>Teléfono:</strong> {venta.usuario?.telefono}</p>
-        </div>
-        <div className="detalle-section">
-          <h3>Pago</h3>
-          <p><strong>Total:</strong> {formatMonto(venta.total, venta.moneda)}</p>
-          <p><strong>Método:</strong> {venta.metodoPago?.nombre}</p>
-          <p><strong>Estado:</strong> <span className={`estado-badge ${venta.estadoPago}`}>{venta.estadoPago}</span></p>
-          <p><strong>Fecha:</strong> {new Date(venta.createdAt).toLocaleString()}</p>
-        </div>
-        <div className="detalle-section">
-          <h3>Cursos</h3>
-          {venta.cursos.map((item) => (
-            <div key={item._id} className="curso-detalle">
-              <p>{item.curso?.titulo} - ${item.precio}</p>
-            </div>
-          ))}
-        </div>
-        {venta.comprobante?.url && (
-          <div className="detalle-section">
-            <h3>Comprobante</h3>
-            <button
-              type="button"
-              onClick={() => onVerComprobante(venta._id)}
-              disabled={comprobanteCargando === venta._id}
-              className="btn-ver-comprobante"
-            >
-              {comprobanteCargando === venta._id ? '⏳ Cargando...' : '📸 Ver Comprobante'}
-            </button>
-          </div>
-        )}
+      <div className="modal-hr"></div>
+
+      <div className="msec">
+        <div className="msec-h">Cliente</div>
+        <div className="kv"><b>Nombre:</b><span>{venta.usuario?.nombre}</span></div>
+        <div className="kv"><b>Email:</b><span>{venta.usuario?.email}</span></div>
+        <div className="kv"><b>Teléfono:</b><span>{venta.usuario?.telefono || '—'}</span></div>
       </div>
+
+      <div className="msec">
+        <div className="msec-h">Pago</div>
+        <div className="kv"><b>Total:</b><span>{formatMonto(venta.total, venta.moneda)}</span></div>
+        <div className="kv"><b>Método:</b><span>{venta.metodoPago?.nombre}</span></div>
+        <div className="kv"><b>Estado:</b><span className="pill-green">{venta.estadoPago}</span></div>
+        <div className="kv"><b>Fecha:</b><span>{new Date(venta.createdAt).toLocaleString()}</span></div>
+      </div>
+
+      <div className="msec">
+        <div className="msec-h">Cursos</div>
+        {venta.cursos?.length ? venta.cursos.map((item) => (
+          <div className="kv" key={item._id}><span>{item.curso?.titulo} - ${item.precio}</span></div>
+        )) : <div className="muted">Sin cursos asociados a esta venta.</div>}
+      </div>
+
+      {venta.comprobante?.url && (
+        <div className="msec">
+          <div className="msec-h">Comprobante</div>
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ height: 44, display: 'inline-flex', alignItems: 'center', gap: 8 }}
+            onClick={() => onVerComprobante(venta._id)}
+            disabled={comprobanteCargando === venta._id}
+          >
+            <FileText size={17} /> {comprobanteCargando === venta._id ? 'Cargando...' : 'Ver Comprobante'}
+          </button>
+        </div>
+      )}
     </div>
   </div>
 );
