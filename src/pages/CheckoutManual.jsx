@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Upload, Check, AlertCircle, ArrowLeft, ArrowRight, CreditCard, Package, BookOpen,
+  Upload, Check, AlertCircle, ArrowLeft, ArrowRight, CreditCard, Package, BookOpen, Copy,
 } from 'lucide-react';
 import { useCarrito } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
@@ -41,6 +41,21 @@ const CheckoutManual = () => {
   const [enviado, setEnviado] = useState(false);
   const [metodosPais, setMetodosPais] = useState(null);
   const [cargandoMetodos, setCargandoMetodos] = useState(true);
+  const [copiado, setCopiado] = useState(false);
+
+  const copiarDatos = async (texto) => {
+    try {
+      await navigator.clipboard.writeText(texto);
+    } catch {
+      // Fallback para navegadores sin permiso de clipboard
+      const ta = document.createElement('textarea');
+      ta.value = texto; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch { /* noop */ }
+      document.body.removeChild(ta);
+    }
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2000);
+  };
 
   const monedaPais = obtenerMoneda(paisSeleccionado);
   const paisActual = obtenerPaisActual();
@@ -239,7 +254,12 @@ const CheckoutManual = () => {
                       </div>
                       {activo && (
                         <div className="card" style={{ padding: 20, margin: '0 0 12px' }}>
-                          <h4 className="fw7 sm" style={{ margin: '0 0 10px' }}>📋 Datos para la transferencia</h4>
+                          <div className="fx ac jb gap8" style={{ marginBottom: 10 }}>
+                            <h4 className="fw7 sm" style={{ margin: 0 }}>📋 Datos para la transferencia</h4>
+                            <button type="button" className="btn btng btn-sm noshrink" onClick={() => copiarDatos(metodo.instrucciones)}>
+                              {copiado ? <><Check className="ic ic-s" />Copiado</> : <><Copy className="ic ic-s" />Copiar</>}
+                            </button>
+                          </div>
                           <pre className="pay-instr">{metodo.instrucciones}</pre>
                           <div className="alert alert-warn" style={{ marginTop: 12 }}>
                             <AlertCircle className="ic ic-s" />Realiza el pago por el monto exacto de <strong>&nbsp;{totalFormateado}</strong>
