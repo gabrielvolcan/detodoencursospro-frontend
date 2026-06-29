@@ -202,7 +202,10 @@
 .pub .pd-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pub .pd-thumb:hover { border-color: #2c2c34; }
 .pub .pd-thumb.on { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
-.pub .pd-cover { aspect-ratio: 3/4; border-radius: 18px; border: 1px solid var(--bd); }
+/* La portada/fotos se adaptan a su proporción real (cuadrada, vertical u horizontal)
+   y se muestran completas sin recortar. */
+.pub .pd-cover { aspect-ratio: auto; border-radius: 18px; border: 1px solid var(--bd); background: var(--elev); }
+.pub .pd-cover img { height: auto; object-fit: contain; }
 
 /* Mis compras / cursos */
 .pub .order { display: grid; grid-template-columns: 1.7fr .8fr .9fr .7fr auto; gap: 18px; align-items: center; padding: 18px 22px; border: 1px solid var(--bd); border-radius: 14px; background: var(--card); margin-bottom: 12px; }
