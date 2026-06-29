@@ -125,10 +125,10 @@ const MisCompras = () => {
                           <span className="fw6 sm" style={{ flex: 1 }}>{item.producto?.titulo}</span>
                           <span className="muted sm">${item.precio}</span>
                           {compra.estadoPago === 'aprobado' && item.producto?._id && item.producto?.libro?.archivoId && (
-                            <button className="btn btng btn-sm" onClick={() => navigate(`/leer/${item.producto._id}`)}><BookOpen className="ic ic-s" />Leer</button>
+                            <button className="btn btnp btn-sm" onClick={() => navigate(`/leer/${item.producto._id}`)}><BookOpen className="ic ic-s" />Leer ahora</button>
                           )}
                           {compra.estadoPago === 'aprobado' && item.producto?._id && !item.producto?.libro?.archivoId && (
-                            <button className="btn btng btn-sm" onClick={() => navigate(`/producto/${item.producto._id}`)}><Download className="ic ic-s" />Descargar</button>
+                            <button className="btn btnp btn-sm" onClick={() => navigate(`/producto/${item.producto._id}`)}><Download className="ic ic-s" />Descargar</button>
                           )}
                         </div>
                       ))}

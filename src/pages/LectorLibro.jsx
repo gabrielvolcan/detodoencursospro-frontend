@@ -61,12 +61,28 @@ const LectorLibro = () => {
   // Tema EPUB (cubre html + body para que NO queden bordes claros)
   const aplicarTemaEpub = useCallback((rend, esOscuro) => {
     if (!rend) return;
+    // Tipografía cómoda para leer (sobre todo en móvil): texto alineado a la
+    // izquierda (sin el justificado que deja huecos), buen interlineado y aire.
+    const tipografia = {
+      'html, body': { 'padding': '0 !important', 'margin': '0 !important' },
+      'p, li, blockquote': {
+        'font-size': '1.12em !important',
+        'line-height': '1.75 !important',
+        'text-align': 'left !important',
+        'word-spacing': 'normal !important',
+        'margin': '0 0 1.05em !important',
+        'hyphens': 'none !important'
+      },
+      'h1, h2, h3': { 'line-height': '1.3 !important', 'text-align': 'left !important' }
+    };
     rend.themes.register('claro', {
-      'html, body': { background: '#ffffff !important', color: '#1a1a1a !important' }
+      ...tipografia,
+      'html, body': { ...tipografia['html, body'], background: '#ffffff !important', color: '#1a1a1a !important' }
     });
     rend.themes.register('oscuro', {
-      'html, body': { background: '#15171a !important', color: '#d6d6d6 !important' },
-      'p, span, div, h1, h2, h3, h4, h5, h6, li, a, blockquote, em, strong, td, th': { color: '#d6d6d6 !important' },
+      ...tipografia,
+      'html, body': { ...tipografia['html, body'], background: '#15171a !important', color: '#d6d6d6 !important' },
+      'p, span, div, h1, h2, h3, h4, h5, h6, li, a, blockquote, em, strong, td, th': { color: '#d6d6d6 !important', 'background-color': 'transparent !important' },
       'a': { color: '#5fd9a6 !important' },
       'img': { 'background-color': 'transparent !important' }
     });
@@ -253,8 +269,9 @@ const LectorLibro = () => {
                 renditionRef.current = rend;
                 aplicarTemaEpub(rend, oscuro);
               }}
-              // Lectura continua (scroll): evita las páginas en blanco del modo paginado
-              epubOptions={{ flow: 'scrolled', manager: 'continuous' }}
+              // Scroll por sección (scrolled-doc): se lee bajando, sin páginas en
+              // blanco y sin el "salto al fondo" que provocaba el manager continuo.
+              epubOptions={{ flow: 'scrolled-doc' }}
             />
           </div>
         )}

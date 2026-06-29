@@ -136,6 +136,8 @@
   .lector-titulo { font-size: 0.85rem; }
   .lector-btn { padding: 7px 9px; font-size: 0.8rem; }
   .lector-epub { height: calc(100vh - 120px); }
+  /* Más ancho de lectura en el celular */
+  .lector-contenido { padding: 12px 6px 30px; }
 }
 
 /* 🌙 Modo oscuro del PDF: invierte el lienzo (página oscura, texto claro) */
