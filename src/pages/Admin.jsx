@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, BookOpen, Package, Users, DollarSign, ShoppingCart } from 'lucide-react';
+import { TrendingUp, BookOpen, Package, Users, DollarSign, ShoppingCart, CreditCard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, cursosAPI, getComprobanteUrl } from '../services/api';
 import { useNotificaciones } from '../hooks/useNotificaciones';
@@ -18,6 +18,7 @@ import GestionProductos from './admin/GestionProductos';
 import GestionUsuarios from './admin/GestionUsuarios';
 import PagosPendientes from './admin/PagosPendientes';
 import GestionVentas from './admin/GestionVentas';
+import GestionMetodosPago from './admin/GestionMetodosPago';
 import ModalEditarUsuario from './admin/components/ModalEditarUsuario';
 import ModalDetalleVenta from './admin/components/ModalDetalleVenta';
 import ModalEditarPrecios from './admin/components/ModalEditarPrecios';
@@ -29,6 +30,7 @@ const NAV = [
   { key: 'usuarios', label: 'Usuarios', icon: Users },
   { key: 'pagos', label: 'Pagos Pendientes', icon: DollarSign },
   { key: 'ventas', label: 'Todas las Ventas', icon: ShoppingCart },
+  { key: 'metodos', label: 'Métodos de Pago', icon: CreditCard },
 ];
 
 const Admin = () => {
@@ -348,6 +350,8 @@ const Admin = () => {
             onEliminar={eliminarCompra}
           />
         )}
+
+        {vista === 'metodos' && <GestionMetodosPago />}
       </main>
 
       {modalEditarUsuario && (

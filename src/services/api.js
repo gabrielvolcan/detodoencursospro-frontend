@@ -150,6 +150,10 @@ export const adminAPI = {
   eliminarUsuario: (usuarioId) => axios.delete(`/admin/usuario/${usuarioId}`),
   quitarCursoUsuario: (usuarioId, cursoId) => axios.delete(`/admin/usuario/${usuarioId}/curso/${cursoId}`),
   
+  // 💳 Métodos de pago (cuentas)
+  obtenerMetodosPagoAdmin: () => axios.get('/admin/metodos-pago'),
+  guardarMetodosPago: (pais, datos) => axios.put(`/admin/metodos-pago/${pais}`, datos),
+
   // 🆕 Gestión de compras/ventas
   obtenerTodasCompras: (params) => axios.get('/admin/todas-compras', { params }),
   actualizarEstadoCompra: (compraId, datos) => axios.put(`/admin/compra/${compraId}/estado`, datos),
