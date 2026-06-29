@@ -287,6 +287,8 @@
   .pub-ft .ft-grid { grid-template-columns: 1fr 1fr; }
   .pub .cd-in, .pub .pd-in, .pub .cart-grid, .pub .out { grid-template-columns: 1fr; gap: 28px; }
   .pub .buybox, .pub .summary { position: static; }
+  /* En móvil la portada no es sticky (si no, tapa el título al hacer scroll) y se centra a tamaño de libro */
+  .pub .pd-gallery { position: static; max-width: 300px; margin: 0 auto; }
   .pub .order { grid-template-columns: 1fr 1fr; gap: 10px; }
   .pub .legal-card { padding: 36px 28px; }
 }
