@@ -25,6 +25,7 @@ const Footer = () => {
             <p className="ft-h">Navegación</p>
             <Link className="ft-link" to="/cursos">Cursos</Link>
             <Link className="ft-link" to="/productos">Productos</Link>
+            <Link className="ft-link" to="/como-comprar">Cómo comprar</Link>
             <Link className="ft-link" to="/mis-compras">Mis Compras</Link>
             <Link className="ft-link" to="/mis-cursos-aprender">Mis Cursos</Link>
           </div>

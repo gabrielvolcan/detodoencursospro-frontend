@@ -6,6 +6,7 @@ import Header from './components/Header';
 import ChatbotFAQ from './components/ChatbotFAQ';
 import MetaPixel from './components/MetaPixel';
 import Home from './pages/Home';
+import ComoComprar from './pages/ComoComprar';
 import Cursos from './pages/Cursos';
 import DetalleCurso from './pages/DetalleCurso';
 import Carrito from './pages/Carrito';
@@ -79,6 +80,7 @@ function App() {
                   {/* ========================================
                       CURSOS (Sistema actual - mantener)
                   ======================================== */}
+                  <Route path="/como-comprar" element={<ComoComprar />} />
                   <Route path="/cursos" element={<Cursos />} />
                   <Route path="/curso/:id" element={<DetalleCurso />} />
                   
