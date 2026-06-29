@@ -65,8 +65,16 @@ const DetalleCurso = () => {
     }
   };
 
-  const handleAgregarCarrito = () => { if (agregarAlCarrito(curso)) navigate('/carrito'); };
-  const handleComprarAhora = () => { if (agregarAlCarrito(curso)) navigate('/checkout'); };
+  // Si no hay sesión, guiamos a registrarse (guardando el curso para retomar)
+  const irARegistro = () => { localStorage.setItem('intentoCompraCursoId', id); navigate('/registro'); };
+  const handleAgregarCarrito = () => {
+    if (!usuario) { irARegistro(); return; }
+    if (agregarAlCarrito(curso)) navigate('/carrito');
+  };
+  const handleComprarAhora = () => {
+    if (!usuario) { irARegistro(); return; }
+    if (agregarAlCarrito(curso)) navigate('/checkout');
+  };
 
   // Inscripción gratuita
   const handleInscripcionGratuita = async () => {

@@ -26,11 +26,12 @@ const Carrito = () => {
   };
 
   const handlePagar = () => {
+    if (items.length === 0) return;
     if (!estaAutenticado) {
-      navigate('/login?redirect=/carrito');
+      // Sin sesión: lo mandamos a registrarse (el carrito queda guardado)
+      navigate('/registro');
       return;
     }
-    if (items.length === 0) return;
     navigate('/checkout');
   };
 
@@ -106,7 +107,7 @@ const Carrito = () => {
                 <Zap className="ic" />Finalizar compra
               </button>
               {!estaAutenticado && (
-                <p className="muted xs tc" style={{ marginTop: 12 }}>Necesitas iniciar sesión para completar la compra</p>
+                <p className="muted xs tc" style={{ marginTop: 12 }}>Creá tu cuenta para completar la compra — te llevamos a registrarte</p>
               )}
               <div className="tc" style={{ marginTop: 14 }}>
                 <button className="green sm fw7 pointer" style={{ background: 'none', border: 0 }} onClick={() => navigate('/cursos')}>Seguir comprando</button>

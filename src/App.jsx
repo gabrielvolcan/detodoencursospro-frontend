@@ -104,7 +104,7 @@ function App() {
                   {/* ========================================
                       RUTAS PRIVADAS (requieren login)
                   ======================================== */}
-                  <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
+                  <Route path="/carrito" element={<Carrito />} />
                   <Route path="/checkout" element={<PrivateRoute><CheckoutManual /></PrivateRoute>} />
                   <Route path="/mis-compras" element={<PrivateRoute><MisCompras /></PrivateRoute>} />
                   <Route path="/leer/:id" element={<PrivateRoute><LectorLibro /></PrivateRoute>} />
