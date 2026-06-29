@@ -43,6 +43,15 @@ const LectorLibro = () => {
   const claveMarca = `lector:${id}:marca`;
   const [marca, setMarca] = useState(() => localStorage.getItem(`lector:${id}:marca`) || null);
   const [aviso, setAviso] = useState('');
+  const [ayuda, setAyuda] = useState(false); // cartel "usá las flechas"
+
+  // Mostrar la ayuda de navegación al abrir el libro (se desvanece sola).
+  useEffect(() => {
+    if (!info) return undefined;
+    setAyuda(true);
+    const t = setTimeout(() => setAyuda(false), 6500);
+    return () => clearTimeout(t);
+  }, [info]);
 
   const marcaAgua = usuario?.email || 'Detodo en Cursos';
   const clavePdf = `lector:${id}:pdfPagina`;
@@ -217,6 +226,14 @@ const LectorLibro = () => {
       </div>
 
       {aviso && <div className="lector-aviso">{aviso}</div>}
+
+      {ayuda && info?.formato === 'epub' && (
+        <button type="button" className="lector-ayuda" onClick={() => setAyuda(false)}>
+          <ChevronLeft size={18} />
+          <span>Tocá las flechas de los costados para seguir leyendo</span>
+          <ChevronRight size={18} />
+        </button>
+      )}
 
       {/* Marca de agua (disuasor sutil) */}
       <div className="lector-marca-agua" aria-hidden="true">

@@ -170,6 +170,35 @@
   pointer-events: none;
 }
 
+/* Cartel de ayuda: "usá las flechas para seguir leyendo" */
+.lector-ayuda {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 32px);
+  background: rgba(22, 224, 138, 0.96);
+  color: #06120c;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  animation: lector-ayuda-in 0.35s ease, lector-ayuda-out 0.6s ease 5.9s forwards;
+}
+.lector-ayuda svg { flex: none; animation: lector-ayuda-flecha 1.1s ease-in-out infinite; }
+.lector-ayuda svg:last-child { animation-delay: 0.55s; }
+@keyframes lector-ayuda-in { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes lector-ayuda-out { to { opacity: 0; transform: translate(-50%, 12px); } }
+@keyframes lector-ayuda-flecha { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-3px); } }
+
 /* Helpers desktop/mobile en la barra del visor */
 .solo-mobile { display: none; }
 @media (max-width: 640px) {
