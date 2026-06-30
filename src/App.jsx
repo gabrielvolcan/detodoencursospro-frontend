@@ -4,7 +4,7 @@ import { CarritoProvider } from './context/CarritoContext';
 import { PaisProvider } from './context/PaisContext';
 import Header from './components/Header';
 import ChatbotFAQ from './components/ChatbotFAQ';
-import MetaPixel from './components/MetaPixel';
+import RouteTracker from './components/RouteTracker';
 import Home from './pages/Home';
 import ComoComprar from './pages/ComoComprar';
 import Cursos from './pages/Cursos';
@@ -62,7 +62,7 @@ function App() {
         <CarritoProvider>
           <PaisProvider>
             <div className="app">
-              <MetaPixel />
+              <RouteTracker />
               <Header />
               <main>
                 <Routes>

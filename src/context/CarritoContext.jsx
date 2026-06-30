@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { trackAddToCart } from '../utils/analytics';
 
 const CarritoContext = createContext();
 
@@ -50,6 +51,7 @@ export const CarritoProvider = ({ children }) => {
     
     if (!yaExiste) {
       setItems([...items, producto]);
+      trackAddToCart({ id: producto._id, name: producto.titulo, price: producto.precioUSD });
       return true;
     }
 

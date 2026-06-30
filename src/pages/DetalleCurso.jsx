@@ -9,6 +9,7 @@ import { useCarrito } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
 import PubThumb from '../components/publico/PubThumb';
+import { trackViewItem } from '../utils/analytics';
 import '../styles/publico.css';
 
 const OUTCOMES = [
@@ -57,6 +58,7 @@ const DetalleCurso = () => {
     try {
       const { data } = await cursosAPI.obtenerPorId(id);
       setCurso(data);
+      trackViewItem({ id: data._id, name: data.titulo, category: data.categoria, price: data.precioUSD });
     } catch (error) {
       console.error('Error cargando curso:', error);
       navigate('/cursos');

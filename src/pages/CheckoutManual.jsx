@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { usePais } from '../context/PaisContext';
 import { pagosAPI } from '../services/api';
 import PubThumb from '../components/publico/PubThumb';
+import { trackBeginCheckout, trackPurchase } from '../utils/analytics';
 import '../styles/publico.css';
 
 // Indicador de pasos: 1 Resumen · 2 Pago · 3 Comprobante
@@ -106,6 +107,12 @@ const CheckoutManual = () => {
     }
   }, [estaAutenticado, items]);
 
+  // 📊 Inicio de checkout (una vez, si hay items)
+  useEffect(() => {
+    if (items.length > 0) trackBeginCheckout(calcularTotal());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const crearOrden = async () => {
     try {
       setSubiendo(true);
@@ -164,6 +171,7 @@ const CheckoutManual = () => {
       const formData = new FormData();
       formData.append('comprobante', comprobanteArchivo);
       await pagosAPI.subirComprobante(ordenCreada.compraId, formData);
+      trackPurchase(totalPais, items.map((i) => i._id));
       vaciarCarrito();
       setEnviado(true);
     } catch (error) {

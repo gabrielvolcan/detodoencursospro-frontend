@@ -15,6 +15,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCarrito } from '../context/CarritoContext';
 import { usePais } from '../context/PaisContext';
 import PubThumb from '../components/publico/PubThumb';
+import { trackViewItem } from '../utils/analytics';
 import '../styles/publico.css';
 
 const ProductoDetalle = () => {
@@ -38,6 +39,7 @@ const ProductoDetalle = () => {
     try {
       const { data } = await productosAPI.obtenerPorId(id);
       setProducto(data);
+      trackViewItem({ id: data._id, name: data.titulo, category: data.tipo, price: data.precioUSD });
       if (usuario && usuario.productosComprados) {
         const comprado = usuario.productosComprados.some((p) => {
           const productoId = typeof p.producto === 'object' ? p.producto._id : p.producto;
