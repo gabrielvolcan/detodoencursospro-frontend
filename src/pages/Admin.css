@@ -226,3 +226,22 @@
   .admin-rd .statgrid4, .admin-rd .statgrid3, .admin-rd .pgrid3, .admin-rd .pgrid2, .admin-rd .pricegrid { grid-template-columns: 1fr; }
   .admin-rd .h1 { font-size: 30px; }
 }
+
+/* ===== Analítica (panel admin) ===== */
+.an-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 22px; }
+.an-card { display: flex; align-items: center; gap: 14px; background: #111114; border: 1px solid #1d1d22; border-radius: 14px; padding: 18px 20px; }
+.an-card .an-ic { width: 44px; height: 44px; border-radius: 12px; background: rgba(22,224,138,.12); color: #16e08a; display: flex; align-items: center; justify-content: center; flex: none; }
+.an-card b { display: block; font-size: 26px; font-weight: 800; color: #f3f3f5; line-height: 1; }
+.an-card span { font-size: 13px; color: #84858c; }
+.an-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.an-panel { background: #111114; border: 1px solid #1d1d22; border-radius: 14px; padding: 18px 20px; }
+.an-panel-h { display: flex; align-items: center; gap: 8px; font-weight: 700; color: #f3f3f5; margin-bottom: 14px; }
+.an-panel-h svg { color: #16e08a; }
+.an-row { display: grid; grid-template-columns: 1fr 90px 38px; align-items: center; gap: 10px; padding: 7px 0; }
+.an-row-l { font-size: 13.5px; color: #d6d6d6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.an-row-v { font-size: 13px; font-weight: 700; color: #16e08a; text-align: right; }
+.an-bar { height: 8px; background: #1d1d22; border-radius: 99px; overflow: hidden; }
+.an-bar-fill { display: block; height: 100%; background: linear-gradient(90deg, #16e08a, #0fbf74); border-radius: 99px; }
+.btn-chip { background: #15151a; border: 1px solid #26262c; color: #d6d6d6; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; cursor: pointer; }
+.btn-chip.on { background: #16e08a; color: #06130c; border-color: #16e08a; }
+@media (max-width: 900px) { .an-cards, .an-grid { grid-template-columns: 1fr; } }

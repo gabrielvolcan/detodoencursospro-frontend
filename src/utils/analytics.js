@@ -16,16 +16,45 @@ const fbq = (event, params) => {
   }
 };
 
+// ---- Analítica propia (se ve en el panel admin) ----
+const API = import.meta.env.VITE_API_URL || '/api';
+
+const getVisitante = () => {
+  try {
+    let v = localStorage.getItem('dtc:vid');
+    if (!v) { v = 'v' + Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('dtc:vid', v); }
+    return v;
+  } catch { return ''; }
+};
+
+const getUtm = () => {
+  try { return new URLSearchParams(window.location.search).get('utm_source') || ''; } catch { return ''; }
+};
+
+// Envía el evento al backend sin bloquear la navegación (fire-and-forget).
+const enviarBackend = (payload) => {
+  try {
+    fetch(`${API}/analytics/track`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload, referrer: document.referrer || '', utmSource: getUtm(), visitante: getVisitante() }),
+      keepalive: true
+    }).catch(() => {});
+  } catch { /* noop */ }
+};
+
 // Vista de página (cada cambio de ruta de la SPA)
 export const trackPageView = (path, title) => {
   pushDL({ event: 'page_view', page_path: path, page_title: title });
   fbq('PageView');
+  enviarBackend({ tipo: 'page', path });
 };
 
 // Ver un producto/curso (para saber "cuál más ven")
 export const trackViewItem = ({ id, name, category, price }) => {
   pushDL({ event: 'view_item', item_id: id, item_name: name, item_category: category, value: price || 0, currency: 'USD' });
   fbq('ViewContent', { content_ids: [id], content_name: name, content_type: 'product', value: price || 0, currency: 'USD' });
+  enviarBackend({ tipo: 'item', itemId: id, itemNombre: name, itemTipo: category });
 };
 
 // Agregar al carrito
