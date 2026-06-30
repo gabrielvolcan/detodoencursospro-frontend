@@ -42,6 +42,7 @@ const Header = () => {
           <button className={navCls('/')} onClick={() => ir('/')}>Inicio</button>
           <button className={navCls('/cursos')} onClick={() => ir('/cursos')}>Cursos</button>
           <button className={navCls('/productos')} onClick={() => ir('/productos')}>Productos</button>
+          <button className={navCls('/como-comprar')} onClick={() => ir('/como-comprar')}>Cómo comprar</button>
         </nav>
 
         <div className="hdr-r">
@@ -107,6 +108,7 @@ const Header = () => {
           <a onClick={() => ir('/')}>Inicio</a>
           <a onClick={() => ir('/cursos')}>Cursos</a>
           <a onClick={() => ir('/productos')}>Productos</a>
+          <a onClick={() => ir('/como-comprar')}>Cómo comprar</a>
           <a onClick={() => ir('/carrito')}>Carrito</a>
           {!estaAutenticado ? (
             <>
