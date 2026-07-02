@@ -29,10 +29,16 @@ const AprendeCurso = () => {
   const [error, setError] = useState('');
   const [copiado, setCopiado] = useState(false);
   const [reanudado, setReanudado] = useState(false); // mostró "continuar donde lo dejaste"
+  const [laminaActual, setLaminaActual] = useState(0); // índice de lámina en lecciones de carrusel
 
   useEffect(() => {
     cargarCurso();
   }, [cursoId]);
+
+  // Al cambiar de lección, volvemos a la primera lámina
+  useEffect(() => {
+    setLaminaActual(0);
+  }, [videoActual?.temaId]);
 
   const cargarCurso = async () => {
     try {
@@ -137,12 +143,30 @@ const AprendeCurso = () => {
 
   if (!curso) return null;
 
+  const laminas = Array.isArray(videoActual?.laminas) ? videoActual.laminas : [];
+  const esLaminas = laminas.length > 0;
   const videoInfo = videoActual?.videoUrl ? extraerVideoInfo(videoActual.videoUrl) : { tipo: null, id: null };
-  const mostrarVistaTexto = esContenidoTexto(videoActual);
+  const mostrarVistaTexto = !esLaminas && esContenidoTexto(videoActual);
   const lecciones = construirLecciones(curso);
   const idxActual = lecciones.findIndex((l) => l.temaId === videoActual?.temaId);
   const hayAnterior = idxActual > 0;
   const haySiguiente = idxActual >= 0 && idxActual < lecciones.length - 1;
+
+  // Navegación dentro del carrusel de láminas
+  const irLamina = (delta) => {
+    const n = laminaActual + delta;
+    if (n < 0) { if (hayAnterior) irLeccion(-1); return; }
+    if (n >= laminas.length) {
+      if (videoActual && !progreso.videosVistos.includes(videoActual.temaId)) marcarComoVisto(videoActual.temaId, true);
+      if (haySiguiente) irLeccion(1);
+      return;
+    }
+    setLaminaActual(n);
+    // Al ver la última lámina, marcamos la lección como vista
+    if (n === laminas.length - 1 && videoActual && !progreso.videosVistos.includes(videoActual.temaId)) {
+      marcarComoVisto(videoActual.temaId, true);
+    }
+  };
 
   return (
     <div className="aprender-curso">
@@ -221,6 +245,39 @@ const AprendeCurso = () => {
               <PlayCircle size={64} />
               <p>Selecciona una lección para comenzar</p>
             </div>
+          ) : esLaminas ? (
+            <>
+              <div className="laminas-stage">
+                <button className="lam-arrow lam-left" onClick={() => irLamina(-1)} disabled={laminaActual === 0} aria-label="Anterior">
+                  <ChevronLeft size={26} />
+                </button>
+                <img className="lam-img" src={laminas[laminaActual]} alt={`${videoActual.titulo} — lámina ${laminaActual + 1}`} draggable={false} />
+                <button className="lam-arrow lam-right" onClick={() => irLamina(1)} disabled={laminaActual >= laminas.length - 1} aria-label="Siguiente">
+                  <ChevronRight size={26} />
+                </button>
+              </div>
+              <div className="lam-dots">
+                {laminas.map((_, i) => (
+                  <button key={i} className={`lam-dot ${i === laminaActual ? 'on' : ''}`} onClick={() => setLaminaActual(i)} aria-label={`Lámina ${i + 1}`}></button>
+                ))}
+              </div>
+              <div className="video-info">
+                <div className="video-header">
+                  <div>
+                    <p className="video-modulo">{videoActual.moduloTitulo}</p>
+                    <h2 className="video-titulo">{videoActual.titulo} <span className="lam-count">· Lámina {laminaActual + 1} de {laminas.length}</span></h2>
+                  </div>
+                  <label className="checkbox-visto">
+                    <input
+                      type="checkbox"
+                      checked={progreso.videosVistos.includes(videoActual.temaId)}
+                      onChange={(e) => marcarComoVisto(videoActual.temaId, e.target.checked)}
+                    />
+                    <span>Marcar como visto</span>
+                  </label>
+                </div>
+              </div>
+            </>
           ) : mostrarVistaTexto ? (
             <div className="vista-texto">
               <div className="texto-container">
