@@ -1,38 +1,39 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CarritoProvider } from './context/CarritoContext';
 import { PaisProvider } from './context/PaisContext';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import ChatbotFAQ from './components/ChatbotFAQ';
 import RouteTracker from './components/RouteTracker';
-import Home from './pages/Home';
-import ComoComprar from './pages/ComoComprar';
-import Cursos from './pages/Cursos';
-import DetalleCurso from './pages/DetalleCurso';
-import Carrito from './pages/Carrito';
-import CheckoutManual from './pages/CheckoutManual';
-import MisCompras from './pages/MisCompras';
-import MisCursos from './pages/MisCursos';
-import AprendeCurso from './pages/AprendeCurso';
-import Login from './pages/Login';
-import Registro from './pages/Registro';
-import RecuperarContraseña from './pages/RecuperarContraseña';
-import RestablecerContraseña from './pages/RestablecerContraseña';
-import VerificarEmail from './pages/VerificarEmail';
-import Admin from './pages/Admin';
-import CursoForm from './pages/CursoForm';
-import Certificado from './pages/Certificado';
-import VerificarCertificado from './pages/VerificarCertificado';
-import EmailMasivo from './pages/EmailMasivo';
-import GraciasPrompts from './pages/GraciasPrompts';
 
-// ✅ COMPONENTES DE PRODUCTOS (ahora activos)
-import Productos from './pages/Productos';
-import ProductoDetalle from './pages/ProductoDetalle';
-import LectorLibro from './pages/LectorLibro';
-import Legales from './pages/Legales';
-import Footer from './components/Footer';
-import ProductoForm from './pages/ProductoForm';
+// 🚀 Carga diferida (code-splitting): cada página se descarga solo al visitarla.
+const Home = lazy(() => import('./pages/Home'));
+const ComoComprar = lazy(() => import('./pages/ComoComprar'));
+const Cursos = lazy(() => import('./pages/Cursos'));
+const DetalleCurso = lazy(() => import('./pages/DetalleCurso'));
+const Carrito = lazy(() => import('./pages/Carrito'));
+const CheckoutManual = lazy(() => import('./pages/CheckoutManual'));
+const MisCompras = lazy(() => import('./pages/MisCompras'));
+const MisCursos = lazy(() => import('./pages/MisCursos'));
+const AprendeCurso = lazy(() => import('./pages/AprendeCurso'));
+const Login = lazy(() => import('./pages/Login'));
+const Registro = lazy(() => import('./pages/Registro'));
+const RecuperarContraseña = lazy(() => import('./pages/RecuperarContraseña'));
+const RestablecerContraseña = lazy(() => import('./pages/RestablecerContraseña'));
+const VerificarEmail = lazy(() => import('./pages/VerificarEmail'));
+const Admin = lazy(() => import('./pages/Admin'));
+const CursoForm = lazy(() => import('./pages/CursoForm'));
+const Certificado = lazy(() => import('./pages/Certificado'));
+const VerificarCertificado = lazy(() => import('./pages/VerificarCertificado'));
+const EmailMasivo = lazy(() => import('./pages/EmailMasivo'));
+const GraciasPrompts = lazy(() => import('./pages/GraciasPrompts'));
+const Productos = lazy(() => import('./pages/Productos'));
+const ProductoDetalle = lazy(() => import('./pages/ProductoDetalle'));
+const LectorLibro = lazy(() => import('./pages/LectorLibro'));
+const Legales = lazy(() => import('./pages/Legales'));
+const ProductoForm = lazy(() => import('./pages/ProductoForm'));
 
 // Loader mientras se verifica la sesión (evita rebotes antes de cargar el usuario)
 const CargandoSesion = () => (
@@ -65,6 +66,7 @@ function App() {
               <RouteTracker />
               <Header />
               <main>
+                <Suspense fallback={<CargandoSesion />}>
                 <Routes>
                   {/* ========================================
                       RUTAS PÚBLICAS - HOME
@@ -135,6 +137,7 @@ function App() {
                   <Route path="/privacidad" element={<Legales documento="privacidad" />} />
                   <Route path="/reembolsos" element={<Legales documento="reembolsos" />} />
                 </Routes>
+                </Suspense>
               </main>
 
               <Footer />
