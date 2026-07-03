@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Clock, Users, Star, ShoppingCart, Check, BookOpen, Award, Target,
-  ChevronDown, Zap, Rocket, Gift, Play,
+  ChevronDown, Zap, Rocket, Gift, Play, Layers,
 } from 'lucide-react';
 import { cursosAPI } from '../services/api';
 import { useCarrito } from '../context/CarritoContext';
@@ -207,11 +207,13 @@ const DetalleCurso = () => {
           {curso.temario && curso.temario.length > 0 ? (
             curso.temario.map((modulo, index) => {
               const abierto = moduloExpandido === index;
+              const esLaminas = (modulo.temas || []).some((t) => t.laminas);
+              const IconoMod = esLaminas ? Layers : Play;
               return (
                 <div className={`module ${abierto ? 'open' : ''}`} key={index}>
                   <div className="module-h" onClick={() => toggleModulo(index)} role="button" tabIndex={0}
                     onKeyDown={(e) => { if (e.key === 'Enter') toggleModulo(index); }}>
-                    <div className="module-ic"><Play className="ic ic-s" /></div>
+                    <div className="module-ic"><IconoMod className="ic ic-s" /></div>
                     <div>
                       <div className="fw7">Módulo {index + 1}: {modulo.titulo}</div>
                       <div className="muted xs" style={{ marginTop: 3 }}>{modulo.temas?.length || 0} lecciones</div>
@@ -222,7 +224,11 @@ const DetalleCurso = () => {
                     <div className="module-body">
                       {modulo.descripcion && <p className="muted sm" style={{ padding: '8px 0' }}>{modulo.descripcion}</p>}
                       {(modulo.temas || []).map((tema, vIndex) => (
-                        <div className="lesson" key={vIndex}><Play className="ic ic-s" />{tema.titulo}</div>
+                        <div className="lesson" key={vIndex}>
+                          {tema.laminas ? <Layers className="ic ic-s" /> : <Play className="ic ic-s" />}
+                          <span style={{ flex: 1 }}>{tema.titulo}</span>
+                          {tema.laminas ? <span className="muted xs">{tema.laminas} láminas</span> : null}
+                        </div>
                       ))}
                     </div>
                   )}
