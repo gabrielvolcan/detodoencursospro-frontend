@@ -144,14 +144,14 @@ const DetalleCurso = () => {
           <div>
             <span className="pill pill-g"><Target className="ic ic-s" />{curso.nivel || 'Todos los niveles'}{esGratis && <>&nbsp;· GRATIS</>}</span>
             <h1 className="h1 green" style={{ margin: '18px 0 0', fontSize: 46 }}>{curso.titulo}</h1>
-            {curso.subtitulo && <p className="lead" style={{ marginTop: 10 }}>{curso.subtitulo}</p>}
+            {(curso.subtitulo || curso.descripcionCorta) && <p className="lead" style={{ marginTop: 10 }}>{curso.subtitulo || curso.descripcionCorta}</p>}
             <div className="cd-meta">
               <span className="mi"><Star className="ic ic-s star" />{curso.calificacion || 5} Rating</span>
               <span className="mi"><Users className="ic ic-s" />{estudiantesAnimados}+ Estudiantes</span>
               <span className="mi"><Clock className="ic ic-s" />{curso.duracion || '23 horas'}</span>
               <span className="mi"><Award className="ic ic-s" />{curso.nivel}</span>
             </div>
-            <p className="lead" style={{ maxWidth: 540, marginBottom: 24 }}>{curso.descripcion}</p>
+            <p className="lead" style={{ maxWidth: 540, marginBottom: 24 }}>{curso.descripcion || curso.descripcionCompleta}</p>
             <div className="bullets" style={{ maxWidth: 420 }}>
               <span className="mi"><Check className="ic ic-s" />Acceso de por vida</span>
               <span className="mi"><Check className="ic ic-s" />Estudia a tu ritmo</span>
