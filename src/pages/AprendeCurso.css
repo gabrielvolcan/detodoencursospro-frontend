@@ -826,8 +826,9 @@
   justify-content: center;
   background: #0a0b0c;
   border-radius: 16px;
-  padding: 18px;
+  padding: 18px 76px; /* espacio lateral para que las flechas no tapen la lámina */
   min-height: 300px;
+  touch-action: pan-y; /* deja hacer scroll vertical; el swipe horizontal lo maneja JS */
 }
 .lam-img {
   max-width: 100%;
@@ -836,6 +837,7 @@
   height: auto;
   border-radius: 12px;
   box-shadow: 0 20px 50px -16px rgba(0,0,0,.6);
+  -webkit-user-select: none;
   user-select: none;
 }
 .lam-arrow {
@@ -847,6 +849,7 @@
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,.14);
   background: rgba(18,20,22,.82);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   color: #fff;
   display: flex;
@@ -879,6 +882,7 @@
 .lam-dot.on { background: #16e08a; transform: scale(1.25); }
 .lam-count { font-size: .78em; font-weight: 600; color: #84858c; }
 @media (max-width: 640px) {
+  .laminas-stage { padding: 14px 54px; }
   .lam-arrow { width: 42px; height: 42px; }
   .lam-left { left: 6px; } .lam-right { right: 6px; }
   .lam-img { max-height: 60vh; }

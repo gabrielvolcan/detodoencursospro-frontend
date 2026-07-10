@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   PlayCircle, CheckCircle, Circle, ArrowLeft, Award, Clock, FileText, Copy, Check,
@@ -30,6 +30,8 @@ const AprendeCurso = () => {
   const [copiado, setCopiado] = useState(false);
   const [reanudado, setReanudado] = useState(false); // mostró "continuar donde lo dejaste"
   const [laminaActual, setLaminaActual] = useState(0); // índice de lámina en lecciones de carrusel
+  const irLaminaRef = useRef(null); // última función irLamina (null si la lección no es de láminas)
+  const touchX = useRef(null); // inicio del swipe táctil
 
   useEffect(() => {
     cargarCurso();
@@ -39,6 +41,19 @@ const AprendeCurso = () => {
   useEffect(() => {
     setLaminaActual(0);
   }, [videoActual?.temaId]);
+
+  // Navegación por teclado en el visor de láminas (← →)
+  useEffect(() => {
+    const onKey = (e) => {
+      const t = e.target?.tagName;
+      if (t === 'INPUT' || t === 'TEXTAREA') return; // no robar el teclado a los campos
+      if (!irLaminaRef.current) return; // solo en lecciones de láminas
+      if (e.key === 'ArrowRight') { e.preventDefault(); irLaminaRef.current(1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); irLaminaRef.current(-1); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const cargarCurso = async () => {
     try {
@@ -167,6 +182,17 @@ const AprendeCurso = () => {
       marcarComoVisto(videoActual.temaId, true);
     }
   };
+  // Exponer irLamina al listener de teclado (null si esta lección no es de láminas)
+  irLaminaRef.current = esLaminas ? irLamina : null;
+
+  // Swipe táctil sobre el visor de láminas
+  const onLaminaTouchStart = (e) => { touchX.current = e.changedTouches[0].clientX; };
+  const onLaminaTouchEnd = (e) => {
+    if (touchX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    touchX.current = null;
+    if (Math.abs(dx) > 45) irLamina(dx < 0 ? 1 : -1);
+  };
 
   return (
     <div className="aprender-curso">
@@ -247,7 +273,7 @@ const AprendeCurso = () => {
             </div>
           ) : esLaminas ? (
             <>
-              <div className="laminas-stage">
+              <div className="laminas-stage" onTouchStart={onLaminaTouchStart} onTouchEnd={onLaminaTouchEnd}>
                 <button className="lam-arrow lam-left" onClick={() => irLamina(-1)} disabled={laminaActual === 0} aria-label="Anterior">
                   <ChevronLeft size={26} />
                 </button>
